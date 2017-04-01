@@ -57,7 +57,6 @@ import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import timber.log.Timber;
 
-import static android.R.attr.offset;
 import static com.orm.SugarRecord.deleteAll;
 import static com.orm.SugarRecord.listAll;
 
@@ -513,6 +512,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 onRefresh();
                 return true;
             }
+            case R.id.add_this_subreddit:{
+                Uri url = UriGenerator.getUriSubredditAbout(mSubredditString);
+                Intent intent = new Intent(this, CheckNewSubredditService.class);
+                intent.putExtra(CheckNewSubredditService.EXTRA_URL, url);
+                startService(intent);
+            }
             case R.id.theme_default:{
                 PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_DEFAULT);
                 return true;
@@ -644,7 +649,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mSubredditString = null;
             mSearchQueryString = null;
             mRestrictSearchBoolean = false;
-            setDefaultSubreddit(mSubredditString);
+            setDefaultSubreddit(null);
             mSwipeRefreshLayout.post(new Runnable() {
                 @Override
                 public void run() {
