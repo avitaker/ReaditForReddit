@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:padding="@dimen/padding_comment_item"
+    android:background="@color/milk">
+
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/info_linear_layout"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:flexWrap="wrap"
+        app:alignItems="stretch"
+        app:alignContent="stretch"
+        app:flexDirection="row">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/author"
+            style="@style/BoldCaptions"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:id="@+id/flair_text"
+            android:layout_toRightOf="@+id/author"
+            android:layout_toEndOf="@+id/author"
+            style="@style/LittleCaptions.Comment"
+            android:visibility="gone"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/flair_text"
+            android:layout_toEndOf="@+id/flair_text"
+            android:id="@+id/score"
+            style="@style/LittleCaptions.Comment"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/score"
+            android:layout_toEndOf="@+id/score"
+            android:id="@+id/time_elapsed"
+            style="@style/LittleCaptions"/>
+
+
+    </com.google.android.flexbox.FlexboxLayout>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/info_linear_layout"
+        android:id="@+id/bodyHtml"
+        style="@style/CommentText"/>
+</RelativeLayout>

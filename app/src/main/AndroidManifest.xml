@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="com.avinashdavid.readitforreddit"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+        android:name=".ReaditApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:hardwareAccelerated="true"
+        android:theme="@style/ThemeApples">
+
+        <meta-data android:name="DATABASE" android:value="widget_posts.db" />
+        <meta-data android:name="VERSION" android:value="3" />
+        <meta-data android:name="QUERY_LOG" android:value="true" />
+        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.avinashdavid.readitforreddit" />
+
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <service android:name=".NetworkUtils.GetListingsService"
+                 android:enabled="true"
+                 android:exported="true"
+                 android:permission="android.permission.BIND_JOB_SERVICE"/>
+
+        <service android:name=".NetworkUtils.GetCommentsService"/>
+
+        <service android:name=".NetworkUtils.GetSubredditsService"/>
+
+        <service android:name=".PostUtils.DeleteCommentsService"/>
+
+        <activity android:name=".CommentsActivity"
+            android:parentActivityName=".MainActivity">
+        </activity>
+
+        <receiver android:name=".Widget.SubredditWidgetProvider"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="com.avinashdavid.readitforreddit.BROADCAST_SUBREDDIT"/>
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                       android:resource="@xml/widget_provider_subreddit"/>
+        </receiver>
+        <service android:name=".Widget.SubredditWidgetRemoteViewsService"
+                 android:permission="android.permission.BIND_REMOTEVIEWS"/>
+        <service android:name=".NetworkUtils.CheckNewSubredditService"/>
+        <activity android:name=".LinkActivity"/>
+    </application>
+
+</manifest>

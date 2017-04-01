@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="reddit_blue">#8bbdee</color>
+    <color name="reddit_dark_blue">#5589ba</color>
+    <color name="reddit_orange">#ff4500</color>
+    <color name="reddit_light_blue">#cee3f8</color>
+    
+    <color name="cloud_shadow">#693D3D</color>
+    <color name="crevice">#46211E</color>
+    <color name="desert">#BA5536</color>
+    <color name="colorAccent_50">#FBE9E7</color>
+
+    <color name="indigo_300">#7986CB</color>
+    <color name="light_blue_300">#4FC3F7</color>
+    <color name="yellow_500">#FFEB3B</color>
+    <color name="light_green_500">#8BC34A</color>
+    <color name="orange_300">#FFB74D</color>
+    <color name="red_300">#E57373</color>
+    <color name="purple_300">#BA68C8</color>
+
+    <color name="blue_grey_50">#eceff1</color>
+
+    <!--cool blues-->
+    <color name="deep_aqua">#003b46</color>
+    <color name="ocean">#07575b</color>
+    <color name="wave">#66a5ad</color>
+    <color name="seafoam">#c4dfe6</color>
+
+    <!--bright and tropical-->
+    <color name="bubblegum">#FA6775</color>
+    <color name="hot_pink">#F52549</color>
+    <color name="pink_400">#F06292</color>
+    <color name="pollen">#FFD64D</color>
+
+    <!--coffee-->
+    <color name="latte">#DDBC95</color>
+    <color name="coffee">#b38867</color>
+    <color name="slate">#626d71</color>
+    <color name="ceramic">#CDCDC0</color>
+
+    <!--apples-->
+    <color name="ripe_apple">#E73f0b</color>
+    <color name="red_delicious">#A11F0C</color>
+    <color name="granny_smith">#BBCf4a</color>
+    <color name="red_50">#FFFDE7</color>
+    
+    <!--blueberry-->
+    <color name="indigo_ink">#283655</color>
+    <color name="midnight_blue">#1e1f26</color>
+    <color name="blueberry">#4d648d</color>
+    <color name="periwinkie">#d0e1f9</color>
+
+    <!--strawberries and cream-->
+    <color name="papaya">#db5443</color>
+    <color name="strawberry">#d8412f</color>
+    <color name="granola">#f5ca99</color>
+    <color name="milk">#fcfdfe</color>
+
+    <!--grecian holiday-->
+    <color name="grecian.blue">#2988bc</color>
+    <color name="sea">#2f496e</color>
+    <color name="coral">#ed8c72</color>
+    <color name="plaster">#f4eade</color>
+    
+    <!--Dark theme 1-->
+    <color name="wine">#500805</color>
+    <color name="dark">#1E0000</color>
+    <color name="grey_800">#424242</color>
+    <color name="currant">#8c0004</color>
+</resources>

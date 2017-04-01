@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/sort.by"
+          android:title="@string/sort"
+          android:icon="@drawable/ic_sort_white_24dp"
+          app:showAsAction="always">
+        <menu>
+
+            <group android:id="@+id/sort.options" android:checkableBehavior="single">
+                <item
+                    android:id="@+id/sort.hot"
+                    android:title="@string/sort_hot"/>
+                <item
+                    android:id="@+id/sort.new"
+                    android:title="@string/sort_new"/>
+                <item
+                    android:id="@+id/sort.rising"
+                    android:title="@string/sort_rising"/>
+                <item
+                    android:id="@+id/sort.top"
+                    android:title="@string/sort_top"/>
+
+            </group>
+
+        </menu>
+    </item>
+
+    <item android:id="@+id/change.theme"
+          android:title="@string/change.theme"
+          android:icon="@drawable/ic_theme_white_24dp"
+          app:showAsAction="never">
+        <menu>
+            <item android:id="@+id/theme.default"
+                  android:title="@string/theme.reddit"/>
+            <item
+                android:id="@+id/theme.desert"
+                android:title="@string/theme.desert"/>
+            <item
+                android:id="@+id/theme.ocean"
+                android:title="@string/theme.ocean"/>
+            <item
+                android:id="@+id/theme.coffee"
+                android:title="@string/theme.coffee"/>
+            <item
+                android:id="@+id/theme.apples"
+                android:title="@string/theme.apples"/>
+
+            <item
+                android:id="@+id/theme.blueberry"
+                android:title="@string/theme.blueberry"/>
+            <item
+                android:id="@+id/theme.strawberries"
+                android:title="@string/theme.strawberries"/>
+            <item
+                android:id="@+id/theme.coastal"
+                android:title="@string/theme.coastal"/>
+            <item
+                android:id="@+id/theme.dark"
+                android:title="@string/theme.dark"/>
+
+        </menu>
+    </item>
+
+
+</menu>

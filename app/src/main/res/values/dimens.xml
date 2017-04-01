@@ -1,0 +1,31 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!--Appbar and collapsing toolbar-->
+    <dimen name="listings_appbar_height">100dp</dimen>
+    <dimen name="collapsingtoolbar_marginstart">48dp</dimen>
+    <dimen name="collapsingtoolbar_marginend">64dp</dimen>
+
+    <!--Listing margins and padding-->
+    <dimen name="margin_listing">2dp</dimen>
+    <dimen name="padding_listing_cardview">8dp</dimen>
+    <dimen name="padding_listing_captions">4dp</dimen>
+
+    <!--comments page-->
+    <dimen name="post_appbar_height">300dp</dimen>
+    <dimen name="padding_comment_item">8dp</dimen>
+
+    <!--comment types dimens-->
+    <dimen name="comment_start_padding">4dp</dimen>
+    <dimen name="c_d_2_margin">4dp</dimen>
+    <dimen name="c_d_3_margin">8dp</dimen>
+    <dimen name="c_d_4_margin">12dp</dimen>
+    <dimen name="c_d_5_margin">16dp</dimen>
+    <dimen name="c_d_6_margin">20dp</dimen>
+    <dimen name="c_d_7_margin">24dp</dimen>
+
+    <dimen name="widget_margin">8dp</dimen>
+
+</resources>

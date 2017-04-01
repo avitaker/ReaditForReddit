@@ -1,0 +1,98 @@
+<resources xmlns:xliff="http://schemas.android.com/tools">
+    <string name="app_name">Readit For Reddit</string>
+
+    <!--Main page navigation view-->
+    <string name="subreddits">Subreddits</string>
+    <string name="go_to">Go to subreddit</string>
+    <string name="search_posts">Search posts</string>
+    <string name="add_subscription">Add subreddit subscription</string>
+
+    <!--Main page options menu-->
+    <string name="sort">Sort</string>
+    <string name="change.theme">Change theme</string>
+    <string name="addThisSubreddit">Subscribe to this subreddit</string>
+
+    <!--listings page-->
+    <string name="format_numberofcomments"><xliff:g id="number_of_comments">%d</xliff:g> comments</string>
+    <string name="frontpage">Frontpage</string>
+    <string name="format_search_results">Search results: %s</string>
+    <string name="message_loading_more_posts">Loading more posts&#8230;</string>
+
+    <!--comments page-->
+    <string name="activity_comments">Comments</string>
+    <string name="format_points"><xliff:g id="time_since_posting">%d</xliff:g> points</string>
+    <string name="message_error_loading_comments">An error occurred while retrieving comments</string>
+
+    <!--browser page-->
+    <string name="activity_link">Browser</string>
+
+    <!--Go to subreddit dialog-->
+    <string name="sr_go_to_hint">Enter subreddit name</string>
+    <string name="go">Go</string>
+
+    <!--Search posts dialog-->
+    <string name="sr_search_posts_hint">Enter search term</string>
+    <string name="search">Search</string>
+    <string name="format_limit_to">Limit to r/%s</string>
+
+    <!--Add subreddit dialog-->
+    <!--<string name="sr_add_hint">Enter subreddit to search</string>-->
+    <string name="add">Add</string>
+    <string name="message_subreddit_added">Subreddit added</string>
+    <string name="message_subreddit_banned">That subreddit has been banned</string>
+    <string name="message_subreddit_not_valid">That subreddit does not exist</string>
+
+    <string name="cancel">Cancel</string>
+
+    <!--Time elapsed formatting-->
+    <string name="format_minuteselapsed"><xliff:g id="minutes_since_posting">%d</xliff:g> min</string>
+    <string name="format_hourselapsed"><xliff:g id="hours_since_posting">%d</xliff:g> hrs</string>
+    <string name="format_hour"><xliff:g id="hour_since_posting">%d</xliff:g> hr</string>
+    <string name="format_dayselapsed"><xliff:g id="days_since_posting">%d</xliff:g> days</string>
+    <string name="format_day"><xliff:g id="day_since_posting">%d</xliff:g> day</string>
+    <string name="format_weekselapsed"><xliff:g id="weeks_since_posting">%d</xliff:g> wks</string>
+    <string name="format_week"><xliff:g id="week_since_posting">%d</xliff:g> wk</string>
+    <string name="format_monthselapsed"><xliff:g id="months_since_posting">%d</xliff:g> months</string>
+    <string name="format_month"><xliff:g id="month_since_posting">%d</xliff:g> month</string>
+    <string name="format_yearselapsed"><xliff:g id="years_since_posting">%d</xliff:g> yrs</string>
+    <string name="format_year"><xliff:g id="years_since_posting">%d</xliff:g> yr</string>
+
+    <string name="sort_hot">hot</string>
+    <string name="sort_new">new</string>
+    <string name="sort_rising">rising</string>
+    <string name="sort_top">top</string>
+    <string name="sort_confidence">confidence</string>
+    <string name="sort_controversial">controversial</string>
+    <string name="sort_old">old</string>
+    <string name="sort_qa">qa</string>
+
+    <string name="theme.reddit">Reddit</string>
+    <string name="theme.desert">Desert</string>
+    <string name="theme.ocean">Ocean</string>
+    <string name="theme.coffee">Coffee</string>
+    <string name="theme.apples">Apples</string>
+    <string name="theme.blueberry">Blueberry</string>
+    <string name="theme.strawberries">Berries and cream</string>
+    <string name="theme.coastal">Coastal holiday</string>
+    <string name="theme.dark">Dark 1</string>
+
+    <string-array name="sort_listing_options">
+        <item>hot</item>
+        <item>new</item>
+        <item>rising</item>
+        <item>top</item>
+    </string-array>
+
+    <!--Preferences-->
+    <string name="pref_subreddit_list">sp_SubList</string>
+    <string name="pref_reload_subreddits">sp_RelSubs</string>
+    <string name="pref_current_subreddit">sp_CurSub</string>
+    <string name="pref_theme">theme_setting</string>
+    <string name="pref_boolean_use_tablet_layout">tablet_boolean</string>
+
+    <string name="error_while_loading_posts">An error occurred while loading posts</string>
+    <string name="refresh">Refresh</string>
+    <string name="retry">Retry</string>
+
+    <string name="widget_empty">Something went wrong. Open app to refresh widget.</string>
+</resources>

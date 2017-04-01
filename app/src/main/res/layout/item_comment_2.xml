@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/c_d_2_margin"
+                android:layout_marginStart="@dimen/c_d_2_margin"
+                android:paddingLeft="@dimen/comment_start_padding"
+                android:paddingStart="@dimen/comment_start_padding"
+                android:paddingEnd="0dp"
+                android:paddingRight="0dp"
+    android:background="@color/indigo_300">
+
+    <include layout="@layout/item_comment"/>
+
+</RelativeLayout>

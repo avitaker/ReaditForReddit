@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Transition names-->
+    <string name="transitionName_Post" translatable="false">postInfo</string>
+    <string name="transitionName_PostBg" translatable="false">postBg</string>
+</resources>
