@@ -623,9 +623,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     menu.findItem(i).setChecked(true);
                 }
             }
-            if (mRedditListings==null){
-                onRefresh();
-            } else if (mRedditListings.size()==0){
+            if (RedditListing.listAll(RedditListing.class).size()<=0){
                 onRefresh();
             }
         }
