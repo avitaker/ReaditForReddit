@@ -34,7 +34,6 @@ import io.realm.RealmList;
 import io.realm.RealmResults;
 import timber.log.Timber;
 
-import static android.provider.Contacts.SettingsColumns.KEY;
 import static com.avinashdavid.readitforreddit.MiscUtils.Constants.BROADCAST_SUBREDDIT_WIDGET;
 
 /**
@@ -54,6 +53,7 @@ public class GetListingsService extends IntentService {
     public static final String EXTRA_LOAD_AFTER = "extraLoadAfter";
 
     public static final String EXTRA_FOR_WIDGET = "extraforw";
+    public static final String EXTRA_RANDOM = "extraRand";
 
     private static final String QUERY_AFTER = "after";
 
@@ -69,7 +69,7 @@ public class GetListingsService extends IntentService {
     private static final String DOMAIN_KEY = "domain";
     private static final String AUTHOR_KEY = "author";
     private static final String TIME_CREATED_KEY = "created_utc";
-    private static final String SUBREDDIT_KEY = "subreddit_name_prefixed";
+    private static final String SUBREDDIT_KEY = "subreddit";
     private static final String URL_KEY = "url";
     private static final String SELFTEXT_HTML = "selftext_html";
     private static final String THUMBNAIL_URL = "thumbnail";
@@ -83,6 +83,7 @@ public class GetListingsService extends IntentService {
     protected void onHandleIntent(final Intent intent) {
         mUrl = intent.getParcelableExtra(EXTRA_URL);
         final boolean haveToSendWidgetData = intent.getBooleanExtra(EXTRA_FOR_WIDGET, false);
+        final boolean isRandom = intent.getBooleanExtra(EXTRA_RANDOM, false);
         Timber.d(mUrl.toString());
         mLoadAfter = intent.getStringExtra(EXTRA_LOAD_AFTER);
         if (null!=mLoadAfter){
@@ -131,7 +132,11 @@ public class GetListingsService extends IntentService {
                                     }
                                 }
                                 Intent localIntent = new Intent();
-                                localIntent.setAction(Constants.BROADCAST_POSTS_LOADED);
+                                if (!isRandom) {
+                                    localIntent.setAction(Constants.BROADCAST_POSTS_LOADED);
+                                } else {
+                                    localIntent.setAction(Constants.BROADCAST_RANDOM_SUBREDDIT_POSTS_LOADED);
+                                }
                                 sendBroadcast(localIntent);
                                 if (haveToSendWidgetData){
                                     Timber.d("have to send widget data");
@@ -164,7 +169,7 @@ public class GetListingsService extends IntentService {
         Uri url = UriGenerator.getUriPosts(subreddit, sorting, limit, after);
         intent.putExtra(GetListingsService.EXTRA_URL, url);
         if (forWidget){
-            intent.putExtra(EXTRA_FOR_WIDGET, forWidget);
+            intent.putExtra(EXTRA_FOR_WIDGET, true);
         }
         context.startService(intent);
     }
@@ -192,4 +197,11 @@ public class GetListingsService extends IntentService {
         return realmResults;
     }
 
+    public static void loadListingsRandom(Context context){
+        Intent intent = new Intent(context, GetListingsService.class);
+        Uri url = UriGenerator.getUriPosts("random", null, 0, null);
+        intent.putExtra(GetListingsService.EXTRA_URL, url);
+        intent.putExtra(GetListingsService.EXTRA_RANDOM, true);
+        context.startService(intent);
+    }
 }

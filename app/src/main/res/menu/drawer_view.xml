@@ -15,6 +15,12 @@
             android:orderInCategory="0"
             android:id="@+id/add.subscription"
             android:title="@string/add_subscription"/>
+
+        <item
+            android:orderInCategory="0"
+            android:id="@+id/random.subreddit"
+            android:title="@string/go_to_random"/>
+
     </group>
 
     <group

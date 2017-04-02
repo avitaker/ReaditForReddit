@@ -5,7 +5,7 @@
     <item android:id="@+id/sort.by"
           android:title="@string/sort"
           android:icon="@drawable/ic_sort_white_24dp"
-          app:showAsAction="always">
+          app:showAsAction="ifRoom">
         <menu>
 
             <group android:id="@+id/sort.options" android:checkableBehavior="single">
@@ -30,7 +30,7 @@
     <item android:id="@+id/add.this.subreddit"
           android:title="@string/addThisSubreddit"
           android:icon="@drawable/ic_add_white_24dp"
-          app:showAsAction="ifRoom"/>
+          app:showAsAction="never"/>
 
     <item android:id="@+id/change.theme"
           android:title="@string/change.theme"

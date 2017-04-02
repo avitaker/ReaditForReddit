@@ -6,6 +6,7 @@
     <string name="go_to">Go to subreddit</string>
     <string name="search_posts">Search posts</string>
     <string name="add_subscription">Add subreddit subscription</string>
+    <string name="go_to_random">Random subreddit</string>
 
     <!--Main page options menu-->
     <string name="sort">Sort</string>
@@ -15,7 +16,7 @@
     <!--listings page-->
     <string name="format_numberofcomments"><xliff:g id="number_of_comments">%d</xliff:g> comments</string>
     <string name="frontpage">Frontpage</string>
-    <string name="format_search_results">Search results: %s</string>
+    <string name="format_search_results">Search: %s</string>
     <string name="message_loading_more_posts">Loading more posts&#8230;</string>
 
     <!--comments page-->

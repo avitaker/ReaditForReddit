@@ -8,6 +8,7 @@ public class Constants {
     public static final String BROADCAST_SUBREDDITS_LOADED = "com.avinashdavid.readitforreddit.BROADCAST_SUBREDDITS_LOADED";
     public static final String BROADCAST_COMMENTS_LOADED = "com.avinashdavid.readitforreddit.BROADCAST_COMMENTS";
     public static final String BROADCAST_POSTS_LOADED = "com.avinashdavid.readitforreddit.BROADCAST_POSTS";
+    public static final String BROADCAST_RANDOM_SUBREDDIT_POSTS_LOADED = "com.avinashdavid.readitforreddit.BROADCAST_RANDOM_SUBREDDIT";
     public static final String BROADCAST_ERROR_WHILE_RETREIVING_POSTS = "com.avinashdavid.readitforreddit.BROADCAST_ERROR_POSTS";
     public static final String BROADCAST_SUBREDDIT_WIDGET = "com.avinashdavid.readitforreddit.BROADCAST_SUBREDDIT";
     public static final String BROADCAST_NO_SUCH_SUBREDDIT = "com.avinashdavid.readitforreddit.NO_SUCH_SUBREDDIT";

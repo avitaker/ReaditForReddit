@@ -222,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 String action = intent.getAction();
                 if (Constants.BROADCAST_POSTS_LOADED.equals(action)) {
                     if (mAfter == null) {
-                        refreshUI();
+                        refreshUI(false);
                     } else {
                         mRedditListings.clear();
                         mRedditListings.addAll(RedditListing.listAll(RedditListing.class));
@@ -238,6 +238,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     mySnackbar.show();
                 } else if (Constants.BROADCAST_SUBREDDITS_LOADED.equals(action)){
                     setSubredditsInNavigationView("");
+                } else if (Constants.BROADCAST_RANDOM_SUBREDDIT_POSTS_LOADED.equals(action)){
+                    refreshUI(true);
                 }
             }
         };
@@ -272,7 +274,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         };
         mAddSubIntentFilter = new IntentFilter();
 
-        //TODO Finish tablet layout from here
         if (usingTabletLayout){
             mCommentsRecyclerview = (RecyclerView)findViewById(R.id.comment_recyclerview);
             mCommentsLinearLayoutManager = new LinearLayoutManager(this);
@@ -351,6 +352,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mPostsIntentFilter.addAction(Constants.BROADCAST_POSTS_LOADED);
         mPostsIntentFilter.addAction(Constants.BROADCAST_ERROR_WHILE_RETREIVING_POSTS);
         mPostsIntentFilter.addAction(Constants.BROADCAST_SUBREDDITS_LOADED);
+        mPostsIntentFilter.addAction(Constants.BROADCAST_RANDOM_SUBREDDIT_POSTS_LOADED);
         registerReceiver(mPostsBroadcastReceiver, mPostsIntentFilter);
 
         mAddSubIntentFilter.addAction(Constants.BROADCAST_SUBREDDIT_BANNED);
@@ -615,7 +617,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         } else {
             String[] subreddits = rawString.split(PreferenceUtils.SUBREDDIT_SEPARATOR);
-//            menu.removeGroup(R.id.subreddits_group);
             for (int i = 0; i < subreddits.length; i++){
                 subTitle = subreddits[i];
                 menu.add(R.id.subreddits_group, i, 1, subTitle).setCheckable(true).setChecked(false);
@@ -676,6 +677,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             openSearchDialog();
         } else if (itemId == R.id.add_subscription){
             openAddSubDialog();
+        } else if (itemId == R.id.random_subreddit){
+            GetListingsService.loadListingsRandom(this);
+            mListingRecyclerview.setAdapter(null);
+            mSwipeRefreshLayout.setRefreshing(true);
         }
         else {
             mAfter = null;
@@ -710,7 +715,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mAfter = null;
 //        findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
         mListingRecyclerview.setAdapter(null);
-        initUi(mSubredditString, mSearchQueryString, mSortString, mRestrictSearchBoolean, true);
+
+        GetListingsService.loadListingsSearch(this, mSubredditString, mSearchQueryString, mAfter, mSortString, mRestrictSearchBoolean);
+        if (mSearchQueryString==null) {
+            mCollapsingToolbarLayout.setTitle(mSubredditString == null ? getString(R.string.frontpage) : mSubredditString);
+        } else {
+            mCollapsingToolbarLayout.setTitle(getString(R.string.format_search_results, mSearchQueryString));
+        }
 //        mSwipeRefreshLayout.setRefreshing(false);
     }
 
@@ -724,12 +735,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mSearchQueryString = null;
         setDefaultSubreddit(mSubredditString);
         mSwipeRefreshLayout.setRefreshing(true);
-//        mRealm.executeTransaction(new Realm.Transaction() {
-//            @Override
-//            public void execute(Realm realm) {
-//                mRealm.where(RedditPost.class).findAll().deleteAllFromRealm();
-//            }
-//        });
+
         deleteAll(RedditListing.class);
         onRefresh();
     }
@@ -793,15 +799,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    void refreshUI(){
+    void refreshUI(boolean isRandom){
         mRedditListings = RedditListing.listAll(RedditListing.class);
         mListingRecyclerAdapter = new RedditPostRecyclerAdapter(this, mRedditListings);
 
+        if (isRandom){
+            mSubredditString = mRedditListings.get(0).subreddit;
+            mCollapsingToolbarLayout.setTitle(mSubredditString);
+        }
+
         mListingRecyclerAdapter.setHasStableIds(true);
         mSwipeRefreshLayout.setRefreshing(false);
-//        findViewById(R.id.loadingPanel).setVisibility(View.GONE);
         mListingRecyclerview.setAdapter(mListingRecyclerAdapter);
-//        findViewById(R.id.swipeRefreshLayout).invalidate();
         itemCount = mRedditListings.size();
     }
 
