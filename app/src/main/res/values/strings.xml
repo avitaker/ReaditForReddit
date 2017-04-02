@@ -39,8 +39,10 @@
     <!--<string name="sr_add_hint">Enter subreddit to search</string>-->
     <string name="add">Add</string>
     <string name="message_subreddit_added">Subreddit added</string>
+    <string name="message_subreddit_present">You are already subscribed to this subreddit</string>
     <string name="message_subreddit_banned">That subreddit has been banned</string>
     <string name="message_subreddit_not_valid">That subreddit does not exist</string>
+    <string name="message_cant_add_search">You cannot subscribe to search results</string>
 
     <string name="cancel">Cancel</string>
 

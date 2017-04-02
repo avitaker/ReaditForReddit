@@ -1,14 +1,11 @@
 package com.avinashdavid.readitforreddit;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
@@ -30,7 +27,6 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
 import com.avinashdavid.readitforreddit.MiscUtils.PreferenceUtils;
@@ -223,7 +219,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (loadingSnack.isShown()){
                     loadingSnack.dismiss();
                 }
-                if (Constants.BROADCAST_POSTS_LOADED.equals(intent.getAction())) {
+                String action = intent.getAction();
+                if (Constants.BROADCAST_POSTS_LOADED.equals(action)) {
                     if (mAfter == null) {
                         refreshUI();
                     } else {
@@ -233,12 +230,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         mListingRecyclerAdapter.notifyItemRangeInserted(itemCount, 20);
                         itemCount = mRedditListings.size();
                     }
-                } else if (Constants.BROADCAST_ERROR_WHILE_RETREIVING_POSTS.equals(intent.getAction())){
+                } else if (Constants.BROADCAST_ERROR_WHILE_RETREIVING_POSTS.equals(action)){
                     mSwipeRefreshLayout.setRefreshing(false);
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.activity_main),
                             R.string.error_while_loading_posts, Snackbar.LENGTH_LONG);
                     mySnackbar.setAction(R.string.retry, new MyRefreshListener());
                     mySnackbar.show();
+                } else if (Constants.BROADCAST_SUBREDDITS_LOADED.equals(action)){
+                    setSubredditsInNavigationView("");
                 }
             }
         };
@@ -249,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 Activity activity = MainActivity.this;
-                if (action.equals(Constants.BROADCAST_SUBREDDIT_VALID)) {
+                if (action.equals(Constants.BROADCAST_SUBREDDIT_ADDED)) {
                     Timber.d("received subreddit valid broadcast");
                     mApplicationSharedPreferences.edit().putBoolean(getString(R.string.pref_reload_subreddits), true).commit();
                     setSubredditsInNavigationView("");
@@ -259,6 +258,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Snackbar.make(findViewById(R.id.activity_main),
                             R.string.message_subreddit_added, Snackbar.LENGTH_LONG).show();
 //                    Toast.makeText(activity, "Subreddit added", Toast.LENGTH_LONG).show();
+                } else if (action.equals(Constants.BROADCAST_SUBREDDIT_PRESENT)){
+                    Snackbar.make(findViewById(R.id.activity_main),
+                            R.string.message_subreddit_present, Snackbar.LENGTH_LONG).show();
                 } else if (action.equals(Constants.BROADCAST_SUBREDDIT_BANNED)){
                     Snackbar.make(findViewById(R.id.activity_main),
                             R.string.message_subreddit_banned, Snackbar.LENGTH_LONG).show();
@@ -348,11 +350,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mPostsIntentFilter.addAction(Constants.BROADCAST_POSTS_LOADED);
         mPostsIntentFilter.addAction(Constants.BROADCAST_ERROR_WHILE_RETREIVING_POSTS);
+        mPostsIntentFilter.addAction(Constants.BROADCAST_SUBREDDITS_LOADED);
         registerReceiver(mPostsBroadcastReceiver, mPostsIntentFilter);
 
         mAddSubIntentFilter.addAction(Constants.BROADCAST_SUBREDDIT_BANNED);
-        mAddSubIntentFilter.addAction(Constants.BROADCAST_SUBREDDIT_VALID);
+        mAddSubIntentFilter.addAction(Constants.BROADCAST_SUBREDDIT_ADDED);
         mAddSubIntentFilter.addAction(Constants.BROADCAST_NO_SUCH_SUBREDDIT);
+        mAddSubIntentFilter.addAction(Constants.BROADCAST_SUBREDDIT_PRESENT);
         registerReceiver(mAddSubBroadcastReceiver, mAddSubIntentFilter);
 
         if (usingTabletLayout){
@@ -513,10 +517,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             }
             case R.id.add_this_subreddit:{
-                Uri url = UriGenerator.getUriSubredditAbout(mSubredditString);
-                Intent intent = new Intent(this, CheckNewSubredditService.class);
-                intent.putExtra(CheckNewSubredditService.EXTRA_URL, url);
-                startService(intent);
+                if (mSearchQueryString==null) {
+                    Uri url = UriGenerator.getUriSubredditAbout(mSubredditString);
+                    Intent intent = new Intent(this, CheckNewSubredditService.class);
+                    intent.putExtra(CheckNewSubredditService.EXTRA_URL, url);
+                    startService(intent);
+                } else {
+                    Snackbar.make(findViewById(R.id.activity_main), R.string.message_cant_add_search, Snackbar.LENGTH_LONG).show();
+                }
+                return true;
             }
             case R.id.theme_default:{
                 PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_DEFAULT);
@@ -613,6 +622,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (subTitle.equals(mSubredditString)){
                     menu.findItem(i).setChecked(true);
                 }
+            }
+            if (mRedditListings==null){
+                onRefresh();
+            } else if (mRedditListings.size()==0){
+                onRefresh();
             }
         }
     }
@@ -801,7 +815,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startService(intent);
     }
 
-    class UpdateCommentsPaneAsyncTask extends GetCommentsAsyncTask{
+    private class UpdateCommentsPaneAsyncTask extends GetCommentsAsyncTask{
         @Override
         protected void onPostExecute(List<CommentRecord> commentRecords) {
             mCommentRecords = CommentRecord.listAll(CommentRecord.class);

@@ -13,13 +13,11 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
 import com.avinashdavid.readitforreddit.SubredditUtils.SubredditObject;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmList;
-import io.realm.RealmResults;
 import timber.log.Timber;
 
 /**
@@ -65,74 +63,82 @@ public class CheckNewSubredditService extends IntentService {
         if (mUrl == null){
             return;
         }
-        final Context context = CheckNewSubredditService.this.getApplicationContext();
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mUrl.toString(), null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    if (response.getString("kind") == null) {
-                        Intent intent = new Intent();
-                        intent.setAction(Constants.BROADCAST_SUBREDDIT_BANNED);
-                        sendBroadcast(intent);
-                        return;
-                    } else {
-                        if (response.getString("kind").equals("t5")){
-                            JSONObject data = response.getJSONObject("data");
-                            if (data!=null){
-                                String subredditName = data.getString(DISPLAY_NAME_KEY);
-                                String publicDesc = data.getString(PUBLIC_DESCRIPTION_KEY);
-                                String subredditType = data.getString(SUBREDDIT_TYPE_KEY);
-                                boolean goodForKids = data.getBoolean(NSFW_KEY);
-                                String title = data.getString(TITLE_KEY);
-                                String headerImg = data.getString(HEADER_IMG_KEY);
 
-                                final SubredditObject subreeeed = new SubredditObject();
-                                subreeeed.setSubredditName(subredditName);
-                                subreeeed.setPublicDescription(publicDesc);
-                                subreeeed.setSubredditType(subredditType);
-                                subreeeed.setSafeForKids(goodForKids);
-                                subreeeed.setTitle(title);
-                                subreeeed.setHeaderImgUrl(headerImg);
-                                subreeeed.setTimestamp(System.currentTimeMillis());
+        String subreddit = mUrl.getPathSegments().get(mUrl.getPathSegments().size()-2);
+        if (mRealm.where(SubredditObject.class).equalTo("subredditName", subreddit).findAll().size()>0){
+            Intent intent1 = new Intent(Constants.BROADCAST_SUBREDDIT_PRESENT);
+            sendBroadcast(intent1);
+        }
+        else {
+            final Context context = CheckNewSubredditService.this.getApplicationContext();
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mUrl.toString(), null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        if (response.getString("kind") == null) {
+                            Intent intent = new Intent();
+                            intent.setAction(Constants.BROADCAST_SUBREDDIT_BANNED);
+                            sendBroadcast(intent);
+                            return;
+                        } else {
+                            if (response.getString("kind").equals("t5")) {
+                                JSONObject data = response.getJSONObject("data");
+                                if (data != null) {
+                                    String subredditName = data.getString(DISPLAY_NAME_KEY);
+                                    String publicDesc = data.getString(PUBLIC_DESCRIPTION_KEY);
+                                    String subredditType = data.getString(SUBREDDIT_TYPE_KEY);
+                                    boolean goodForKids = data.getBoolean(NSFW_KEY);
+                                    String title = data.getString(TITLE_KEY);
+                                    String headerImg = data.getString(HEADER_IMG_KEY);
 
-                                mSubredditObjectRealmList.add(0, subreeeed);
-                                mRealm.executeTransaction(new Realm.Transaction() {
-                                    @Override
-                                    public void execute(Realm realm) {
-                                        mRealm.copyToRealmOrUpdate(mSubredditObjectRealmList);
-                                        Timber.d("adding subreddit");
-                                    }
-                                });
+                                    final SubredditObject subreeeed = new SubredditObject();
+                                    subreeeed.setSubredditName(subredditName);
+                                    subreeeed.setPublicDescription(publicDesc);
+                                    subreeeed.setSubredditType(subredditType);
+                                    subreeeed.setSafeForKids(goodForKids);
+                                    subreeeed.setTitle(title);
+                                    subreeeed.setHeaderImgUrl(headerImg);
+                                    subreeeed.setTimestamp(System.currentTimeMillis());
 
+                                    mSubredditObjectRealmList.add(0, subreeeed);
+                                    mRealm.executeTransaction(new Realm.Transaction() {
+                                        @Override
+                                        public void execute(Realm realm) {
+                                            mRealm.copyToRealmOrUpdate(mSubredditObjectRealmList);
+                                            Timber.d("adding subreddit");
+                                        }
+                                    });
+
+                                    Intent intent = new Intent();
+                                    intent.setAction(Constants.BROADCAST_SUBREDDIT_ADDED);
+                                    sendBroadcast(intent);
+                                    return;
+                                }
+                            } else {
                                 Intent intent = new Intent();
-                                intent.setAction(Constants.BROADCAST_SUBREDDIT_VALID);
+                                intent.setAction(Constants.BROADCAST_NO_SUCH_SUBREDDIT);
                                 sendBroadcast(intent);
                                 return;
                             }
-                        } else {
-                            Intent intent = new Intent();
-                            intent.setAction(Constants.BROADCAST_NO_SUCH_SUBREDDIT);
-                            sendBroadcast(intent);
-                            return;
                         }
+                        Intent intent = new Intent();
+                        intent.setAction(Constants.BROADCAST_NO_SUCH_SUBREDDIT);
+                        sendBroadcast(intent);
+                    } catch (Exception e) {
+                        Timber.e(e);
                     }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Timber.e(error);
                     Intent intent = new Intent();
                     intent.setAction(Constants.BROADCAST_NO_SUCH_SUBREDDIT);
-                    sendBroadcast(intent);
-                } catch (Exception e) {
-                    Timber.e(e);
+                    context.sendBroadcast(intent);
                 }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Timber.e(error);
-                Intent intent = new Intent();
-                intent.setAction(Constants.BROADCAST_NO_SUCH_SUBREDDIT);
-                context.sendBroadcast(intent);
-            }
-        });
-        NetworkSingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+            });
+            NetworkSingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+        }
     }
 
     @Override

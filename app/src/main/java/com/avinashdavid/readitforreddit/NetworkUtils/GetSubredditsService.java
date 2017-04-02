@@ -11,6 +11,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.avinashdavid.readitforreddit.MainActivity;
+import com.avinashdavid.readitforreddit.MiscUtils.Constants;
 import com.avinashdavid.readitforreddit.MiscUtils.RealmDataUtils;
 import com.avinashdavid.readitforreddit.PostUtils.CommentObject;
 import com.avinashdavid.readitforreddit.SubredditUtils.SubredditObject;
@@ -126,6 +127,8 @@ public class GetSubredditsService extends IntentService {
                                 mRealm.copyToRealmOrUpdate(mSubredditObjects);
                             }
                         });
+                        Intent doneIntent = new Intent(Constants.BROADCAST_SUBREDDITS_LOADED);
+                        GetSubredditsService.this.getApplicationContext().sendBroadcast(doneIntent);
                     }
 
                 }, new Response.ErrorListener() {
