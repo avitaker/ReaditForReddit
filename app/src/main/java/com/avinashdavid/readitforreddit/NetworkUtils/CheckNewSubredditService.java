@@ -64,12 +64,12 @@ public class CheckNewSubredditService extends IntentService {
             return;
         }
 
-        String subreddit = mUrl.getPathSegments().get(mUrl.getPathSegments().size()-2);
-        if (mRealm.where(SubredditObject.class).equalTo("subredditName", subreddit).findAll().size()>0){
-            Intent intent1 = new Intent(Constants.BROADCAST_SUBREDDIT_PRESENT);
-            sendBroadcast(intent1);
-        }
-        else {
+//        String subreddit = mUrl.getPathSegments().get(mUrl.getPathSegments().size()-2);
+//        if (mRealm.where(SubredditObject.class).equalTo("subredditName", subreddit).findAll().size()>0){
+//            Intent intent1 = new Intent(Constants.BROADCAST_SUBREDDIT_PRESENT);
+//            sendBroadcast(intent1);
+//        }
+//        else {
             final Context context = CheckNewSubredditService.this.getApplicationContext();
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, mUrl.toString(), null, new Response.Listener<JSONObject>() {
                 @Override
@@ -92,6 +92,11 @@ public class CheckNewSubredditService extends IntentService {
                                     String headerImg = data.getString(HEADER_IMG_KEY);
 
                                     final SubredditObject subreeeed = new SubredditObject();
+                                    if (mRealm.where(SubredditObject.class).equalTo("subredditName", subredditName).findAll().size()>0){
+                                        Intent intent1 = new Intent(Constants.BROADCAST_SUBREDDIT_PRESENT);
+                                        sendBroadcast(intent1);
+                                        return;
+                                    }
                                     subreeeed.setSubredditName(subredditName);
                                     subreeeed.setPublicDescription(publicDesc);
                                     subreeeed.setSubredditType(subredditType);
@@ -138,7 +143,7 @@ public class CheckNewSubredditService extends IntentService {
                 }
             });
             NetworkSingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
-        }
+//        }
     }
 
     @Override
