@@ -25,7 +25,98 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
 
-        <include layout="@layout/post_details"/>
+            <LinearLayout
+                android:background="?attr/colorPrimary"
+                android:id="@+id/post_info_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true"
+                app:layout_collapseMode="none"
+                android:orientation="vertical"
+                android:layout_marginTop="?attr/actionBarSize"
+                android:padding="@dimen/padding_listing_cardview"
+                android:gravity="bottom">
+
+                <RelativeLayout
+                    android:id="@+id/post_info_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    xmlns:android="http://schemas.android.com/apk/res/android">
+
+                    <LinearLayout
+                        android:id="@+id/postinfo1"
+                        android:layout_alignParentTop="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="bottom">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/voteCount_textview"
+                            style="@style/VoteCount"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/author_textview"
+                            style="@style/NormalWeightColorAccent"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/subreddit_textview"
+                            style="@style/NormalWeightColorAccent"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/listingTitle_textview"
+                        style="@style/PostDetails"
+                        android:layout_below="@+id/postinfo1"/>
+
+                    <LinearLayout
+                        android:id="@+id/third_linearlayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_below="@+id/listingTitle_textview"
+                        android:layout_alignParentBottom="true">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/numberOfComments_textview"
+                            style="@style/LittleCaptions"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/listing_domain_textview"
+                            style="@style/LittleCaptions"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/time_elapsed_textview"
+                            style="@style/LittleCaptions"/>
+
+                    </LinearLayout>
+
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/selftext_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    style="@style/SelftextContainer"/>
+
+            </LinearLayout>
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/my_toolbar"

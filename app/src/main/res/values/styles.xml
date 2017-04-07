@@ -83,8 +83,9 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="PostDetails" parent="TextAppearance.AppCompat.SearchResult.Subtitle">
+    <style name="PostDetails">
         <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="CommentText">
@@ -129,6 +130,7 @@
 
     <style name="SelftextContainer">
         <item name="android:paddingTop">@dimen/padding_comment_item</item>
+        <item name="android:paddingBottom">@dimen/padding_listing_cardview</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
 
