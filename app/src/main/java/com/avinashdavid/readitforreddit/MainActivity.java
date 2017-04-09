@@ -533,6 +533,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_DEFAULT);
                 return true;
             }
+            case R.id.theme_saturated:{
+                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_SATURATED);
+                return true;
+            }
             case R.id.theme_desert:{
                 PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_DESERT);
                 return true;

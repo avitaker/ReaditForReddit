@@ -27,6 +27,7 @@ public class PreferenceUtils {
 
     private static int sTheme;
     public final static int THEME_DEFAULT = 0;
+    public static final int THEME_SATURATED = 9;
     public final static int THEME_OCEAN = 1;
     public final static int THEME_COFFEE = 2;
     public static final int THEME_APPLES = 3;
@@ -77,6 +78,9 @@ public class PreferenceUtils {
                 break;
             case THEME_DESERT:
                 activity.setTheme(R.style.ThemeDesert);
+                break;
+            case THEME_SATURATED:
+                activity.setTheme(R.style.ThemeRedditSaturated);
                 break;
             default:
                 activity.setTheme(R.style.AppTheme);

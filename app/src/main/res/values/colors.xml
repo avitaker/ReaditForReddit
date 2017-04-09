@@ -67,4 +67,11 @@
     <color name="dark">#1E0000</color>
     <color name="grey_800">#424242</color>
     <color name="currant">#8c0004</color>
+
+    <!--Reddit saturated-->
+    <color name="reddit_saturated">#448AFF</color>
+    <color name="reddit_dark_saturated">#2979FF</color>
+    <color name="reddit_accent_saturated">#FF3D00</color>
+    <color name="reddit_light_blue_saturated">#82B1FF</color>
+    <color name="reddit_light_orange_saturated">#FF9E80</color>
 </resources>

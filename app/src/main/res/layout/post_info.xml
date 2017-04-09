@@ -59,13 +59,25 @@
             style="@style/PostTitle"
             android:layout_below="@+id/postinfo1"/>
 
-        <LinearLayout
-            android:id="@+id/third_linearlayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_below="@+id/listingTitle_textview"
-            android:layout_alignParentBottom="true">
+        <!--<LinearLayout-->
+            <!--android:id="@+id/third_linearlayout"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_below="@+id/listingTitle_textview"-->
+            <!--android:layout_alignParentBottom="true">-->
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/third_linearlayout"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:flexWrap="wrap"
+                app:alignItems="stretch"
+                app:alignContent="stretch"
+                android:layout_below="@+id/listingTitle_textview"
+                android:layout_alignParentBottom="true"
+                app:flexDirection="row">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -85,7 +97,9 @@
                 android:id="@+id/time_elapsed_textview"
                 style="@style/LittleCaptions"/>
 
-        </LinearLayout>
+            </com.google.android.flexbox.FlexboxLayout>
+
+        <!--</LinearLayout>-->
 
     </RelativeLayout>
 

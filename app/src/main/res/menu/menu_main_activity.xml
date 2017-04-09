@@ -39,6 +39,8 @@
         <menu>
             <item android:id="@+id/theme.default"
                   android:title="@string/theme.reddit"/>
+            <item android:id="@+id/theme.saturated"
+                  android:title="@string/theme.saturated"/>
             <item
                 android:id="@+id/theme.desert"
                 android:title="@string/theme.desert"/>
