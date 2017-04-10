@@ -23,10 +23,12 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.method.LinkMovementMethod;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
@@ -714,7 +716,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mListingRecyclerview.setAdapter(null);
 
         GetListingsService.loadListingsSearch(this, mSubredditString, mSearchQueryString, mAfter, mSortString, mRestrictSearchBoolean);
-        if (mSubredditString!=null) {
+        if (mSearchQueryString==null) {
             GetSubredditInfoService.loadSidebar(this, mSubredditString);
         }
         if (mSearchQueryString==null) {
@@ -859,6 +861,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void setSidebarText(TextView sidebarTextview){
         String textHtml = mApplicationSharedPreferences.getString(GetSubredditInfoService.KEY_DESCRIPTION_HTML, getString(R.string.pref_sidebar_default_value));
         sidebarTextview.setText(GeneralUtils.returnFormattedStringFromHtml(textHtml));
+        sidebarTextview.setMovementMethod(LinkMovementMethod.getInstance());
+        ((ScrollView)findViewById(R.id.sidebar_scrollview)).scrollTo(0,0);
     }
 
     @Override

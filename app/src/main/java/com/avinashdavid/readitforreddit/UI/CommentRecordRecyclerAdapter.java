@@ -212,6 +212,7 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
             author.setText(commentRecord.author);
             if (commentRecord.author.equals(postAuthor)){
                 author.setBackgroundResource(R.drawable.background_post_author);
+                author.setTextColor(mContext.getResources().getColor(R.color.milk));
             }
             if (commentRecord.scoreHidden){
                 score.setText("score hidden");

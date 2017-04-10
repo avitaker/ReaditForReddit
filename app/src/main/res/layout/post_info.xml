@@ -108,7 +108,8 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        style="@style/PostThumbnail"/>
+        style="@style/PostThumbnail"
+        android:scaleType="fitCenter"/>
     <!--<LinearLayout-->
         <!--android:layout_below="@+id/third_linearlayout"-->
         <!--android:layout_width="match_parent"-->
