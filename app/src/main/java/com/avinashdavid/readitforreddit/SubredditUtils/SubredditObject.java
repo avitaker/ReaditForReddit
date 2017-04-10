@@ -23,6 +23,8 @@ public class SubredditObject extends RealmObject {
 
     String headerImgUrl;
 
+    String sidebarTextHtml;
+
     public String getSubredditName() {
         return subredditName;
     }

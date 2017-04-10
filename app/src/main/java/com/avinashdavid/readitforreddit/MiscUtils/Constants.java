@@ -16,6 +16,8 @@ public class Constants {
     public static final String BROADCAST_SUBREDDIT_ADDED = "com.avinashdavid.readitforreddit.SUBREDDIT_ADDED";
     public static final String BROADCAST_SUBREDDIT_PRESENT = "com.avinashdavid.readitforreddit.SUBREDDIT_PRESENT";
     public static final String BROADCAST_ERROR_WHILE_LOADING_COMMENTS = "com.avinashdavid.readitforreddit.ERROR_LOADING_COMMENTS";
+    public static final String BROADCAST_SIDEBAR_ERROR = "com.avinashdavid.readitforreddit.SIDEBAR_ERROR";
+    public static final String BROADCAST_SIDEBAR = "com.avinashdavid.readitforreddit.SIDEBAR_LOADED";
 
     public static final String KEY_COMMENTS_FIRST_CHILD = "commentsScrollPos";
     public static final String KEY_COMMENTS_OFFSET = "commentsOffset";

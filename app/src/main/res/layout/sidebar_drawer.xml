@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_gravity="end"
+            android:fitsSystemWindows="true"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+    android:padding="@dimen/padding_listing_cardview">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/background_light">
+
+        <TextView
+            android:id="@+id/sidebar_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:text="@string/sidebar"
+            style="@style/SidebarHeader"/>
+
+        <TextView
+            android:id="@+id/sidebar_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="this is a test"
+            style="@style/SidebarContainer"/>
+
+    </LinearLayout>
+
+</ScrollView>

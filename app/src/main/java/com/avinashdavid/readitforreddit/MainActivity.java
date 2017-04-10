@@ -27,12 +27,15 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
+import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils;
 import com.avinashdavid.readitforreddit.MiscUtils.PreferenceUtils;
 import com.avinashdavid.readitforreddit.NetworkUtils.CheckNewSubredditService;
 import com.avinashdavid.readitforreddit.NetworkUtils.GetCommentsService;
 import com.avinashdavid.readitforreddit.NetworkUtils.GetListingsService;
+import com.avinashdavid.readitforreddit.NetworkUtils.GetSubredditInfoService;
 import com.avinashdavid.readitforreddit.NetworkUtils.GetSubredditsService;
 import com.avinashdavid.readitforreddit.NetworkUtils.UriGenerator;
 import com.avinashdavid.readitforreddit.PostUtils.CommentRecord;
@@ -130,6 +133,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     BroadcastReceiver mAddSubBroadcastReceiver;
     IntentFilter mAddSubIntentFilter;
 
+    BroadcastReceiver mSubredditInfoReceiver;
+    IntentFilter mSubredditInfoIntentFilter;
+
 
     /**
      * COMMENTS VARIABLES
@@ -197,6 +203,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mSubredditObjectRealmResults = mRealm.where(SubredditObject.class).findAll();
         String rawString = mApplicationSharedPreferences.getString(getString(R.string.pref_subreddit_list), "");
         setSubredditsInNavigationView(rawString);
+        setSidebarText((TextView)findViewById(R.id.sidebar_text));
 
         mNavigationView.setNavigationItemSelectedListener(this);
 
@@ -274,6 +281,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         };
         mAddSubIntentFilter = new IntentFilter();
 
+        mSubredditInfoReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                TextView sidebarText = (TextView)findViewById(R.id.sidebar_text);
+                String action = intent.getAction();
+
+                if (action.equals(Constants.BROADCAST_SIDEBAR)){
+                    setSidebarText(sidebarText);
+                } else if (action.equals(Constants.BROADCAST_SIDEBAR_ERROR)){
+                    sidebarText.setText(getString(R.string.error_loading_sidebar));
+                }
+            }
+        };
+        mSubredditInfoIntentFilter = new IntentFilter();
+
         if (usingTabletLayout){
             mCommentsRecyclerview = (RecyclerView)findViewById(R.id.comment_recyclerview);
             mCommentsLinearLayoutManager = new LinearLayoutManager(this);
@@ -307,7 +329,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         try {
             initUi(mSubredditString, mSearchQueryString, mSortString, mRestrictSearchBoolean, false);
         } finally {
-//            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
             mFirstChildPosition = mApplicationSharedPreferences.getInt(Constants.KEY_POSTS_SCROLL_POSITION, 0);
             mOffset = mApplicationSharedPreferences.getInt(Constants.KEY_POSTS_OFFSET, 0);
             mListingRecyclerview.scrollToPosition(mFirstChildPosition);
@@ -348,39 +369,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
-
-        mPostsIntentFilter.addAction(Constants.BROADCAST_POSTS_LOADED);
-        mPostsIntentFilter.addAction(Constants.BROADCAST_ERROR_WHILE_RETREIVING_POSTS);
-        mPostsIntentFilter.addAction(Constants.BROADCAST_SUBREDDITS_LOADED);
-        mPostsIntentFilter.addAction(Constants.BROADCAST_RANDOM_SUBREDDIT_POSTS_LOADED);
-        registerReceiver(mPostsBroadcastReceiver, mPostsIntentFilter);
-
-        mAddSubIntentFilter.addAction(Constants.BROADCAST_SUBREDDIT_BANNED);
-        mAddSubIntentFilter.addAction(Constants.BROADCAST_SUBREDDIT_ADDED);
-        mAddSubIntentFilter.addAction(Constants.BROADCAST_NO_SUCH_SUBREDDIT);
-        mAddSubIntentFilter.addAction(Constants.BROADCAST_SUBREDDIT_PRESENT);
-        registerReceiver(mAddSubBroadcastReceiver, mAddSubIntentFilter);
-
-        if (usingTabletLayout){
-            mCommentsIntentFilter.addAction(Constants.BROADCAST_COMMENTS_LOADED);
-            registerReceiver(mCommentsLoadedBroadcastReceiver, mCommentsIntentFilter);
-        }
+        startAllReceivers();
     }
 
     @Override
     protected void onPause() {
-        try {
-            unregisterReceiver(mPostsBroadcastReceiver);
-            unregisterReceiver(mAddSubBroadcastReceiver);
-        } catch (IllegalArgumentException e) {
-            if (e.getMessage().contains("Receiver not registered")) {
-                // Ignore this exception. This is exactly what is desired
-                Timber.d("Tried to unregister the receiver when it's not registered");
-            } else {
-                // unexpected, re-throw
-                throw e;
-            }
-        }
+        stopAllReceivers();
         View firstChild = mListingRecyclerview.getChildAt(0);
         if (firstChild!=null) {
             int firstVisiblePosition = mListingRecyclerview.getChildAdapterPosition(firstChild);
@@ -393,7 +387,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         if (usingTabletLayout){
-            unregisterReceiver(mCommentsLoadedBroadcastReceiver);
             View firstComment = mCommentsRecyclerview.getChildAt(0);
             if (firstComment!=null){
                 int firstVisiblePosition = mCommentsRecyclerview.getChildAdapterPosition(firstChild);
@@ -721,6 +714,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mListingRecyclerview.setAdapter(null);
 
         GetListingsService.loadListingsSearch(this, mSubredditString, mSearchQueryString, mAfter, mSortString, mRestrictSearchBoolean);
+        if (mSubredditString!=null) {
+            GetSubredditInfoService.loadSidebar(this, mSubredditString);
+        }
         if (mSearchQueryString==null) {
             mCollapsingToolbarLayout.setTitle(mSubredditString == null ? getString(R.string.frontpage) : mSubredditString);
         } else {
@@ -803,6 +799,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    void startAllReceivers(){
+        mPostsIntentFilter.addAction(Constants.BROADCAST_POSTS_LOADED);
+        mPostsIntentFilter.addAction(Constants.BROADCAST_ERROR_WHILE_RETREIVING_POSTS);
+        mPostsIntentFilter.addAction(Constants.BROADCAST_SUBREDDITS_LOADED);
+        mPostsIntentFilter.addAction(Constants.BROADCAST_RANDOM_SUBREDDIT_POSTS_LOADED);
+        registerReceiver(mPostsBroadcastReceiver, mPostsIntentFilter);
+
+        mAddSubIntentFilter.addAction(Constants.BROADCAST_SUBREDDIT_BANNED);
+        mAddSubIntentFilter.addAction(Constants.BROADCAST_SUBREDDIT_ADDED);
+        mAddSubIntentFilter.addAction(Constants.BROADCAST_NO_SUCH_SUBREDDIT);
+        mAddSubIntentFilter.addAction(Constants.BROADCAST_SUBREDDIT_PRESENT);
+        registerReceiver(mAddSubBroadcastReceiver, mAddSubIntentFilter);
+
+        mSubredditInfoIntentFilter.addAction(Constants.BROADCAST_SIDEBAR);
+        mSubredditInfoIntentFilter.addAction(Constants.BROADCAST_SIDEBAR_ERROR);
+        registerReceiver(mSubredditInfoReceiver, mSubredditInfoIntentFilter);
+
+        if (usingTabletLayout){
+            mCommentsIntentFilter.addAction(Constants.BROADCAST_COMMENTS_LOADED);
+            registerReceiver(mCommentsLoadedBroadcastReceiver, mCommentsIntentFilter);
+        }
+    }
+
+    void stopAllReceivers(){
+        try {
+            unregisterReceiver(mPostsBroadcastReceiver);
+            unregisterReceiver(mAddSubBroadcastReceiver);
+            unregisterReceiver(mSubredditInfoReceiver);
+            if (usingTabletLayout){
+                unregisterReceiver(mCommentsLoadedBroadcastReceiver);
+            }
+        } catch (IllegalArgumentException e) {
+            if (e.getMessage().contains("Receiver not registered")) {
+                // Ignore this exception. This is exactly what is desired
+                Timber.d("Tried to unregister the receiver when it's not registered");
+            } else {
+                // unexpected, re-throw
+                throw e;
+            }
+        }
+    }
+
     void refreshUI(boolean isRandom){
         mRedditListings = RedditListing.listAll(RedditListing.class);
         mListingRecyclerAdapter = new RedditPostRecyclerAdapter(this, mRedditListings);
@@ -816,6 +854,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mSwipeRefreshLayout.setRefreshing(false);
         mListingRecyclerview.setAdapter(mListingRecyclerAdapter);
         itemCount = mRedditListings.size();
+    }
+
+    public void setSidebarText(TextView sidebarTextview){
+        String textHtml = mApplicationSharedPreferences.getString(GetSubredditInfoService.KEY_DESCRIPTION_HTML, getString(R.string.pref_sidebar_default_value));
+        sidebarTextview.setText(GeneralUtils.returnFormattedStringFromHtml(textHtml));
     }
 
     @Override

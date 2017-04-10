@@ -69,6 +69,12 @@
     <string name="sort_old">old</string>
     <string name="sort_qa">qa</string>
 
+    <string name="sidebar">Sidebar</string>
+    <!--<string name="refresh_sidebar"></string>-->
+    <string name="loading_sidebar">Loading sidebar content&#8230;</string>
+    <string name="error_loading_sidebar">Error occurred while loading sidebar content</string>
+    <string name="pref_sidebar_default_value">@string/loading_sidebar</string>
+
     <string name="theme.reddit">Reddit</string>
     <string name="theme.saturated">Reddit Saturated</string>
     <string name="theme.desert">Desert</string>
