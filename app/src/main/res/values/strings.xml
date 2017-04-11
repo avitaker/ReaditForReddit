@@ -19,9 +19,13 @@
     <string name="format_search_results">Search: %s</string>
     <string name="message_loading_more_posts">Loading more posts&#8230;</string>
 
+    <string name="in"> in </string>
+    <string name="format_subreddit">r/%s</string>
+
     <!--comments page-->
     <string name="activity_comments">Comments</string>
     <string name="format_points"><xliff:g id="time_since_posting">%d</xliff:g> points</string>
+    <string name="score_hidden">score hidden</string>
     <string name="message_error_loading_comments">An error occurred while retrieving comments</string>
 
     <!--browser page-->
@@ -40,6 +44,7 @@
     <!--<string name="sr_add_hint">Enter subreddit to search</string>-->
     <string name="add">Add</string>
     <string name="message_subreddit_added">Subreddit added</string>
+    <string name="cannot_subscribe_to_frontpage">You cannot subscribe to the frontpage</string>
     <string name="message_subreddit_present">You are already subscribed to this subreddit</string>
     <string name="message_subreddit_banned">That subreddit has been banned</string>
     <string name="message_subreddit_not_valid">That subreddit does not exist</string>
@@ -48,6 +53,7 @@
     <string name="cancel">Cancel</string>
 
     <!--Time elapsed formatting-->
+    <string name="just_now">just now</string>
     <string name="format_minuteselapsed"><xliff:g id="minutes_since_posting">%d</xliff:g> min</string>
     <string name="format_hourselapsed"><xliff:g id="hours_since_posting">%d</xliff:g> hrs</string>
     <string name="format_hour"><xliff:g id="hour_since_posting">%d</xliff:g> hr</string>

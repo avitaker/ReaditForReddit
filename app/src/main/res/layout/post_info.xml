@@ -41,13 +41,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/author_textview"
-                style="@style/BoldCaptions"/>
+                style="@style/BoldCaptionsAccent"/>
+
+                <TextView
+                    android:text="@string/in"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/BoldCaptions"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/subreddit_textview"
-                style="@style/BoldCaptions"/>
+                style="@style/BoldCaptionsAccent"/>
             </com.google.android.flexbox.FlexboxLayout>
 
         <!--</LinearLayout>-->

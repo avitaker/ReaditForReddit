@@ -24,7 +24,7 @@ public class GeneralUtils {
         long millisecondsDifference = timeNow - (long)(timeThen*1000);
         int num = 0;
         if (millisecondsDifference<60000){
-            return context.getString(R.string.format_minuteselapsed, (int)(millisecondsDifference/60000));
+            return context.getString(R.string.just_now);
         } else if (millisecondsDifference>=60000 && millisecondsDifference<3.6e6){
             return context.getString(R.string.format_minuteselapsed, (int)(millisecondsDifference/60000));
         } else if (millisecondsDifference>=3.6e6 && millisecondsDifference<8.64e7){

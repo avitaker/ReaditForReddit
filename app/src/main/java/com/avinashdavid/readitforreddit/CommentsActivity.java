@@ -392,10 +392,34 @@ public class CommentsActivity extends AppCompatActivity {
 
     }
 
-    void setToolbarPostInfo(RedditListing listing){
+    void setToolbarPostInfo(final RedditListing listing){
         voteCount_textview.setText(Integer.toString(listing.voteCount));
         author_textview.setText(listing.author);
-        subreddit_textview.setText(listing.subreddit);
+        final String sub = listing.subreddit;
+        subreddit_textview.setText(getString(R.string.format_subreddit, sub));
+        subreddit_textview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                try {
+                    if (!sp.getString(getString(R.string.pref_current_subreddit), null).equals(sub)){
+                        sp.edit().putString(getString(R.string.pref_current_subreddit), sub).commit();
+                        RedditListing.deleteAll(RedditListing.class);
+                        Intent intent = new Intent(CommentsActivity.this, MainActivity.class);
+                        intent.putExtra(MainActivity.EXTRA_SUBREDDIT_NAME, sub);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    }
+                } catch (NullPointerException e){
+                    sp.edit().putString(getString(R.string.pref_current_subreddit), sub).commit();
+                    RedditListing.deleteAll(RedditListing.class);
+                    Intent intent = new Intent(CommentsActivity.this, MainActivity.class);
+                    intent.putExtra(MainActivity.EXTRA_SUBREDDIT_NAME, sub);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }
+            }
+        });
         listTitle_textview.setText(GeneralUtils.returnFormattedStringFromHtml(listing.mTitle));
         commentCount_textview.setText(getString(R.string.format_numberofcomments, listing.commentsCount));
         domain_textview.setText(listing.domain);

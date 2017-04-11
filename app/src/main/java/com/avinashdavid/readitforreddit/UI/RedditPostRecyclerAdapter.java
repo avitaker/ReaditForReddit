@@ -9,10 +9,13 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -81,17 +84,7 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
         if (getItemViewType(position)==VIEW_TYPE_NORMAL) {
             final RedditListing redditPost = mRedditListings.get(position);
             holder.bindListing(redditPost);
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-//                    Intent i = new Intent(mMainActivity, LinkActivity.class);
-//                    i.putExtra(LinkActivity.EXTRA_URL, redditPost.url);
-                    Timber.d(redditPost.url);
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(GeneralUtils.returnFormattedStringFromHtml(redditPost.url).toString()));
-                    mMainActivity.startActivity(browserIntent);
-                    return true;
-                }
-            });
+
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -107,6 +100,19 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
                     }
                 }
             });
+
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+//                    Intent i = new Intent(mMainActivity, LinkActivity.class);
+//                    i.putExtra(LinkActivity.EXTRA_URL, redditPost.url);
+                    Timber.d(redditPost.url);
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(GeneralUtils.returnFormattedStringFromHtml(redditPost.url).toString()));
+                    mMainActivity.startActivity(browserIntent);
+                    return true;
+                }
+            });
+
         }
     }
 
@@ -192,7 +198,7 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
             }
             voteCount_textview.setText(Integer.toString(listing.voteCount));
             author_textview.setText(listing.author);
-            subreddit_textview.setText(listing.subreddit);
+            subreddit_textview.setText(mContext.getString(R.string.format_subreddit, listing.subreddit));
             listTitle_textview.setText(GeneralUtils.returnFormattedStringFromHtml(listing.mTitle));
             commentCount_textview.setText(mContext.getString(R.string.format_numberofcomments, listing.commentsCount));
             domain_textview.setText(listing.domain);

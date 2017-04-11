@@ -70,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     int itemCount=20;
 
+    public static final String EXTRA_SUBREDDIT_NAME = "extraSubName";
+
     private static final String KEY_SUBREDDIT_NAME = "sr_name_SI";
     private static final String KEY_AFTER = "after_SI";
     private static final String KEY_SORT = "sort_SI";
@@ -322,6 +324,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mCommentsIntentFilter = new IntentFilter();
             mItemCount = 0;
         }
+
+        if (getIntent().getStringExtra(EXTRA_SUBREDDIT_NAME)!=null){
+            mSwipeRefreshLayout.setRefreshing(true);
+            onRefresh();
+        }
     }
 
     @Override
@@ -475,12 +482,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main_activity, menu);
-//        String[] sortStrings = getResources().getStringArray(R.array.sort_listing_options);
-//        MenuItem menuItem = menu.findItem(R.id.sort_by);
-//        SubMenu subMenu = menuItem.getSubMenu();
-//        for (int i = 0; i < sortStrings.length; i++){
-//            subMenu.add(R.id.sort_options, i+1, i, sortStrings[i]);
-//        }
         return true;
     }
 
@@ -515,10 +516,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             case R.id.add_this_subreddit:{
                 if (mSearchQueryString==null) {
-                    Uri url = UriGenerator.getUriSubredditAbout(mSubredditString);
-                    Intent intent = new Intent(this, CheckNewSubredditService.class);
-                    intent.putExtra(CheckNewSubredditService.EXTRA_URL, url);
-                    startService(intent);
+                    if (mSubredditString!=null) {
+                        Uri url = UriGenerator.getUriSubredditAbout(mSubredditString);
+                        Intent intent = new Intent(this, CheckNewSubredditService.class);
+                        intent.putExtra(CheckNewSubredditService.EXTRA_URL, url);
+                        startService(intent);
+                    } else {
+                        Snackbar.make(findViewById(R.id.activity_main), R.string.cannot_subscribe_to_frontpage, Snackbar.LENGTH_LONG).show();
+                    }
                 } else {
                     Snackbar.make(findViewById(R.id.activity_main), R.string.message_cant_add_search, Snackbar.LENGTH_LONG).show();
                 }
@@ -733,13 +738,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void OnGoToDialogPositiveClick(DialogFragment dialogFragment, String query) {
-        mSubredditString = query;
-        mSearchQueryString = null;
-        setDefaultSubreddit(mSubredditString);
-        mSwipeRefreshLayout.setRefreshing(true);
+        if (query.length()>0) {
+            mSubredditString = query;
+            mSearchQueryString = null;
+            setDefaultSubreddit(mSubredditString);
+            mSwipeRefreshLayout.setRefreshing(true);
 
-        deleteAll(RedditListing.class);
-        onRefresh();
+            deleteAll(RedditListing.class);
+            onRefresh();
+        }
     }
 
     @Override
@@ -867,10 +874,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void OnAddDialogPositiveClick(DialogFragment dialogFragment, String query) {
-        Uri url = UriGenerator.getUriSubredditAbout(query);
-        Intent intent = new Intent(this, CheckNewSubredditService.class);
-        intent.putExtra(CheckNewSubredditService.EXTRA_URL, url);
-        startService(intent);
+        if (query.length()>0) {
+            Uri url = UriGenerator.getUriSubredditAbout(query);
+            Intent intent = new Intent(this, CheckNewSubredditService.class);
+            intent.putExtra(CheckNewSubredditService.EXTRA_URL, url);
+            startService(intent);
+        }
     }
 
     private class UpdateCommentsPaneAsyncTask extends GetCommentsAsyncTask{

@@ -215,7 +215,7 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
                 author.setTextColor(mContext.getResources().getColor(R.color.milk));
             }
             if (commentRecord.scoreHidden){
-                score.setText("score hidden");
+                score.setText(mContext.getString(R.string.score_hidden));
             } else {
                 score.setText(mContext.getString(R.string.format_points, commentRecord.score));
             }

@@ -7,15 +7,15 @@
     android:background="@color/milk">
 
     <com.google.android.flexbox.FlexboxLayout
-        android:id="@+id/info_linear_layout"
-        android:layout_alignParentTop="true"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:flexWrap="wrap"
-        app:alignItems="stretch"
-        app:alignContent="stretch"
-        app:flexDirection="row">
+    android:id="@+id/info_linear_layout"
+    android:layout_alignParentTop="true"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:flexWrap="wrap"
+    app:alignItems="stretch"
+    app:alignContent="stretch"
+    app:flexDirection="row">
 
         <TextView
             android:layout_width="wrap_content"
@@ -24,7 +24,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:id="@+id/author"
-            style="@style/BoldCaptions"/>
+            style="@style/BoldCaptionsAccent"/>
 
         <TextView
             android:layout_width="wrap_content"
