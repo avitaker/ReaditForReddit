@@ -1,5 +1,6 @@
 package com.avinashdavid.readitforreddit.UI;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.avinashdavid.readitforreddit.MiscUtils.GPSUtils;
 import com.avinashdavid.readitforreddit.R;
 
 /**
@@ -41,8 +43,9 @@ public class GoToDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+        Activity activity = getActivity();
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        LayoutInflater inflater = activity.getLayoutInflater();
 
         View v= inflater.inflate(R.layout.dialog_go_to_subreddit, null);
 
@@ -64,6 +67,8 @@ public class GoToDialogFragment extends DialogFragment {
                         mGoToDialogListener.OnGoToDialogNegativeClick(GoToDialogFragment.this);
                     }
                 });
+
+        GPSUtils.setScreenName(activity, GoToDialogFragment.class.getSimpleName());
         return builder.create();
     }
 }

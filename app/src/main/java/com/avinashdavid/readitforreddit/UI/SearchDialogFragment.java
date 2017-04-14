@@ -16,6 +16,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.avinashdavid.readitforreddit.MainActivity;
+import com.avinashdavid.readitforreddit.MiscUtils.GPSUtils;
 import com.avinashdavid.readitforreddit.R;
 
 /**
@@ -78,6 +79,7 @@ public class SearchDialogFragment extends DialogFragment {
                         mSearchDialogListener.OnSearchDialogNegativeClick(SearchDialogFragment.this);
                     }
                 });
+        GPSUtils.setScreenName(activity, SearchDialogFragment.class.getSimpleName());
         return builder.create();
     }
 }

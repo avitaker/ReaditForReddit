@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
+import com.avinashdavid.readitforreddit.MiscUtils.GPSUtils;
 import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils;
 import com.avinashdavid.readitforreddit.MiscUtils.PreferenceUtils;
 import com.avinashdavid.readitforreddit.NetworkUtils.GetCommentsService;
@@ -125,6 +126,7 @@ public class CommentsActivity extends AppCompatActivity {
         PreferenceUtils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_comments);
 
+        GPSUtils.setScreenName(this, "CommentsActivity");
         Timber.d("oncreate");
         mIntent = getIntent();
         if (mIntent==null && null == savedInstanceState.getString(EXTRA_POST_ID)){

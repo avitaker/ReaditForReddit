@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.avinashdavid.readitforreddit.MiscUtils.GPSUtils;
 import com.avinashdavid.readitforreddit.R;
 
 /**
@@ -61,7 +62,7 @@ public class AddSubredditDialogFragment extends DialogFragment {
                 getDialog().cancel();
             }
         });
-
+        GPSUtils.setScreenName(activity, AddSubredditDialogFragment.class.getSimpleName());
         return builder.create();
     }
 }

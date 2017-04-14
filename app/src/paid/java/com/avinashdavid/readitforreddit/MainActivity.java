@@ -32,6 +32,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
+import com.avinashdavid.readitforreddit.MiscUtils.GPSUtils;
 import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils;
 import com.avinashdavid.readitforreddit.MiscUtils.PreferenceUtils;
 import com.avinashdavid.readitforreddit.NetworkUtils.CheckNewSubredditService;
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Realm mRealm;
 
     Snackbar loadingSnack;
-    
+
     private String mAfter;
 
     public boolean haveToReloadSubreddits;
@@ -160,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Timber.d("onCreate");
         PreferenceUtils.onActivityCreateSetTheme(this);
         setContentView(R.layout.drawer_main_activity);
+        GPSUtils.setScreenName(this, "MainActivityPaid");
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             postponeEnterTransition();
         }
@@ -204,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startRealm();
 
 
-        mSubredditObjectRealmResults = mRealm.where(SubredditObject.class).findAll();
+        mSubredditObjectRealmResults = mRealm.where(SubredditObject.class).findAll().sort("subredditName");
         String rawString = mApplicationSharedPreferences.getString(getString(R.string.pref_subreddit_list), "");
         setSubredditsInNavigationView(rawString);
         setSidebarText((TextView)findViewById(R.id.sidebar_text));
@@ -223,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         RecyclerView.ItemDecoration mDividerItemDecoration = new DividerItemDecoration(this, mListingsLinearLayoutManager.getOrientation());
 
         mListingRecyclerview.addItemDecoration(mDividerItemDecoration);
-        
+
         mPostsBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -267,7 +269,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     setSubredditsInNavigationView("");
                     activity.unregisterReceiver(mAddSubBroadcastReceiver);
                     activity.finish();
-                    activity.startActivity(new Intent(activity, activity.getClass()));
+                    Intent intent1 = new Intent(activity, activity.getClass());
+                    intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    activity.startActivity(intent1);
                     Snackbar.make(findViewById(R.id.activity_main),
                             R.string.message_subreddit_added, Snackbar.LENGTH_LONG).show();
 //                    Toast.makeText(activity, "Subreddit added", Toast.LENGTH_LONG).show();
@@ -598,7 +602,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (mRealm == null){
                 startRealm();
             }
-            mSubredditObjectRealmResults = mRealm.where(SubredditObject.class).findAll();
+            mSubredditObjectRealmResults = mRealm.where(SubredditObject.class).findAll().sort("subredditName");
             if (mSubredditObjectRealmResults.size()<=0) {
                 getSubredditsForNavigationMenu(null, null);
 //                setSubredditsInNavigationView("");
@@ -670,7 +674,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mSwipeRefreshLayout.post(new Runnable() {
                 @Override
                 public void run() {
-                mSwipeRefreshLayout.setRefreshing(true);
+                    mSwipeRefreshLayout.setRefreshing(true);
                     deleteAll(RedditListing.class);
                     onRefresh();
                 }
