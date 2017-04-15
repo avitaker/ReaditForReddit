@@ -76,4 +76,22 @@ public class CommentRecord extends SugarRecord {
         cv.put(ReaditContract.CommentEntry.COLUMN_AUTHOR_FLAIR_TEXT, commentRecord.authorFlairText);
         return cv;
     }
+
+    public static CommentRecord makeCommentRecord(@NonNull ContentValues cv){
+        String id = cv.getAsString(ReaditContract.CommentEntry.COLUMN_COMMENT_ID);
+        long timestamp = cv.getAsLong(ReaditContract.CommentEntry.COLUMN_TIMESTAMP);
+        String postId = cv.getAsString(ReaditContract.CommentEntry.COLUMN_POST_ID);
+        boolean scoreHidden = cv.getAsBoolean(ReaditContract.CommentEntry.COLUMN_SCORE_HIDDEN);
+        int score = cv.getAsInteger(ReaditContract.CommentEntry.COLUMN_SCORE);
+        String author = cv.getAsString(ReaditContract.CommentEntry.COLUMN_COMMENT_AUTHOR);
+        String bodyHtml = cv.getAsString(ReaditContract.CommentEntry.COLUMN_BODY_HTML);
+        String parent = cv.getAsString(ReaditContract.CommentEntry.COLUMN_PARENT);
+        float timeCreated = cv.getAsFloat(ReaditContract.CommentEntry.COLUMN_TIME_CREATED);
+        int depth = cv.getAsInteger(ReaditContract.CommentEntry.COLUMN_DEPTH);
+        boolean hasReplies = cv.getAsBoolean(ReaditContract.CommentEntry.COLUMN_HAS_REPLIES);
+        String flairText = cv.getAsString(ReaditContract.CommentEntry.COLUMN_AUTHOR_FLAIR_TEXT);
+        return new CommentRecord(timestamp, id, postId, scoreHidden, score, author, bodyHtml, parent, timeCreated, depth, hasReplies, flairText);
+    }
+
+
 }

@@ -140,12 +140,16 @@ public class GetListingsService extends IntentService {
                                     localIntent.setAction(Constants.BROADCAST_RANDOM_SUBREDDIT_POSTS_LOADED);
                                 }
                                 sendBroadcast(localIntent);
-                                if (haveToSendWidgetData){
-                                    Timber.d("have to send widget data");
+//                                if (haveToSendWidgetData){
+//                                    Timber.d("have to send widget data");
+//
+//                                    Intent broadcastIntent = new Intent(BROADCAST_SUBREDDIT_WIDGET);
+//                                    context.sendBroadcast(broadcastIntent);
+//                                }
+                                Timber.d("have to send widget data");
 
-                                    Intent broadcastIntent = new Intent(BROADCAST_SUBREDDIT_WIDGET);
-                                    context.sendBroadcast(broadcastIntent);
-                                }
+                                Intent broadcastIntent = new Intent(BROADCAST_SUBREDDIT_WIDGET);
+                                context.sendBroadcast(broadcastIntent);
                             }
                         }
                         catch (Exception e){

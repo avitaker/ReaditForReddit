@@ -37,7 +37,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/listingTitle_textview"
         android:layout_below="@+id/first"
-        style="@style/PostTitle"/>
+        style="@style/PostTitle"
+        android:textColor="@android:color/black"/>
 
     <LinearLayout
         android:id="@+id/second"

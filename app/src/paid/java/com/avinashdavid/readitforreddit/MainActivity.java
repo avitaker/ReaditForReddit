@@ -861,6 +861,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (isRandom){
             mSubredditString = mRedditListings.get(0).subreddit;
             mCollapsingToolbarLayout.setTitle(mSubredditString);
+            mApplicationSharedPreferences.edit().putString(getString(R.string.pref_current_subreddit), mSubredditString).apply();
         }
 
         mListingRecyclerAdapter.setHasStableIds(true);

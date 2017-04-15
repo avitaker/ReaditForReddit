@@ -451,7 +451,7 @@ public class CommentsActivity extends AppCompatActivity implements LoaderManager
                 errorSnack.dismiss();
                 errorSnack = null;
             }
-//            getSupportLoaderManager().getLoader(0).onContentChanged();
+
             mCommentRecords = CommentRecord.listAll(CommentRecord.class);
             mItemCount = mCommentRecords.size();
 
