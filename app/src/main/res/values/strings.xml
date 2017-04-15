@@ -50,6 +50,11 @@
     <string name="message_subreddit_not_valid">That subreddit does not exist</string>
     <string name="message_cant_add_search">You cannot subscribe to search results</string>
 
+    <!--Post options dialog-->
+    <string name="post_options">Post options</string>
+    <string name="open_in_browser">Open link</string>
+    <string name="view_subreddit">Go to %s</string>
+
     <string name="cancel">Cancel</string>
 
     <!--Time elapsed formatting-->
@@ -111,4 +116,5 @@
     <string name="retry">Retry</string>
 
     <string name="widget_empty">Something went wrong. Open app to refresh widget.</string>
+
 </resources>

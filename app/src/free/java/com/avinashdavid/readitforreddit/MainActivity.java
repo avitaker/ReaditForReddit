@@ -174,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         AdView adView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
                 .setRequestAgent("android_studio:ad_template")
+                .addTestDevice("574B1C5FFDA76F22AB8378A71AB6BDA4")
                 .build();
         adView.loadAd(adRequest);
 

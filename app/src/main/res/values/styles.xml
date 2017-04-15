@@ -166,4 +166,13 @@
     <style name="SidebarContainer">
         <item name="android:padding">@dimen/padding_listing_cardview</item>
     </style>
+
+    <style name="PostOptionsItem">
+        <item name="android:paddingTop">@dimen/padding_listing_cardview</item>
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingBottom">@dimen/padding_listing_cardview</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Widget.ActionBar.Menu</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
 </resources>

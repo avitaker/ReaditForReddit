@@ -34,6 +34,7 @@ import io.realm.RealmList;
 import io.realm.RealmResults;
 import timber.log.Timber;
 
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 import static com.avinashdavid.readitforreddit.MiscUtils.Constants.BROADCAST_SUBREDDIT_WIDGET;
 
 /**
@@ -73,6 +74,7 @@ public class GetListingsService extends IntentService {
     private static final String URL_KEY = "url";
     private static final String SELFTEXT_HTML = "selftext_html";
     private static final String THUMBNAIL_URL = "thumbnail";
+
 //    private RealmList<RedditPost> mRedditPosts;
 
     public GetListingsService() {
@@ -128,7 +130,7 @@ public class GetListingsService extends IntentService {
 
                                         RedditListing redditListing = new RedditListing(postId, System.currentTimeMillis(), title, voteCount, commentCount, author, subreddit, timeCreated, selftext, domain, afterResponse, url, thumbnailUrl);
                                         redditListing.save();
-
+//                                        getContentResolver().query(redditListing.)
                                     }
                                 }
                                 Intent localIntent = new Intent();

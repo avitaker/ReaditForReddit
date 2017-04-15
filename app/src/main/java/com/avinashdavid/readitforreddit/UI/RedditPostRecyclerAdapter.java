@@ -4,15 +4,20 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.util.Pair;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -35,6 +40,8 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import timber.log.Timber;
+
+import static android.support.v7.widget.AppCompatDrawableManager.get;
 
 /**
  * Created by avinashdavid on 3/17/17.
@@ -64,6 +71,7 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
                     + " must implement ScrollListener");
         }
         usingTabletLayout = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_boolean_use_tablet_layout),false);
+
     }
 
 
@@ -106,9 +114,16 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
                 public boolean onLongClick(View v) {
 //                    Intent i = new Intent(mMainActivity, LinkActivity.class);
 //                    i.putExtra(LinkActivity.EXTRA_URL, redditPost.url);
-                    Timber.d(redditPost.url);
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(GeneralUtils.returnFormattedStringFromHtml(redditPost.url).toString()));
-                    mMainActivity.startActivity(browserIntent);
+                    FragmentManager fm = mMainActivity.getSupportFragmentManager();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    Fragment prev = fm.findFragmentByTag("dialog");
+                    if (prev != null) {
+                        ft.remove(prev);
+                    }
+                    ft.addToBackStack(null);
+
+                    PostOptionsDialogFragment newFragment = PostOptionsDialogFragment.newInstance(GeneralUtils.returnFormattedStringFromHtml(redditPost.url).toString(), redditPost.subreddit);
+                    newFragment.show(ft, PostOptionsDialogFragment.TAG_POST_OPTIONS);
                     return true;
                 }
             });

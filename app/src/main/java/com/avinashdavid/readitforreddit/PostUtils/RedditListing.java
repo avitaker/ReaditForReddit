@@ -1,5 +1,9 @@
 package com.avinashdavid.readitforreddit.PostUtils;
 
+import android.content.ContentValues;
+import android.support.annotation.NonNull;
+
+import com.avinashdavid.readitforreddit.Data.ReaditContract;
 import com.orm.SugarRecord;
 
 /**
@@ -45,5 +49,23 @@ public class RedditListing extends SugarRecord {
         this.after = after;
         this.url = url;
         this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public static ContentValues makeContentValues(@NonNull RedditListing redditListing){
+        ContentValues cv = new ContentValues();
+        cv.put(ReaditContract.RedditListingEntry.COLUMN_POST_ID, redditListing.mPostId);
+        cv.put(ReaditContract.RedditListingEntry.COLUMN_TIMESTAMP, redditListing.timestamp);
+        cv.put(ReaditContract.RedditListingEntry.COLUMN_TITLE, redditListing.mTitle);
+        cv.put(ReaditContract.RedditListingEntry.COLUMN_VOTE_COUNT, redditListing.voteCount);
+        cv.put(ReaditContract.RedditListingEntry.COLUMN_COMMENTS_COUNT, redditListing.commentsCount);
+        cv.put(ReaditContract.RedditListingEntry.COLUMN_AUTHOR, redditListing.author);
+        cv.put(ReaditContract.RedditListingEntry.COLUMN_SUBREDDIT, redditListing.subreddit);
+        cv.put(ReaditContract.RedditListingEntry.COLUMN_TIME_CREATED, redditListing.timeCreated);
+        cv.put(ReaditContract.RedditListingEntry.COLUMN_SELFTEXT_HTML, redditListing.selftext_html);
+        cv.put(ReaditContract.RedditListingEntry.COLUMN_DOMAIN, redditListing.domain);
+        cv.put(ReaditContract.RedditListingEntry.COLUMN_AFTER, redditListing.after);
+        cv.put(ReaditContract.RedditListingEntry.COLUMN_URL, redditListing.url);
+        cv.put(ReaditContract.RedditListingEntry.COLUMN_THUMBNAIL_URL, redditListing.thumbnailUrl);
+        return cv;
     }
 }
