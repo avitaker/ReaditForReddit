@@ -24,10 +24,7 @@ import com.avinashdavid.readitforreddit.R;
 
 import java.util.ArrayList;
 
-import io.realm.Realm;
 import timber.log.Timber;
-
-import static android.R.attr.id;
 
 /**
  * Created by avinashdavid on 3/16/17.
@@ -46,7 +43,6 @@ public class SubredditWidgetProvider extends AppWidgetProvider {
         Timber.d("maybe updaing widget");
 
         if (Constants.BROADCAST_SUBREDDIT_WIDGET.equals(intent.getAction())) {
-            Timber.e("getting broadcast");
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, getClass()));
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_listview);
@@ -88,16 +84,6 @@ public class SubredditWidgetProvider extends AppWidgetProvider {
             remoteViews.setPendingIntentTemplate(R.id.widget_listview, clickPendingIntentTemplate);
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
 
-//            // Create an Intent to launch ExampleActivity
-//
-//
-//            // Get the layout for the App Widget and attach an on-click listener
-//            // to the button
-//            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_subreddit);
-//            views.setOnClickPendingIntent(R.id.widget_recyclerview, pendingIntent);
-//
-//            // Tell the AppWidgetManager to perform an update on the current app widget
-//            appWidgetManager.updateAppWidget(appWidgetId, views);
         }
     }
 

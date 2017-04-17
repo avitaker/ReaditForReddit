@@ -1,31 +1,20 @@
 package com.avinashdavid.readitforreddit.Widget;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Binder;
 import android.widget.ListView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.avinashdavid.readitforreddit.CommentsActivity;
-import com.avinashdavid.readitforreddit.MiscUtils.Constants;
 import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils;
-import com.avinashdavid.readitforreddit.NetworkUtils.GetListingsService;
 import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
-import com.avinashdavid.readitforreddit.PostUtils.RedditPost;
 import com.avinashdavid.readitforreddit.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
-import io.realm.RealmResults;
 import timber.log.Timber;
-
-import static android.R.attr.data;
-import static android.R.style.Widget;
 
 /**
  * Created by avinashdavid on 3/16/17.
@@ -81,9 +70,9 @@ public class SubredditWidgetRemoteViewsService extends RemoteViewsService {
 //                Timber.d("HARHAR" + mArrayLists.get(0).get(Constants.INDEX_TITLE_SUBREDDIT_WIDGET));
                 Context context = SubredditWidgetRemoteViewsService.this;
                 RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.item_widget);
-                String voteCount = context.getString(R.string.format_points, redditPost.voteCount);
+                String voteCount = Integer.toString(redditPost.voteCount);
                 String author= redditPost.author;
-                String subreddit = redditPost.subreddit;
+                String subreddit = context.getString(R.string.format_subreddit, redditPost.subreddit);
                 String title = redditPost.mTitle;
                 String numComments = context.getString(R.string.format_numberofcomments,redditPost.commentsCount);
                 String domain = redditPost.domain;

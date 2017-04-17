@@ -13,6 +13,7 @@ public class ReaditContract {
     public static final String PATH_AFTER = "after";
     public static final String PATH_SORT = "sort";
     public static final String PATH_POST_ID = "postId";
+    public static final String PATH_COMMENT_ID = "commentId";
 
     private ReaditContract() {
     }
@@ -35,20 +36,24 @@ public class ReaditContract {
 
         public static Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/listings");
 
-        public static Uri getUriSubreddit(String subredditName){
+        private static Uri getUriSubreddit(String subredditName){
             return CONTENT_URI.buildUpon().appendPath(subredditName).build();
         }
 
-        public static Uri getUriAfter(String after){
+        private static Uri getUriAfter(String after){
             return CONTENT_URI.buildUpon().appendPath(PATH_AFTER).appendPath(after).build();
         }
 
-        public static Uri getUriSort(String sort, @Nullable String after){
+        private static Uri getUriSort(String sort, @Nullable String after){
             if (after!=null){
                 return getUriAfter(after).buildUpon().appendPath(PATH_SORT).appendPath(sort).build();
             } else {
                 return CONTENT_URI.buildUpon().appendPath(PATH_SORT).appendPath(sort).build();
             }
+        }
+
+        public static Uri getUriPostId(String postId){
+            return CONTENT_URI.buildUpon().appendPath(PATH_POST_ID).appendPath(postId).build();
         }
     }
 
@@ -71,6 +76,10 @@ public class ReaditContract {
 
         public static Uri getUriComments(String postId){
             return CONTENT_URI.buildUpon().appendPath(PATH_POST_ID).appendPath(postId).build();
+        }
+
+        public static Uri getUriCommentId(String commentId){
+            return CONTENT_URI.buildUpon().appendPath(PATH_COMMENT_ID).appendPath(commentId).build();
         }
     }
 }

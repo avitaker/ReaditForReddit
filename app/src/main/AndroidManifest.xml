@@ -56,6 +56,11 @@
         <service android:name=".NetworkUtils.CheckNewSubredditService"/>
         <service android:name=".NetworkUtils.GetSubredditInfoService"/>
         <activity android:name=".LinkActivity"/>
+        <provider
+            android:authorities="com.avinashdavid.readitforreddit"
+            android:name=".Data.ReaditProvider"
+            android:readPermission="android.permission.permRead"
+            android:exported="true"/>
     </application>
 
 </manifest>

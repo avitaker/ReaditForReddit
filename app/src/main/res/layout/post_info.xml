@@ -35,25 +35,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/voteCount_textview"
-                style="@style/VoteCount"/>
+                style="@style/VoteCount"
+                android:gravity="bottom"/>
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:id="@+id/author_textview"
-                style="@style/BoldCaptionsAccent"/>
+                style="@style/BoldCaptionsAccent"
+                android:gravity="bottom"/>
 
                 <TextView
                     android:text="@string/in"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/BoldCaptions"/>
+                    style="@style/BoldCaptions"
+                    android:gravity="bottom"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/subreddit_textview"
-                style="@style/BoldCaptionsAccent"/>
+                style="@style/BoldCaptionsAccent"
+                android:gravity="bottom"/>
             </com.google.android.flexbox.FlexboxLayout>
 
         <!--</LinearLayout>-->
