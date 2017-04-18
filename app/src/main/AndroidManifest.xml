@@ -59,7 +59,6 @@
         <provider
             android:authorities="com.avinashdavid.readitforreddit"
             android:name=".Data.ReaditProvider"
-            android:readPermission="android.permission.permRead"
             android:exported="true"/>
     </application>
 

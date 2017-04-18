@@ -1,6 +1,7 @@
 package com.avinashdavid.readitforreddit.Data;
 
 import android.content.ContentProvider;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -13,6 +14,8 @@ import com.avinashdavid.readitforreddit.PostUtils.CommentRecord;
 import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 
 import java.util.List;
+
+import timber.log.Timber;
 
 /**
  * Created by avinashdavid on 4/14/17.
@@ -45,6 +48,19 @@ public class ReaditProvider extends ContentProvider {
             ReaditContract.CommentEntry.COLUMN_AUTHOR_FLAIR_TEXT
     };
 
+    public static final int COLUMN_TIMESTAMP = 0;
+    public static final int COLUMN_COMMENT_ID = 1;
+    public static final int COLUMN_POST_ID = 2;
+    public static final int COLUMN_SCORE_HIDDEN = 3;
+    public static final int COLUMN_SCORE = 4;
+    public static final int COLUMN_COMMENT_AUTHOR = 5;
+    public static final int COLUMN_BODY_HTML = 6;
+    public static final int COLUMN_PARENT = 7;
+    public static final int COLUMN_TIME_CREATED = 8;
+    public static final int COLUMN_DEPTH = 9;
+    public static final int COLUMN_HAS_REPLIES = 10;
+    public static final int COLUMN_AUTHOR_FLAIR_TEXT = 11;
+
     public static final String[] LISTING_CURSOR_COLUMNS = new String[]{
             ReaditContract.RedditListingEntry.COLUMN_POST_ID,
             ReaditContract.RedditListingEntry.COLUMN_TIMESTAMP,
@@ -65,12 +81,12 @@ public class ReaditProvider extends ContentProvider {
     private SQLiteDatabase db;
 
     static {
-        sUriMatcher.addURI(ReaditContract.AUTHORITY, "*", CODE_LISTINGS_SUBREDDIT);
+        sUriMatcher.addURI(ReaditContract.AUTHORITY, "listings"+ "/*", CODE_LISTINGS_SUBREDDIT);
         sUriMatcher.addURI(ReaditContract.AUTHORITY, "listings/" +ReaditContract.PATH_AFTER + "/*", CODE_LISTINGS_AFTER);
         sUriMatcher.addURI(ReaditContract.AUTHORITY, "listings/" +ReaditContract.PATH_SORT + "/*", CODE_LISTINGS_SORT);
         sUriMatcher.addURI(ReaditContract.AUTHORITY, "listings/" +ReaditContract.PATH_AFTER + "/*/" + ReaditContract.PATH_SORT + "/*", CODE_LISTINGS_SORT_AND_AFTER);
         sUriMatcher.addURI(ReaditContract.AUTHORITY, "listings/" + ReaditContract.PATH_POST_ID +"/*", CODE_LISTING_ID);
-        sUriMatcher.addURI(ReaditContract.AUTHORITY, "comments/" +ReaditContract.PATH_POST_ID + "/*", CODE_COMMENTS);
+        sUriMatcher.addURI(ReaditContract.AUTHORITY, ReaditContract.PATH_COMMENTS + "/*", CODE_COMMENTS);
         sUriMatcher.addURI(ReaditContract.AUTHORITY, "comments/" + ReaditContract.PATH_COMMENT_ID + "/*", CODE_COMMENT_ID);
         sUriMatcher.addURI(ReaditContract.AUTHORITY, "comments", CODE_COMMENTS_ALL);
         sUriMatcher.addURI(ReaditContract.AUTHORITY, "listings", CODE_LISTINGS_ALL);
@@ -91,20 +107,21 @@ public class ReaditProvider extends ContentProvider {
         ContentValues cv;
         List<RedditListing> redditListings;
         List<CommentRecord> commentRecords;
+        Timber.d("querying uri: " + Integer.toString(sUriMatcher.match(uri)));
         switch (sUriMatcher.match(uri)){
             case CODE_COMMENTS:
-                queryId = uri.getPathSegments().get(2);
-                commentRecords = CommentRecord.find(CommentRecord.class, "linkId = ?", queryId);
-                db.delete(ReaditContract.RedditListingEntry.TABLE_NAME, null, null);
-                for (int i=0; i< commentRecords.size(); i++){
-                    CommentRecord record = commentRecords.get(i);
-                    if (record==null){
-                        continue;
-                    }
-                    cv = CommentRecord.makeContentValues(record);
-                    db.insertOrThrow(ReaditContract.CommentEntry.TABLE_NAME, null, cv);
-                }
-                cursor = db.query(ReaditContract.CommentEntry.TABLE_NAME, COMMENT_CURSOR_COLUMNS, null, null, null, null, null);
+                queryId = uri.getPathSegments().get(1);
+//                commentRecords = CommentRecord.find(CommentRecord.class, "linkId = ?", queryId);
+//                db.delete(ReaditContract.RedditListingEntry.TABLE_NAME, null, null);
+//                for (int i=0; i< commentRecords.size(); i++){
+//                    CommentRecord record = commentRecords.get(i);
+//                    if (record==null){
+//                        continue;
+//                    }
+//                    cv = CommentRecord.makeContentValues(record);
+//                    db.insertOrThrow(ReaditContract.CommentEntry.TABLE_NAME, null, cv);
+//                }
+                cursor = db.query(ReaditContract.CommentEntry.TABLE_NAME, COMMENT_CURSOR_COLUMNS, ReaditContract.CommentEntry.COLUMN_POST_ID + " = ?", new String[]{queryId}, null, null, null);
                 break;
             case CODE_COMMENT_ID:
                 queryId = uri.getPathSegments().get(2);
@@ -116,7 +133,7 @@ public class ReaditProvider extends ContentProvider {
                 db.delete(ReaditContract.CommentEntry.TABLE_NAME, null, null);
                 cv = CommentRecord.makeContentValues(record);
                 db.insertOrThrow(ReaditContract.CommentEntry.TABLE_NAME, null, cv);
-                cursor = db.query(ReaditContract.CommentEntry.TABLE_NAME, COMMENT_CURSOR_COLUMNS, null, null, null, null, null);
+                cursor = db.query(ReaditContract.CommentEntry.TABLE_NAME, COMMENT_CURSOR_COLUMNS, ReaditContract.CommentEntry.COLUMN_COMMENT_ID, new String[]{queryId}, null, null, null);
                 break;
             case CODE_COMMENTS_ALL:
                 commentRecords = CommentRecord.listAll(CommentRecord.class);
@@ -141,7 +158,7 @@ public class ReaditProvider extends ContentProvider {
                 db.delete(ReaditContract.RedditListingEntry.TABLE_NAME, null, null);
                 cv = RedditListing.makeContentValues(listing);
                 db.insertOrThrow(ReaditContract.RedditListingEntry.TABLE_NAME, null, cv);
-                cursor = db.query(ReaditContract.RedditListingEntry.TABLE_NAME, LISTING_CURSOR_COLUMNS, null, null, null, null, null);
+                cursor = db.query(ReaditContract.RedditListingEntry.TABLE_NAME, LISTING_CURSOR_COLUMNS, ReaditContract.RedditListingEntry.COLUMN_POST_ID + " = ?", new String[]{queryId}, null, null, null);
                 break;
             case CODE_LISTINGS_ALL:
                 redditListings = RedditListing.listAll(RedditListing.class);
@@ -160,6 +177,14 @@ public class ReaditProvider extends ContentProvider {
                 cursor = null;
                 break;
         }
+        try {
+            ContentResolver cr = getContext().getContentResolver();
+            if (cursor!=null) {
+                cursor.setNotificationUri(cr, uri);
+            }
+        } catch (NullPointerException e){
+            Timber.e(e);
+        }
         return cursor;
     }
 
@@ -172,12 +197,113 @@ public class ReaditProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-        return null;
+        db = mReaditDBHelper.getWritableDatabase();
+        Timber.d(uri.toString());
+        String queryId;
+        ContentResolver cr;
+        try {
+            cr = getContext().getContentResolver();
+        } catch (NullPointerException e){
+            Timber.e(e);
+            return null;
+        }
+        Timber.d(Integer.toString(sUriMatcher.match(uri)));
+        switch (sUriMatcher.match(uri)){
+            case CODE_COMMENTS:
+                Timber.d("inserting comment");
+                db.insertOrThrow(ReaditContract.CommentEntry.TABLE_NAME, null, values);
+                cr.notifyChange(uri, null);
+                break;
+            case CODE_COMMENTS_ALL:
+                db.insertOrThrow(ReaditContract.CommentEntry.TABLE_NAME, null, values);
+                cr.notifyChange(uri, null);
+                break;
+            case CODE_COMMENT_ID:
+                db.insertOrThrow(ReaditContract.CommentEntry.TABLE_NAME, null, values);
+                cr.notifyChange(uri, null);
+                break;
+            case CODE_LISTINGS_ALL:
+                db.insertOrThrow(ReaditContract.RedditListingEntry.TABLE_NAME, null, values);
+                cr.notifyChange(uri, null);
+                break;
+            case CODE_LISTING_ID:
+                db.insertOrThrow(ReaditContract.RedditListingEntry.TABLE_NAME, null, values);
+                cr.notifyChange(uri, null);
+                break;
+            default:
+                break;
+        }
+        return uri;
     }
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        db = mReaditDBHelper.getWritableDatabase();
+        String queryId;
+        ContentResolver cr;
+        int retInt = 0;
+        try {
+            cr = getContext().getContentResolver();
+        } catch (NullPointerException e){
+            Timber.e(e);
+            return 0;
+        }
+        switch (sUriMatcher.match(uri)){
+            case CODE_COMMENTS:
+                queryId = uri.getPathSegments().get(1);
+                retInt = db.delete(ReaditContract.CommentEntry.TABLE_NAME, ReaditContract.CommentEntry.COLUMN_POST_ID, new String[]{queryId});
+                cr.notifyChange(uri, null);
+                break;
+            case CODE_COMMENTS_ALL:
+                retInt = db.delete(ReaditContract.CommentEntry.TABLE_NAME, null, null);
+                cr.notifyChange(uri, null);
+                break;
+            case CODE_COMMENT_ID:
+                queryId = uri.getPathSegments().get(2);
+                retInt = db.delete(ReaditContract.CommentEntry.TABLE_NAME, ReaditContract.CommentEntry.COLUMN_COMMENT_ID, new String[]{queryId});
+                cr.notifyChange(uri, null);
+                break;
+            case CODE_LISTINGS_ALL:
+                retInt = db.delete(ReaditContract.RedditListingEntry.TABLE_NAME, null, null);
+                cr.notifyChange(uri, null);
+                break;
+            case CODE_LISTING_ID:
+                queryId = uri.getPathSegments().get(2);
+                retInt = db.delete(ReaditContract.RedditListingEntry.TABLE_NAME, ReaditContract.RedditListingEntry.COLUMN_POST_ID, new String[]{queryId});
+                cr.notifyChange(uri, null);
+                break;
+            default:
+                break;
+        }
+        return retInt;
+    }
+
+    @Override
+    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
+        db = mReaditDBHelper.getWritableDatabase();
+        final int match = sUriMatcher.match(uri);
+
+        switch (match){
+            case CODE_COMMENTS:
+                db.beginTransaction();
+                int returnCount = 0;
+                try {
+                    for (ContentValues cv: values){
+                        long _id = db.insert(ReaditContract.CommentEntry.TABLE_NAME, null, cv);
+                        if (_id>0){
+                            returnCount++;
+                        }
+
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+            default:
+                return super.bulkInsert(uri, values);
+        }
     }
 
     @Override

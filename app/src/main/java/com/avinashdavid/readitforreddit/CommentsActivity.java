@@ -8,16 +8,15 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -26,11 +25,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
+import com.avinashdavid.readitforreddit.Data.ReaditContract;
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
 import com.avinashdavid.readitforreddit.MiscUtils.GPSUtils;
 import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils;
@@ -38,7 +36,6 @@ import com.avinashdavid.readitforreddit.MiscUtils.PreferenceUtils;
 import com.avinashdavid.readitforreddit.NetworkUtils.GetCommentsService;
 import com.avinashdavid.readitforreddit.NetworkUtils.GetListingsService;
 import com.avinashdavid.readitforreddit.NetworkUtils.UriGenerator;
-import com.avinashdavid.readitforreddit.PostUtils.CommentObject;
 import com.avinashdavid.readitforreddit.PostUtils.CommentRecord;
 import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 import com.avinashdavid.readitforreddit.UI.CommentRecordRecyclerAdapter;
@@ -46,10 +43,9 @@ import com.avinashdavid.readitforreddit.UI.GetCommentsAsyncTask;
 
 import java.util.List;
 
-import io.realm.RealmResults;
 import timber.log.Timber;
 
-public class CommentsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<CommentRecord>>{
+public class CommentsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
 //    @BindView(R.id.my_toolbar)
 //    Toolbar mToolbar;
@@ -109,6 +105,7 @@ public class CommentsActivity extends AppCompatActivity implements LoaderManager
     BroadcastReceiver mReceiver;
     IntentFilter mIntentFilter;
 
+    Cursor mCursor;
 
 
     RedditListing mListing;
@@ -159,7 +156,7 @@ public class CommentsActivity extends AppCompatActivity implements LoaderManager
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 if (Constants.BROADCAST_COMMENTS_LOADED.equals(action)) {
-                    restartLoader();
+//                    restartLoader();
                 } else if (Constants.BROADCAST_ERROR_WHILE_LOADING_COMMENTS.equals(action)){
                     errorSnack = Snackbar.make(findViewById(R.id.activity_comments), R.string.message_error_loading_comments, Snackbar.LENGTH_INDEFINITE);
                     errorSnack.setAction(R.string.refresh, new CommentsRefreshListener());
@@ -180,7 +177,7 @@ public class CommentsActivity extends AppCompatActivity implements LoaderManager
         if (savedInstanceState!=null && savedInstanceState.getString(EXTRA_POST_ID)!= null){
             restartLoader();
         }
-        getSupportLoaderManager().initLoader(0, null, (LoaderManager.LoaderCallbacks<List<CommentRecord>>) this);
+        getSupportLoaderManager().initLoader(1, null, (LoaderManager.LoaderCallbacks<Cursor>) this);
     }
 
     @TargetApi(21)
@@ -204,7 +201,7 @@ public class CommentsActivity extends AppCompatActivity implements LoaderManager
     @Override
     protected void onResume() {
         super.onResume();
-        mIntentFilter.addAction(Constants.BROADCAST_COMMENTS_LOADED);
+//        mIntentFilter.addAction(Constants.BROADCAST_COMMENTS_LOADED);
         mIntentFilter.addAction(Constants.BROADCAST_ERROR_WHILE_LOADING_COMMENTS);
         registerReceiver(mReceiver, mIntentFilter);
     }
@@ -236,7 +233,7 @@ public class CommentsActivity extends AppCompatActivity implements LoaderManager
         mCommentRecords = CommentRecord.listAll(CommentRecord.class);
         mItemCount = mCommentRecords.size();
 
-        mCommentsRecyclerViewAdapter = new CommentRecordRecyclerAdapter(this, mCommentRecords, mListing);
+        mCommentsRecyclerViewAdapter = new CommentRecordRecyclerAdapter(this, mCursor, mListing);
         mCommentsRecyclerViewAdapter.setHasStableIds(true);
 
         mCommentsRecyclerview.setAdapter(mCommentsRecyclerViewAdapter);
@@ -403,7 +400,7 @@ public class CommentsActivity extends AppCompatActivity implements LoaderManager
     }
 
     @Override
-    public Loader<List<CommentRecord>> onCreateLoader(int id, Bundle args) {
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (mPostId==null){
             return null;
         }
@@ -415,34 +412,62 @@ public class CommentsActivity extends AppCompatActivity implements LoaderManager
             editor.apply();
             GetCommentsService.loadCommentsForArticle(CommentsActivity.this, null, mPostId, mSortString);
         } else {
-            findViewById(R.id.loadingPanel).setVisibility(View.GONE);
             initUi();
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-            mFirstVisibleChild = sp.getInt(Constants.KEY_COMMENTS_FIRST_CHILD, 0);
-            mOffset = sp.getInt(Constants.KEY_COMMENTS_OFFSET, 0);
-            mCommentsRecyclerview.scrollToPosition(mFirstVisibleChild);
-            mCommentsRecyclerview.post(new Runnable() {
-                @Override
-                public void run() {
-                    mCommentsRecyclerview.scrollBy(0, -mOffset);
-                }
-            });
+//            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+//            mFirstVisibleChild = sp.getInt(Constants.KEY_COMMENTS_FIRST_CHILD, 0);
+//            mOffset = sp.getInt(Constants.KEY_COMMENTS_OFFSET, 0);
+//            mCommentsRecyclerview.scrollToPosition(mFirstVisibleChild);
+//            mCommentsRecyclerview.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    mCommentsRecyclerview.scrollBy(0, -mOffset);
+//                }
+//            });
         }
-        return new Loader<List<CommentRecord>>(CommentsActivity.this);
+        return new CursorLoader(CommentsActivity.this, ReaditContract.CommentEntry.getUriComments(mPostId), null, null, null, null);
     }
 
     @Override
-    public void onLoadFinished(Loader<List<CommentRecord>> loader, List<CommentRecord> data) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Timber.d("onLoadFinished");
-        UpdateCommentsAsyncTask updateCommentsAsyncTask = new UpdateCommentsAsyncTask();
-        updateCommentsAsyncTask.execute(mPostId);
+        mCursor = data;
+        if (errorSnack!=null){
+            errorSnack.dismiss();
+            errorSnack = null;
+        }
+
+        mCommentsRecyclerViewAdapter = new CommentRecordRecyclerAdapter(this, mCursor, mListing);
+        mCommentsRecyclerViewAdapter.setHasStableIds(true);
+        mItemCount = mCursor.getCount();
+
+        if (mItemCount>0) {
+            findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+        }
+
+        mCommentsRecyclerview.setAdapter(mCommentsRecyclerViewAdapter);
+        mCommentsRecyclerview.setAdapter(mCommentsRecyclerViewAdapter);
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        mFirstVisibleChild = sp.getInt(Constants.KEY_COMMENTS_FIRST_CHILD, 0);
+        mOffset = sp.getInt(Constants.KEY_COMMENTS_OFFSET, 0);
+        mCommentsRecyclerview.scrollToPosition(mFirstVisibleChild);
+        mCommentsRecyclerview.post(new Runnable() {
+            @Override
+            public void run() {
+                mCommentsRecyclerview.scrollBy(0, -mOffset);
+            }
+        });
+
+        mLinearLayoutManager.onRestoreInstanceState(mLayoutState);
+
+//        UpdateCommentsAsyncTask updateCommentsAsyncTask = new UpdateCommentsAsyncTask();
+//        updateCommentsAsyncTask.execute(mPostId);
     }
 
     @Override
-    public void onLoaderReset(Loader<List<CommentRecord>> loader) {
-//        mCommentsRecyclerview.setAdapter(null);
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mCommentsRecyclerViewAdapter.swapCursor(null);
     }
-
 
     class UpdateCommentsAsyncTask extends GetCommentsAsyncTask{
         @Override
@@ -455,7 +480,7 @@ public class CommentsActivity extends AppCompatActivity implements LoaderManager
             mCommentRecords = CommentRecord.listAll(CommentRecord.class);
             mItemCount = mCommentRecords.size();
 
-            mCommentsRecyclerViewAdapter = new CommentRecordRecyclerAdapter(CommentsActivity.this, mCommentRecords, mListing);
+            mCommentsRecyclerViewAdapter = new CommentRecordRecyclerAdapter(CommentsActivity.this, mCursor, mListing);
             mCommentsRecyclerViewAdapter.setHasStableIds(true);
 
             findViewById(R.id.loadingPanel).setVisibility(View.GONE);
@@ -487,6 +512,6 @@ public class CommentsActivity extends AppCompatActivity implements LoaderManager
         {
             mLoaderManager.destroyLoader(0);
         }
-        mLoaderManager.restartLoader(0, null, (LoaderManager.LoaderCallbacks<List<CommentRecord>>)CommentsActivity.this);
+        mLoaderManager.restartLoader(1, null, (LoaderManager.LoaderCallbacks<Cursor>)CommentsActivity.this);
     }
 }

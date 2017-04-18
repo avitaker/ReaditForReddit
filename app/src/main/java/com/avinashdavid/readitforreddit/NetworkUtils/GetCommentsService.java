@@ -1,31 +1,26 @@
 package com.avinashdavid.readitforreddit.NetworkUtils;
 
 import android.app.IntentService;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.avinashdavid.readitforreddit.Data.ReaditContract;
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
-import com.avinashdavid.readitforreddit.PostUtils.CommentObject;
 import com.avinashdavid.readitforreddit.PostUtils.CommentRecord;
-import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 import com.avinashdavid.readitforreddit.R;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
-import io.realm.RealmList;
 import timber.log.Timber;
 
 /**
@@ -62,9 +57,12 @@ public class GetCommentsService extends IntentService {
     private static final String TIME_CREATED_KEY = "created_utc";
     private static final String KEY_AUTHOR_FLAIR = "author_flair_text";
 
+    private static ArrayList<ContentValues> sContentValues;
+
 
     public GetCommentsService() {
         super(GetCommentsService.class.getSimpleName());
+        sContentValues = new ArrayList<>();
 //        try{
 //            mRealm = Realm.getDefaultInstance();
 //
@@ -88,6 +86,8 @@ public class GetCommentsService extends IntentService {
         }
         Timber.d(mUrl.toString());
         CommentRecord.deleteAll(CommentRecord.class);
+        Uri uri = ReaditContract.CommentEntry.CONTENT_URI;
+        getContentResolver().delete(uri, null, null);
         final Context context = GetCommentsService.this.getApplicationContext();
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
                 (Request.Method.GET, mUrl.toString(), null, new Response.Listener<JSONArray>() {
@@ -99,7 +99,8 @@ public class GetCommentsService extends IntentService {
                             String linkId = response.getJSONObject(0).getJSONObject(DATA_KEY).getJSONArray(CHILDREN_KEY).getJSONObject(0).getJSONObject(DATA_KEY).getString(ID_KEY);
                             JSONArray childrenJsonArray = response.getJSONObject(1).getJSONObject(DATA_KEY).getJSONArray(CHILDREN_KEY);
                             parentReplyJsonObjects.addAll(getCommentDataJsonObjectsFromChildrenJsonArray(childrenJsonArray));
-                            makeCommentObjectsFromJsonObjects(GetCommentsService.this, parentReplyJsonObjects, linkId);
+                            getContentValuesList(GetCommentsService.this, parentReplyJsonObjects, linkId);
+//                            getContentResolver().bulkInsert(ReaditContract.CommentEntry.getUriComments(linkId), toInsert);
                             Intent intent = new Intent();
                             intent.setAction(Constants.BROADCAST_COMMENTS_LOADED);
                             GetCommentsService.this.sendBroadcast(intent);
@@ -130,13 +131,26 @@ public class GetCommentsService extends IntentService {
         context.startService(intent);
     }
 
+    private static void getContentValuesList(Context context, ArrayList<JSONObject> jsonObjects, String linkId){
+        ContentValues cv;
+        try {
+            makeCommentObjectsFromJsonObjects(context, jsonObjects, linkId);
+        } finally {
+            ContentValues[] contentValues1 = new ContentValues[sContentValues.size()];
+            contentValues1 = sContentValues.toArray(contentValues1);
+            context.getContentResolver().bulkInsert(ReaditContract.CommentEntry.getUriComments(linkId), contentValues1);
+        }
+    }
+
     private static void makeCommentObjectsFromJsonObjects(Context context, ArrayList<JSONObject> jsonObjects, String linkId){
+        Uri uri = ReaditContract.CommentEntry.getUriComments(linkId);
+        ContentValues cv = null;
         for (int i = 0; i < jsonObjects.size(); i++){
             JSONObject currentJsonObj = jsonObjects.get(i);
             CommentRecord commentObject = getChildrenCommentObjectsFromJsonDataObject(currentJsonObj, linkId);
-            commentObject.save();
-//            commentObjects.add(COMMENT_INDEX, commentObject);
-//            COMMENT_INDEX ++;
+            cv = CommentRecord.makeContentValues(commentObject);
+            sContentValues.add(cv);
+
             if (commentObject.hasReplies){
                 ArrayList<JSONObject> childObjects = getRepliesJsonObjectsFromCommentDataObj(currentJsonObj);
                 makeCommentObjectsFromJsonObjects(context, childObjects, linkId);

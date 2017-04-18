@@ -1,17 +1,12 @@
 package com.avinashdavid.readitforreddit.PostUtils;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
 import com.avinashdavid.readitforreddit.Data.ReaditContract;
+import com.avinashdavid.readitforreddit.Data.ReaditProvider;
 import com.orm.SugarRecord;
-import com.orm.util.NamingHelper;
-import com.orm.util.SugarCursorFactory;
-
-import static com.orm.SugarContext.getSugarContext;
 
 
 /**
@@ -93,5 +88,21 @@ public class CommentRecord extends SugarRecord {
         return new CommentRecord(timestamp, id, postId, scoreHidden, score, author, bodyHtml, parent, timeCreated, depth, hasReplies, flairText);
     }
 
-
+    public static CommentRecord makeCommentRecord(@NonNull Cursor c){
+        String id = c.getString(ReaditProvider.COLUMN_COMMENT_ID);
+        long timestamp = c.getLong(ReaditProvider.COLUMN_TIMESTAMP);
+        String postId = c.getString(ReaditProvider.COLUMN_POST_ID);
+        int scoreHiddenInt = c.getInt(ReaditProvider.COLUMN_SCORE_HIDDEN);
+        boolean scoreHidden = scoreHiddenInt!=0;
+        int score = c.getInt(ReaditProvider.COLUMN_SCORE);
+        String author = c.getString(ReaditProvider.COLUMN_COMMENT_AUTHOR);
+        String bodyHtml = c.getString(ReaditProvider.COLUMN_BODY_HTML);
+        String parent = c.getString(ReaditProvider.COLUMN_PARENT);
+        float timeCreated = c.getFloat(ReaditProvider.COLUMN_TIME_CREATED);
+        int depth = c.getInt(ReaditProvider.COLUMN_DEPTH);
+        int hasRepliesInt = c.getInt(ReaditProvider.COLUMN_HAS_REPLIES);
+        boolean hasReplies = hasRepliesInt!=0;
+        String flairText = c.getString(ReaditProvider.COLUMN_AUTHOR_FLAIR_TEXT);
+        return new CommentRecord(timestamp, id, postId, scoreHidden, score, author, bodyHtml, parent, timeCreated, depth, hasReplies, flairText);
+    }
 }

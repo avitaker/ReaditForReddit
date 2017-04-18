@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
@@ -31,6 +32,7 @@ import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.avinashdavid.readitforreddit.Data.ReaditContract;
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
 import com.avinashdavid.readitforreddit.MiscUtils.GPSUtils;
 import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils;
@@ -333,6 +335,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mSwipeRefreshLayout.setRefreshing(true);
             onRefresh();
         }
+    }
+
+    @Override
+    public void onActivityReenter(int resultCode, Intent data) {
+        super.onActivityReenter(resultCode, data);
+        onCreate(null);
     }
 
     @Override
@@ -890,9 +898,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private class UpdateCommentsPaneAsyncTask extends GetCommentsAsyncTask{
         @Override
         protected void onPostExecute(List<CommentRecord> commentRecords) {
-            mCommentRecords = CommentRecord.listAll(CommentRecord.class);
+//            mCommentRecords = CommentRecord.listAll(CommentRecord.class);
+            Cursor cursor = getContentResolver().query(ReaditContract.CommentEntry.getUriComments(mPostId), null, null, null, null);
             mCommentsRedditListing = RedditListing.find(RedditListing.class, "m_post_id = ?", mPostId).get(0);
-            mCommentRecordRecyclerAdapter = new CommentRecordRecyclerAdapter(MainActivity.this, mCommentRecords, mCommentsRedditListing);
+            mCommentRecordRecyclerAdapter = new CommentRecordRecyclerAdapter(MainActivity.this, cursor, mCommentsRedditListing);
             mCommentRecordRecyclerAdapter.setHasStableIds(true);
 
             mCommentsRecyclerview.setAdapter(mCommentRecordRecyclerAdapter);

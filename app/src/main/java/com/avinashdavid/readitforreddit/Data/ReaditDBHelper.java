@@ -19,7 +19,7 @@ public class ReaditDBHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_REDDITLISTINGS =
             "CREATE TABLE " + ReaditContract.RedditListingEntry.TABLE_NAME + " (" +
-                    ReaditContract.RedditListingEntry._ID + " INTEGER PRIMARY KEY " +
+                    ReaditContract.RedditListingEntry._ID + " INTEGER PRIMARY KEY " + COMMA_MARKER +
                     ReaditContract.RedditListingEntry.COLUMN_POST_ID + TEXT_MARKER + COMMA_MARKER +
                     ReaditContract.RedditListingEntry.COLUMN_TIMESTAMP + INTEGER_MARKER + COMMA_MARKER +
                     ReaditContract.RedditListingEntry.COLUMN_TITLE + TEXT_MARKER + COMMA_MARKER +
@@ -36,7 +36,7 @@ public class ReaditDBHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_COMMENTS =
             "CREATE TABLE " + ReaditContract.CommentEntry.TABLE_NAME + " (" +
-                    ReaditContract.CommentEntry._ID + " INTEGER PRIMARY KEY " +
+                    ReaditContract.CommentEntry._ID + " INTEGER PRIMARY KEY " + COMMA_MARKER +
                     ReaditContract.CommentEntry.COLUMN_COMMENT_ID + TEXT_MARKER + COMMA_MARKER +
                     ReaditContract.CommentEntry.COLUMN_TIMESTAMP + INTEGER_MARKER + COMMA_MARKER +
                     ReaditContract.CommentEntry.COLUMN_POST_ID + TEXT_MARKER + COMMA_MARKER +

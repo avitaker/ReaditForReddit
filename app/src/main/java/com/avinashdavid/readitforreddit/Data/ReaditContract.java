@@ -14,6 +14,7 @@ public class ReaditContract {
     public static final String PATH_SORT = "sort";
     public static final String PATH_POST_ID = "postId";
     public static final String PATH_COMMENT_ID = "commentId";
+    public static final String PATH_COMMENTS = "comments";
 
     private ReaditContract() {
     }
@@ -72,10 +73,11 @@ public class ReaditContract {
         public static final String COLUMN_HAS_REPLIES = "hasReplies";
         public static final String COLUMN_AUTHOR_FLAIR_TEXT = "authorFlairText";
 
-        public static Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY+"/comments");
+        private static Uri BASE_URI = Uri.parse("content://" + AUTHORITY);
+        public static Uri CONTENT_URI = BASE_URI.buildUpon().appendPath(PATH_COMMENTS).build();
 
         public static Uri getUriComments(String postId){
-            return CONTENT_URI.buildUpon().appendPath(PATH_POST_ID).appendPath(postId).build();
+            return CONTENT_URI.buildUpon().appendPath(postId).build();
         }
 
         public static Uri getUriCommentId(String commentId){
