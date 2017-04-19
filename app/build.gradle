@@ -8,7 +8,7 @@ android {
         release {
             keyAlias 'ReaditKey'
             keyPassword 'password2'
-            storeFile file('/Users/avinashdavid/Documents/ReaditForReddit/signing/app_keystore.jks')
+            storeFile file('libs/signing/app_keystore.jks')
             storePassword 'password1'
         }
     }
@@ -77,10 +77,12 @@ dependencies {
 }
 
 task installRelease() {
-    android.applicationVariants.all { v ->
-        if (v.name.endsWith('Release')) {
-            String name = v.name.capitalize()
-            dependsOn "install$name"
-        }
-    }
+    dependsOn "installFreeRelease","installPaidRelease"
+//    android.applicationVariants.all { v ->
+//        if (v.name.endsWith('Release')) {
+//            String name = v.name.capitalize()
+//            dependsOn "install$name"
+//            endsWith
+//        }
+//    }
 }

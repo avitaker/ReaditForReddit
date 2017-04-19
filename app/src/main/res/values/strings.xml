@@ -116,5 +116,6 @@
     <string name="retry">Retry</string>
 
     <string name="widget_empty">Something went wrong. Open app to refresh widget.</string>
+    <string name="cp_authority">com.avinashdavid.readitforreddit</string>
 
 </resources>

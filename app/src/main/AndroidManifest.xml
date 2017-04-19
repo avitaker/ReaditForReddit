@@ -57,7 +57,7 @@
         <service android:name=".NetworkUtils.GetSubredditInfoService"/>
         <activity android:name=".LinkActivity"/>
         <provider
-            android:authorities="com.avinashdavid.readitforreddit"
+            android:authorities="@string/cp_authority"
             android:name=".Data.ReaditProvider"
             android:exported="true"/>
     </application>
