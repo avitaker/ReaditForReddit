@@ -14,12 +14,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.avinashdavid.readitforreddit.CommentsActivity;
-import com.avinashdavid.readitforreddit.Data.ReaditProvider;
 import com.avinashdavid.readitforreddit.MainActivity;
 import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils;
 import com.avinashdavid.readitforreddit.PostUtils.CommentRecord;
 import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 import com.avinashdavid.readitforreddit.R;
+
+import java.util.List;
 
 import timber.log.Timber;
 
@@ -29,8 +30,8 @@ import timber.log.Timber;
 
 public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-//    private List<CommentRecord> mCommentRecords;
-    private Cursor mCommentRecords;
+    private List<CommentRecord> mCommentRecords;
+//    private Cursor mCommentRecords;
     private RedditListing mRedditListing;
     private Activity mCommentsActivity;
     private LayoutInflater mLayoutInflater;
@@ -52,15 +53,16 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 //        mCommentRecords = commentRecords;
 //        mRedditListing = RedditListing.find(RedditListing.class, "m_post_id = ?", commentRecords.get(0).linkId).get(0);
 //    }
-    public CommentRecordRecyclerAdapter(@NonNull Context context, Cursor commentRecords) {
-        this.mCommentsActivity = (CommentsActivity)context;
-        this.mLayoutInflater = LayoutInflater.from(mCommentsActivity);
-        mCommentRecords = commentRecords;
-        if (mCommentRecords.moveToFirst()){
-            String linkId = mCommentRecords.getString(ReaditProvider.COLUMN_POST_ID);
-            mRedditListing = RedditListing.find(RedditListing.class, "m_post_id = ?", linkId).get(0);
-        }
-    }
+
+//    public CommentRecordRecyclerAdapter(@NonNull Context context, Cursor commentRecords) {
+//        this.mCommentsActivity = (CommentsActivity)context;
+//        this.mLayoutInflater = LayoutInflater.from(mCommentsActivity);
+//        mCommentRecords = commentRecords;
+//        if (mCommentRecords.moveToFirst()){
+//            String linkId = mCommentRecords.getString(ReaditProvider.COLUMN_POST_ID);
+//            mRedditListing = RedditListing.find(RedditListing.class, "m_post_id = ?", linkId).get(0);
+//        }
+//    }
 
 
 //    public CommentRecordRecyclerAdapter(@NonNull Context context, List<CommentRecord> commentRecords, RedditListing redditListing){
@@ -74,7 +76,7 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 //        mRedditListing = redditListing;
 //    }
 
-    public CommentRecordRecyclerAdapter(@NonNull Context context, Cursor commentRecords, RedditListing redditListing){
+    public CommentRecordRecyclerAdapter(@NonNull Context context, List<CommentRecord> commentRecords, RedditListing redditListing){
         try {
             this.mCommentsActivity = (CommentsActivity) context;
         } catch (ClassCastException e){
@@ -130,18 +132,20 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        mCommentRecords.moveToPosition(position);
+//        mCommentRecords.moveToPosition(position);
         CommentRecord commentObject;
         if (MainActivity.usingTabletLayout){
             if (getItemViewType(position)==0){
                 ((RedditPostRecyclerAdapter.ListingHolder) holder).bindListing(mRedditListing);
             } else {
-                commentObject = CommentRecord.makeCommentRecord(mCommentRecords);
+//                commentObject = CommentRecord.makeCommentRecord(mCommentRecords);
+                commentObject = mCommentRecords.get(position-1);
                 ((CommentsHolder)holder).bindComment(commentObject, mRedditListing.author);
             }
         } else {
-            if (position<mCommentRecords.getCount()){
-                commentObject = CommentRecord.makeCommentRecord(mCommentRecords);
+            if (position<mCommentRecords.size()){
+//                commentObject = CommentRecord.makeCommentRecord(mCommentRecords);
+                commentObject = mCommentRecords.get(position);
                 ((CommentsHolder)holder).bindComment(commentObject, mRedditListing.author);
             }
 //            else {
@@ -172,9 +176,9 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
     @Override
     public int getItemCount() {
         if (!MainActivity.usingTabletLayout) {
-            return mCommentRecords == null ? 0 : mCommentRecords.getCount();
+            return mCommentRecords == null ? 0 : mCommentRecords.size();
         } else {
-            return mCommentRecords == null ? 1 : mCommentRecords.getCount()+1;
+            return mCommentRecords == null ? 1 : mCommentRecords.size()+1;
         }
     }
 
@@ -186,22 +190,26 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
     @Override
     public int getItemViewType(int position) {
+        CommentRecord commentRecord;
         if (!MainActivity.usingTabletLayout) {
-            if (position<mCommentRecords.getCount()) {
-                mCommentRecords.moveToPosition(position);
-                CommentRecord commentRecord = CommentRecord.makeCommentRecord(mCommentRecords);
+            if (position<mCommentRecords.size()) {
+//                mCommentRecords.moveToPosition(position);
+//                CommentRecord commentRecord = CommentRecord.makeCommentRecord(mCommentRecords);
+                commentRecord = mCommentRecords.get(position);
                 return commentRecord.depth + 1;
             } else {
-                mCommentRecords.moveToPosition(position -1);
-                CommentRecord commentRecord = CommentRecord.makeCommentRecord(mCommentRecords);
+//                mCommentRecords.moveToPosition(position -1);
+//                CommentRecord commentRecord = CommentRecord.makeCommentRecord(mCommentRecords);
+                commentRecord = mCommentRecords.get(position -1);
                 return commentRecord.depth + 1;
             }
         } else {
             if (position==0){
                 return VIEW_TYPE_POST_INFO;
             } else {
-                mCommentRecords.moveToPosition(position-1);
-                CommentRecord commentRecord = CommentRecord.makeCommentRecord(mCommentRecords);
+//                mCommentRecords.moveToPosition(position-1);
+//                CommentRecord commentRecord = CommentRecord.makeCommentRecord(mCommentRecords);
+                commentRecord = mCommentRecords.get(position - 1);
                 return commentRecord.depth + 1;
             }
         }
@@ -209,26 +217,33 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
     @Override
     public long getItemId(int position) {
+        CommentRecord commentRecord;
         if (MainActivity.usingTabletLayout){
             if (position==0){
                 return 0;
             } else {
-                mCommentRecords.moveToPosition(position -1);
-                return mCommentRecords.getInt(ReaditProvider.COLUMN_TIMESTAMP);
+//                mCommentRecords.moveToPosition(position -1);
+//                return mCommentRecords.getInt(ReaditProvider.COLUMN_TIMESTAMP);
+                commentRecord = mCommentRecords.get(position - 1);
+                return commentRecord.getId();
             }
         } else {
-            if (position<mCommentRecords.getCount()) {
-                mCommentRecords.moveToPosition(position);
-                return mCommentRecords.getInt(ReaditProvider.COLUMN_TIMESTAMP);
+            if (position<mCommentRecords.size()) {
+//                mCommentRecords.moveToPosition(position);
+//                return mCommentRecords.getInt(ReaditProvider.COLUMN_TIMESTAMP);
+                commentRecord = mCommentRecords.get(position);
+                return commentRecord.getId();
             } else {
-                mCommentRecords.moveToPosition(position - 1);
-                return mCommentRecords.getInt(ReaditProvider.COLUMN_TIMESTAMP);
+//                mCommentRecords.moveToPosition(position - 1);
+//                return mCommentRecords.getInt(ReaditProvider.COLUMN_TIMESTAMP);
+                commentRecord = mCommentRecords.get(position - 1);
+                return commentRecord.getId();
             }
         }
     }
 
     public void swapCursor(Cursor cursor){
-        mCommentRecords = cursor;
+//        mCommentRecords = cursor;
     }
 
     static class CommentsHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

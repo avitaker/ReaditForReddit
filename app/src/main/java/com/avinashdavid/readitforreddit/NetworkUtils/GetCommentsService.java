@@ -86,8 +86,6 @@ public class GetCommentsService extends IntentService {
         }
         Timber.d(mUrl.toString());
         CommentRecord.deleteAll(CommentRecord.class);
-        Uri uri = ReaditContract.CommentEntry.CONTENT_URI;
-        getContentResolver().delete(uri, null, null);
         final Context context = GetCommentsService.this.getApplicationContext();
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
                 (Request.Method.GET, mUrl.toString(), null, new Response.Listener<JSONArray>() {
@@ -99,8 +97,9 @@ public class GetCommentsService extends IntentService {
                             String linkId = response.getJSONObject(0).getJSONObject(DATA_KEY).getJSONArray(CHILDREN_KEY).getJSONObject(0).getJSONObject(DATA_KEY).getString(ID_KEY);
                             JSONArray childrenJsonArray = response.getJSONObject(1).getJSONObject(DATA_KEY).getJSONArray(CHILDREN_KEY);
                             parentReplyJsonObjects.addAll(getCommentDataJsonObjectsFromChildrenJsonArray(childrenJsonArray));
-                            getContentValuesList(GetCommentsService.this, parentReplyJsonObjects, linkId);
+//                            getContentValuesList(GetCommentsService.this, parentReplyJsonObjects, linkId);
 //                            getContentResolver().bulkInsert(ReaditContract.CommentEntry.getUriComments(linkId), toInsert);
+                            makeCommentObjectsFromJsonObjects(context, parentReplyJsonObjects, linkId);
                             Intent intent = new Intent();
                             intent.setAction(Constants.BROADCAST_COMMENTS_LOADED);
                             GetCommentsService.this.sendBroadcast(intent);
@@ -143,13 +142,15 @@ public class GetCommentsService extends IntentService {
     }
 
     private static void makeCommentObjectsFromJsonObjects(Context context, ArrayList<JSONObject> jsonObjects, String linkId){
-        Uri uri = ReaditContract.CommentEntry.getUriComments(linkId);
-        ContentValues cv = null;
+//        Uri uri = ReaditContract.CommentEntry.getUriComments(linkId);
+//        ContentValues cv = null;
         for (int i = 0; i < jsonObjects.size(); i++){
+            Timber.e("Saving comment");
             JSONObject currentJsonObj = jsonObjects.get(i);
             CommentRecord commentObject = getChildrenCommentObjectsFromJsonDataObject(currentJsonObj, linkId);
-            cv = CommentRecord.makeContentValues(commentObject);
-            sContentValues.add(cv);
+            commentObject.save();
+//            cv = CommentRecord.makeContentValues(commentObject);
+//            sContentValues.add(cv);
 
             if (commentObject.hasReplies){
                 ArrayList<JSONObject> childObjects = getRepliesJsonObjectsFromCommentDataObj(currentJsonObj);

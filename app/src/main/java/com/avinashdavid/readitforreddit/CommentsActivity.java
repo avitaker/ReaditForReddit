@@ -13,9 +13,6 @@ import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,7 +25,6 @@ import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
-import com.avinashdavid.readitforreddit.Data.ReaditContract;
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
 import com.avinashdavid.readitforreddit.MiscUtils.GPSUtils;
 import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils;
@@ -45,7 +41,9 @@ import java.util.List;
 
 import timber.log.Timber;
 
-public class CommentsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+public class CommentsActivity extends AppCompatActivity
+//        implements LoaderManager.LoaderCallbacks<Cursor>
+{
 
 //    @BindView(R.id.my_toolbar)
 //    Toolbar mToolbar;
@@ -157,6 +155,8 @@ public class CommentsActivity extends AppCompatActivity implements LoaderManager
                 String action = intent.getAction();
                 if (Constants.BROADCAST_COMMENTS_LOADED.equals(action)) {
 //                    restartLoader();
+                    UpdateCommentsAsyncTask updateCommentsAsyncTask = new UpdateCommentsAsyncTask();
+                    updateCommentsAsyncTask.execute(mPostId);
                 } else if (Constants.BROADCAST_ERROR_WHILE_LOADING_COMMENTS.equals(action)){
                     errorSnack = Snackbar.make(findViewById(R.id.activity_comments), R.string.message_error_loading_comments, Snackbar.LENGTH_INDEFINITE);
                     errorSnack.setAction(R.string.refresh, new CommentsRefreshListener());
@@ -174,10 +174,10 @@ public class CommentsActivity extends AppCompatActivity implements LoaderManager
 
         mCommentsRecyclerview.setNestedScrollingEnabled(true);
 
-        if (savedInstanceState!=null && savedInstanceState.getString(EXTRA_POST_ID)!= null){
-            restartLoader();
-        }
-        getSupportLoaderManager().initLoader(1, null, (LoaderManager.LoaderCallbacks<Cursor>) this);
+//        if (savedInstanceState!=null && savedInstanceState.getString(EXTRA_POST_ID)!= null){
+//            restartLoader();
+//        }
+//        getSupportLoaderManager().initLoader(1, null, (LoaderManager.LoaderCallbacks<Cursor>) this);
     }
 
     @TargetApi(21)
@@ -193,15 +193,35 @@ public class CommentsActivity extends AppCompatActivity implements LoaderManager
     @Override
     protected void onStart() {
         super.onStart();
-        if (findViewById(R.id.loadingPanel).getVisibility() == View.GONE){
-            restartLoader();
+//        if (findViewById(R.id.loadingPanel).getVisibility() == View.GONE){
+//            restartLoader();
+//        }
+        if (!mPostId.equals(GetCommentsService.sLastPostId)) {
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putInt(Constants.KEY_COMMENTS_FIRST_CHILD, 0);
+            editor.putInt(Constants.KEY_COMMENTS_OFFSET, 0);
+            editor.apply();
+            GetCommentsService.loadCommentsForArticle(CommentsActivity.this, null, mPostId, mSortString);
+        } else {
+            initUi();
+//            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+//            mFirstVisibleChild = sp.getInt(Constants.KEY_COMMENTS_FIRST_CHILD, 0);
+//            mOffset = sp.getInt(Constants.KEY_COMMENTS_OFFSET, 0);
+//            mCommentsRecyclerview.scrollToPosition(mFirstVisibleChild);
+//            mCommentsRecyclerview.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    mCommentsRecyclerview.scrollBy(0, -mOffset);
+//                }
+//            });
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-//        mIntentFilter.addAction(Constants.BROADCAST_COMMENTS_LOADED);
+        mIntentFilter.addAction(Constants.BROADCAST_COMMENTS_LOADED);
         mIntentFilter.addAction(Constants.BROADCAST_ERROR_WHILE_LOADING_COMMENTS);
         registerReceiver(mReceiver, mIntentFilter);
     }
@@ -233,7 +253,7 @@ public class CommentsActivity extends AppCompatActivity implements LoaderManager
         mCommentRecords = CommentRecord.listAll(CommentRecord.class);
         mItemCount = mCommentRecords.size();
 
-        mCommentsRecyclerViewAdapter = new CommentRecordRecyclerAdapter(this, mCursor, mListing);
+        mCommentsRecyclerViewAdapter = new CommentRecordRecyclerAdapter(this, mCommentRecords, mListing);
         mCommentsRecyclerViewAdapter.setHasStableIds(true);
 
         mCommentsRecyclerview.setAdapter(mCommentsRecyclerViewAdapter);
@@ -399,75 +419,75 @@ public class CommentsActivity extends AppCompatActivity implements LoaderManager
         }
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (mPostId==null){
-            return null;
-        }
-        if (!mPostId.equals(GetCommentsService.sLastPostId)) {
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-            SharedPreferences.Editor editor = sp.edit();
-            editor.putInt(Constants.KEY_COMMENTS_FIRST_CHILD, 0);
-            editor.putInt(Constants.KEY_COMMENTS_OFFSET, 0);
-            editor.apply();
-            GetCommentsService.loadCommentsForArticle(CommentsActivity.this, null, mPostId, mSortString);
-        } else {
-            initUi();
+//    @Override
+//    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+//        if (mPostId==null){
+//            return null;
+//        }
+//        if (!mPostId.equals(GetCommentsService.sLastPostId)) {
 //            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-//            mFirstVisibleChild = sp.getInt(Constants.KEY_COMMENTS_FIRST_CHILD, 0);
-//            mOffset = sp.getInt(Constants.KEY_COMMENTS_OFFSET, 0);
-//            mCommentsRecyclerview.scrollToPosition(mFirstVisibleChild);
-//            mCommentsRecyclerview.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    mCommentsRecyclerview.scrollBy(0, -mOffset);
-//                }
-//            });
-        }
-        return new CursorLoader(CommentsActivity.this, ReaditContract.CommentEntry.getUriComments(mPostId), null, null, null, null);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Timber.d("onLoadFinished");
-        mCursor = data;
-        if (errorSnack!=null){
-            errorSnack.dismiss();
-            errorSnack = null;
-        }
-
-        mCommentsRecyclerViewAdapter = new CommentRecordRecyclerAdapter(this, mCursor, mListing);
-        mCommentsRecyclerViewAdapter.setHasStableIds(true);
-        mItemCount = mCursor.getCount();
-
-        if (mItemCount>0) {
-            findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-        }
-
-        mCommentsRecyclerview.setAdapter(mCommentsRecyclerViewAdapter);
-        mCommentsRecyclerview.setAdapter(mCommentsRecyclerViewAdapter);
-
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        mFirstVisibleChild = sp.getInt(Constants.KEY_COMMENTS_FIRST_CHILD, 0);
-        mOffset = sp.getInt(Constants.KEY_COMMENTS_OFFSET, 0);
-        mCommentsRecyclerview.scrollToPosition(mFirstVisibleChild);
-        mCommentsRecyclerview.post(new Runnable() {
-            @Override
-            public void run() {
-                mCommentsRecyclerview.scrollBy(0, -mOffset);
-            }
-        });
-
-        mLinearLayoutManager.onRestoreInstanceState(mLayoutState);
-
-//        UpdateCommentsAsyncTask updateCommentsAsyncTask = new UpdateCommentsAsyncTask();
-//        updateCommentsAsyncTask.execute(mPostId);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        mCommentsRecyclerViewAdapter.swapCursor(null);
-    }
+//            SharedPreferences.Editor editor = sp.edit();
+//            editor.putInt(Constants.KEY_COMMENTS_FIRST_CHILD, 0);
+//            editor.putInt(Constants.KEY_COMMENTS_OFFSET, 0);
+//            editor.apply();
+//            GetCommentsService.loadCommentsForArticle(CommentsActivity.this, null, mPostId, mSortString);
+//        } else {
+//            initUi();
+////            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+////            mFirstVisibleChild = sp.getInt(Constants.KEY_COMMENTS_FIRST_CHILD, 0);
+////            mOffset = sp.getInt(Constants.KEY_COMMENTS_OFFSET, 0);
+////            mCommentsRecyclerview.scrollToPosition(mFirstVisibleChild);
+////            mCommentsRecyclerview.post(new Runnable() {
+////                @Override
+////                public void run() {
+////                    mCommentsRecyclerview.scrollBy(0, -mOffset);
+////                }
+////            });
+//        }
+//        return new CursorLoader(CommentsActivity.this, ReaditContract.CommentEntry.getUriComments(mPostId), null, null, null, null);
+//    }
+//
+//    @Override
+//    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+//        Timber.d("onLoadFinished");
+//        mCursor = data;
+//        if (errorSnack!=null){
+//            errorSnack.dismiss();
+//            errorSnack = null;
+//        }
+//
+//        mCommentsRecyclerViewAdapter = new CommentRecordRecyclerAdapter(this, mCursor, mListing);
+//        mCommentsRecyclerViewAdapter.setHasStableIds(true);
+//        mItemCount = mCursor.getCount();
+//
+//        if (mItemCount>0) {
+//            findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+//        }
+//
+//        mCommentsRecyclerview.setAdapter(mCommentsRecyclerViewAdapter);
+//        mCommentsRecyclerview.setAdapter(mCommentsRecyclerViewAdapter);
+//
+//        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+//        mFirstVisibleChild = sp.getInt(Constants.KEY_COMMENTS_FIRST_CHILD, 0);
+//        mOffset = sp.getInt(Constants.KEY_COMMENTS_OFFSET, 0);
+//        mCommentsRecyclerview.scrollToPosition(mFirstVisibleChild);
+//        mCommentsRecyclerview.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                mCommentsRecyclerview.scrollBy(0, -mOffset);
+//            }
+//        });
+//
+//        mLinearLayoutManager.onRestoreInstanceState(mLayoutState);
+//
+////        UpdateCommentsAsyncTask updateCommentsAsyncTask = new UpdateCommentsAsyncTask();
+////        updateCommentsAsyncTask.execute(mPostId);
+//    }
+//
+//    @Override
+//    public void onLoaderReset(Loader<Cursor> loader) {
+//        mCommentsRecyclerViewAdapter.swapCursor(null);
+//    }
 
     class UpdateCommentsAsyncTask extends GetCommentsAsyncTask{
         @Override
@@ -480,7 +500,7 @@ public class CommentsActivity extends AppCompatActivity implements LoaderManager
             mCommentRecords = CommentRecord.listAll(CommentRecord.class);
             mItemCount = mCommentRecords.size();
 
-            mCommentsRecyclerViewAdapter = new CommentRecordRecyclerAdapter(CommentsActivity.this, mCursor, mListing);
+            mCommentsRecyclerViewAdapter = new CommentRecordRecyclerAdapter(CommentsActivity.this, mCommentRecords, mListing);
             mCommentsRecyclerViewAdapter.setHasStableIds(true);
 
             findViewById(R.id.loadingPanel).setVisibility(View.GONE);
@@ -505,13 +525,13 @@ public class CommentsActivity extends AppCompatActivity implements LoaderManager
         }
     }
 
-    private void restartLoader(){
-        LoaderManager mLoaderManager = getSupportLoaderManager();
-        Loader<Cursor> loader = mLoaderManager.getLoader(0);
-        if (loader != null)
-        {
-            mLoaderManager.destroyLoader(0);
-        }
-        mLoaderManager.restartLoader(1, null, (LoaderManager.LoaderCallbacks<Cursor>)CommentsActivity.this);
-    }
+//    private void restartLoader(){
+//        LoaderManager mLoaderManager = getSupportLoaderManager();
+//        Loader<Cursor> loader = mLoaderManager.getLoader(0);
+//        if (loader != null)
+//        {
+//            mLoaderManager.destroyLoader(0);
+//        }
+//        mLoaderManager.restartLoader(1, null, (LoaderManager.LoaderCallbacks<Cursor>)CommentsActivity.this);
+//    }
 }
