@@ -2,9 +2,12 @@ package com.avinashdavid.readitforreddit.MiscUtils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.TypedValue;
+import android.view.View;
 
 import com.avinashdavid.readitforreddit.LinkActivity;
 import com.avinashdavid.readitforreddit.R;
@@ -86,5 +89,19 @@ public class GeneralUtils {
         Intent i = new Intent(context, LinkActivity.class);
         i.putExtra(LinkActivity.EXTRA_URL, url);
         context.startActivity(i);
+    }
+
+    public static int getThemeAccentColor (final Context context) {
+        final TypedValue value = new TypedValue ();
+        context.getTheme ().resolveAttribute (R.attr.colorAccent, value, true);
+        return value.data;
+    }
+
+    public static void setSDKSensitiveBackground(View view, Drawable background){
+        if (Build.VERSION.SDK_INT>=16) {
+            view.setBackground(background);
+        } else {
+            view.setBackgroundDrawable(background);
+        }
     }
 }

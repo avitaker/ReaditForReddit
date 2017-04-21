@@ -205,16 +205,17 @@ public class CommentsActivity extends AppCompatActivity
             GetCommentsService.loadCommentsForArticle(CommentsActivity.this, null, mPostId, mSortString);
         } else {
             initUi();
-//            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-//            mFirstVisibleChild = sp.getInt(Constants.KEY_COMMENTS_FIRST_CHILD, 0);
-//            mOffset = sp.getInt(Constants.KEY_COMMENTS_OFFSET, 0);
-//            mCommentsRecyclerview.scrollToPosition(mFirstVisibleChild);
-//            mCommentsRecyclerview.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    mCommentsRecyclerview.scrollBy(0, -mOffset);
-//                }
-//            });
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+            mFirstVisibleChild = sp.getInt(Constants.KEY_COMMENTS_FIRST_CHILD, 0);
+            mOffset = sp.getInt(Constants.KEY_COMMENTS_OFFSET, 0);
+            mCommentsRecyclerview.scrollToPosition(mFirstVisibleChild);
+            mCommentsRecyclerview.post(new Runnable() {
+                @Override
+                public void run() {
+                    mCommentsRecyclerview.scrollBy(0, -mOffset);
+                }
+            });
+            (findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
         }
     }
 
@@ -506,6 +507,17 @@ public class CommentsActivity extends AppCompatActivity
             findViewById(R.id.loadingPanel).setVisibility(View.GONE);
 
             mCommentsRecyclerview.setAdapter(mCommentsRecyclerViewAdapter);
+
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(CommentsActivity.this);
+            mFirstVisibleChild = sp.getInt(Constants.KEY_COMMENTS_FIRST_CHILD, 0);
+            mOffset = sp.getInt(Constants.KEY_COMMENTS_OFFSET, 0);
+            mCommentsRecyclerview.scrollToPosition(mFirstVisibleChild);
+            mCommentsRecyclerview.post(new Runnable() {
+                @Override
+                public void run() {
+                    mCommentsRecyclerview.scrollBy(0, -mOffset);
+                }
+            });
 
             mLinearLayoutManager.onRestoreInstanceState(mLayoutState);
         }

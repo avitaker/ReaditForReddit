@@ -3,6 +3,8 @@ package com.avinashdavid.readitforreddit.UI;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
@@ -255,13 +257,21 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
         private CommentRecord mCommentObject;
         private Context mContext;
+        Drawable authorBackground;
 
         void bindComment(CommentRecord commentRecord, String postAuthor){
             mCommentObject = commentRecord;
             author.setText(commentRecord.author);
             if (commentRecord.author.equals(postAuthor)){
-                author.setBackgroundResource(R.drawable.background_post_author);
+                GeneralUtils.setSDKSensitiveBackground(author, authorBackground);
                 author.setTextColor(mContext.getResources().getColor(R.color.milk));
+            } else {
+                if (authorBackground!=null && author.getBackground()!=null) {
+                    if (author.getBackground().equals(authorBackground)) {
+                        GeneralUtils.setSDKSensitiveBackground(author, null);
+                        author.setTextColor(GeneralUtils.getThemeAccentColor(mContext));
+                    }
+                }
             }
             if (commentRecord.scoreHidden){
                 score.setText(mContext.getString(R.string.score_hidden));
@@ -287,6 +297,11 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
             bodyText = (TextView)itemView.findViewById(R.id.bodyHtml);
             flairText = (TextView)itemView.findViewById(R.id.flair_text);
             mContext = itemView.getContext();
+            if (Build.VERSION.SDK_INT>=21) {
+                authorBackground = mContext.getDrawable(R.drawable.background_post_author);
+            } else {
+                authorBackground = mContext.getResources().getDrawable(R.drawable.background_post_author);
+            }
         }
 
         public void clearAnimation()
