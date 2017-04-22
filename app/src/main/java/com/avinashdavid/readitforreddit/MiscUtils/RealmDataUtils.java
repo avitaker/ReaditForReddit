@@ -1,18 +1,9 @@
 package com.avinashdavid.readitforreddit.MiscUtils;
 
-import com.avinashdavid.readitforreddit.PostUtils.CommentObject;
-import com.avinashdavid.readitforreddit.PostUtils.RedditPost;
 import com.avinashdavid.readitforreddit.SubredditUtils.SubredditObject;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmResults;
-import timber.log.Timber;
 
 /**
  * Created by avinashdavid on 3/8/17.
@@ -41,29 +32,6 @@ public class RealmDataUtils {
 
     static int COMMENT_INDEX = 0;
 
-    public static boolean deleteListings(Realm realm){
-        final RealmResults<RedditPost> realmResults = realm.where(RedditPost.class).findAll();
-        final boolean[] toReturn = new boolean[1];
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                toReturn[0] = realmResults.deleteAllFromRealm();
-            }
-        });
-        return toReturn[0];
-    }
-
-    public static boolean deleteComments(Realm realm){
-        final RealmResults<CommentObject> realmResults = realm.where(CommentObject.class).findAll();
-        final boolean[] toReturn = new boolean[1];
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                toReturn[0] = realmResults.deleteAllFromRealm();
-            }
-        });
-        return toReturn[0];
-    }
 
     public static boolean deleteSubreddits(Realm realm){
         final RealmResults<SubredditObject> realmResults = realm.where(SubredditObject.class).findAll();

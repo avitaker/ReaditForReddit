@@ -4,8 +4,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -13,14 +11,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.util.Pair;
-import android.support.v4.view.GestureDetectorCompat;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -29,7 +21,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.avinashdavid.readitforreddit.CommentsActivity;
-import com.avinashdavid.readitforreddit.LinkActivity;
 import com.avinashdavid.readitforreddit.MainActivity;
 import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils;
 import com.avinashdavid.readitforreddit.NetworkUtils.GetCommentsService;
@@ -40,8 +31,6 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import timber.log.Timber;
-
-import static android.support.v7.widget.AppCompatDrawableManager.get;
 
 /**
  * Created by avinashdavid on 3/17/17.
@@ -71,7 +60,6 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
                     + " must implement ScrollListener");
         }
         usingTabletLayout = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_boolean_use_tablet_layout),false);
-
     }
 
 
@@ -181,6 +169,7 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
         Context mContext;
 
         public String mPostId;
+        final int goldColor;
 
         private RedditListing mRedditPost;
 
@@ -201,6 +190,7 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
             } else {
                 mContext = itemView.getContext();
             }
+            goldColor = GeneralUtils.getSDKSensitiveColor(mContext, R.color.gold);
         }
 
 
@@ -224,6 +214,14 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
                 mRelativeLayout.setWeightSum(4);
             } else {
                 Picasso.with(mContext).load(listing.thumbnailUrl).into(thumbnail_imageview);
+            }
+
+            if (listing.isGilded){
+                author_textview.setTextColor(goldColor);
+            } else {
+                if (author_textview.getCurrentTextColor() == goldColor) {
+                    author_textview.setTextColor(GeneralUtils.getThemeAccentColor(mContext));
+                }
             }
         }
     }

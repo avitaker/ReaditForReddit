@@ -1,7 +1,6 @@
 package com.avinashdavid.readitforreddit.UI;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,7 +12,6 @@ import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 import com.avinashdavid.readitforreddit.R;
 

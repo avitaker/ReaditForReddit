@@ -1,40 +1,23 @@
 package com.avinashdavid.readitforreddit.NetworkUtils;
 
 import android.app.IntentService;
-import android.app.PendingIntent;
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
-import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils;
 import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
-import com.avinashdavid.readitforreddit.PostUtils.RedditPost;
-import com.avinashdavid.readitforreddit.R;
-import com.avinashdavid.readitforreddit.Widget.RedditPostWidget;
-import com.avinashdavid.readitforreddit.Widget.SubredditWidgetProvider;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
-import io.realm.RealmList;
-import io.realm.RealmResults;
 import timber.log.Timber;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 import static com.avinashdavid.readitforreddit.MiscUtils.Constants.BROADCAST_SUBREDDIT_WIDGET;
 
 /**
@@ -74,8 +57,7 @@ public class GetListingsService extends IntentService {
     private static final String URL_KEY = "url";
     private static final String SELFTEXT_HTML = "selftext_html";
     private static final String THUMBNAIL_URL = "thumbnail";
-
-//    private RealmList<RedditPost> mRedditPosts;
+    private static final String GILDED = "gilded";
 
     public GetListingsService() {
         super(GetListingsService.class.getSimpleName());
@@ -127,8 +109,9 @@ public class GetListingsService extends IntentService {
                                         String url = linkObject.getString(URL_KEY);
                                         String selftext = linkObject.getString(SELFTEXT_HTML);
                                         String thumbnailUrl = linkObject.getString(THUMBNAIL_URL);
+                                        boolean isGilded = linkObject.getInt(GILDED)>0;
 
-                                        RedditListing redditListing = new RedditListing(postId, System.currentTimeMillis(), title, voteCount, commentCount, author, subreddit, timeCreated, selftext, domain, afterResponse, url, thumbnailUrl);
+                                        RedditListing redditListing = new RedditListing(postId, System.currentTimeMillis(), title, voteCount, commentCount, author, subreddit, timeCreated, selftext, domain, afterResponse, url, thumbnailUrl, isGilded);
                                         redditListing.save();
 //                                        getContentResolver().query(redditListing.)
                                     }
@@ -190,18 +173,6 @@ public class GetListingsService extends IntentService {
         context.startService(intent);
     }
 
-    public static RealmResults<RedditPost> getPostsForWidget(Context context, @Nullable String subreddit){
-        RealmResults<RedditPost> realmResults;
-        try {
-            Intent intent = new Intent(context, GetListingsService.class);
-            intent.putExtra(GetListingsService.EXTRA_URL, UriGenerator.getUriPosts(subreddit, null, 0, null));
-            context.startService(intent);
-        } finally {
-            Realm realm = Realm.getDefaultInstance();
-            realmResults =  realm.where(RedditPost.class).findAll();
-        }
-        return realmResults;
-    }
 
     public static void loadListingsRandom(Context context){
         Intent intent = new Intent(context, GetListingsService.class);

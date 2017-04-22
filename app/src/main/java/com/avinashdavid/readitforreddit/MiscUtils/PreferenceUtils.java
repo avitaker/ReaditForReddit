@@ -1,14 +1,10 @@
 package com.avinashdavid.readitforreddit.MiscUtils;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.avinashdavid.readitforreddit.R;
-
-import timber.log.Timber;
 
 /**
  * Created by avinashdavid on 3/10/17.

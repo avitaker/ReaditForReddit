@@ -33,10 +33,6 @@ public class SubredditWidgetRemoteViewsService extends RemoteViewsService {
             @Override
             public void onCreate() {
                 Timber.d("SubredditWidgetRemoteViewsService started");
-//                mArrayLists = new ArrayList<>();
-////                mRedditPosts = new RealmResults<RedditPost>();
-//                mRedditPosts = RedditListing.listAll(RedditListing.class);
-//                Timber.d("post count in oncreate " + Integer.toString(mRedditPosts.size()));
             }
 
             @Override

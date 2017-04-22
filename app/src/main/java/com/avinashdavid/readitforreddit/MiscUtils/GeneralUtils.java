@@ -104,4 +104,12 @@ public class GeneralUtils {
             view.setBackgroundDrawable(background);
         }
     }
+
+    public static int getSDKSensitiveColor(Context context, int resourceId){
+        if (Build.VERSION.SDK_INT>=23){
+            return context.getColor(resourceId);
+        } else {
+            return context.getResources().getColor(resourceId);
+        }
+    }
 }

@@ -1,13 +1,10 @@
 package com.avinashdavid.readitforreddit;
 
-import android.app.Application;
-
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.orm.SugarApp;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import timber.log.Timber;
 
 /**

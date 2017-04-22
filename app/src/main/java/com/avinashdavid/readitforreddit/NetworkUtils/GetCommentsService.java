@@ -56,6 +56,7 @@ public class GetCommentsService extends IntentService {
     private static final String REPLIES_KEY = "replies";
     private static final String TIME_CREATED_KEY = "created_utc";
     private static final String KEY_AUTHOR_FLAIR = "author_flair_text";
+    private static final String GILDED = "gilded";
 
     private static ArrayList<ContentValues> sContentValues;
 
@@ -199,8 +200,8 @@ public class GetCommentsService extends IntentService {
             int depth = replyData.getInt(DEPTH_KEY);
             boolean hasReplies = !replyData.get(REPLIES_KEY).toString().equals("");
             String authorflair = replyData.getString(KEY_AUTHOR_FLAIR);
-
-            commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, scoreHidden, score, author, body, parent, timecreated, depth, hasReplies, authorflair);
+            boolean isGilded = replyData.getInt(GILDED)>0;
+            commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, scoreHidden, score, author, body, parent, timecreated, depth, hasReplies, authorflair, isGilded);
 
 
         } catch (Exception e){

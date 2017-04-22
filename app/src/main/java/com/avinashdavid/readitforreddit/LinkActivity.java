@@ -1,24 +1,12 @@
 package com.avinashdavid.readitforreddit;
 
-import android.app.Activity;
-import android.app.FragmentTransaction;
-import android.net.Uri;
-import android.net.http.SslError;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.webkit.SslErrorHandler;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.FrameLayout;
 
-import com.avinashdavid.readitforreddit.UI.LinkWebviewFragment;
 import com.avinashdavid.readitforreddit.UI.VideoEnabledWebChromeClient;
 import com.avinashdavid.readitforreddit.UI.VideoEnabledWebView;
 

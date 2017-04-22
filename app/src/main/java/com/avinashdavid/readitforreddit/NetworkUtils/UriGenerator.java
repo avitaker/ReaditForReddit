@@ -3,8 +3,6 @@ package com.avinashdavid.readitforreddit.NetworkUtils;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
-import static android.provider.Contacts.SettingsColumns.KEY;
-
 /**
  * Created by avinashdavid on 3/6/17.
  */

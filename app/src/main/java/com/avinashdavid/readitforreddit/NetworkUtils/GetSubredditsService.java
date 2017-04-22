@@ -10,16 +10,11 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.avinashdavid.readitforreddit.MainActivity;
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
-import com.avinashdavid.readitforreddit.MiscUtils.RealmDataUtils;
-import com.avinashdavid.readitforreddit.PostUtils.CommentObject;
 import com.avinashdavid.readitforreddit.SubredditUtils.SubredditObject;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;

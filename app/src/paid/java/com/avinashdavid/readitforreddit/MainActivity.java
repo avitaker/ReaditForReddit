@@ -43,7 +43,6 @@ import com.avinashdavid.readitforreddit.NetworkUtils.GetSubredditsService;
 import com.avinashdavid.readitforreddit.NetworkUtils.UriGenerator;
 import com.avinashdavid.readitforreddit.PostUtils.CommentRecord;
 import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
-import com.avinashdavid.readitforreddit.PostUtils.RedditPost;
 import com.avinashdavid.readitforreddit.SubredditUtils.SubredditObject;
 import com.avinashdavid.readitforreddit.UI.AddSubredditDialogFragment;
 import com.avinashdavid.readitforreddit.UI.CommentRecordRecyclerAdapter;
@@ -127,7 +126,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     RealmResults<SubredditObject> mSubredditObjectRealmResults;
 
-    RealmResults<RedditPost> mRedditPostRealmResults;
 
     SharedPreferences mApplicationSharedPreferences;
     Parcelable mLayoutState;

@@ -1,12 +1,9 @@
 package com.avinashdavid.readitforreddit.NetworkUtils;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.net.NetworkInfo;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
 /**

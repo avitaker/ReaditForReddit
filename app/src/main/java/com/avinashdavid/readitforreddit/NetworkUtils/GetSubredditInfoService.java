@@ -14,16 +14,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
-import com.avinashdavid.readitforreddit.SubredditUtils.SubredditObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import io.realm.Realm;
 import timber.log.Timber;
-
-import static android.provider.MediaStore.Audio.AudioColumns.TITLE_KEY;
-import static com.avinashdavid.readitforreddit.R.id.error;
 
 /**
  * Created by avinashdavid on 4/9/17.

@@ -3,7 +3,6 @@ package com.avinashdavid.readitforreddit.UI;
 import android.os.AsyncTask;
 
 import com.avinashdavid.readitforreddit.PostUtils.CommentRecord;
-import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 
 import java.util.List;
 

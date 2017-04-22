@@ -2,7 +2,6 @@ package com.avinashdavid.readitforreddit.UI;
 
 import android.app.Activity;
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -48,35 +47,6 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
     private static final int VIEW_TYPE_DEPTH_5 = 6;
     private static final int VIEW_TYPE_DEPTH_6 = 7;
     private static final int VIEW_TYPE_DEPTH_7 = 8;
-
-//    public CommentRecordRecyclerAdapter(@NonNull Context context, List<CommentRecord> commentRecords) {
-//        this.mCommentsActivity = (CommentsActivity)context;
-//        this.mLayoutInflater = LayoutInflater.from(mCommentsActivity);
-//        mCommentRecords = commentRecords;
-//        mRedditListing = RedditListing.find(RedditListing.class, "m_post_id = ?", commentRecords.get(0).linkId).get(0);
-//    }
-
-//    public CommentRecordRecyclerAdapter(@NonNull Context context, Cursor commentRecords) {
-//        this.mCommentsActivity = (CommentsActivity)context;
-//        this.mLayoutInflater = LayoutInflater.from(mCommentsActivity);
-//        mCommentRecords = commentRecords;
-//        if (mCommentRecords.moveToFirst()){
-//            String linkId = mCommentRecords.getString(ReaditProvider.COLUMN_POST_ID);
-//            mRedditListing = RedditListing.find(RedditListing.class, "m_post_id = ?", linkId).get(0);
-//        }
-//    }
-
-
-//    public CommentRecordRecyclerAdapter(@NonNull Context context, List<CommentRecord> commentRecords, RedditListing redditListing){
-//        try {
-//            this.mCommentsActivity = (CommentsActivity) context;
-//        } catch (ClassCastException e){
-//            this.mCommentsActivity = (Activity)context;
-//        }
-//        this.mLayoutInflater = LayoutInflater.from(mCommentsActivity);
-//        mCommentRecords = commentRecords;
-//        mRedditListing = redditListing;
-//    }
 
     public CommentRecordRecyclerAdapter(@NonNull Context context, List<CommentRecord> commentRecords, RedditListing redditListing){
         try {
@@ -134,44 +104,20 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-//        mCommentRecords.moveToPosition(position);
         CommentRecord commentObject;
         if (MainActivity.usingTabletLayout){
             if (getItemViewType(position)==0){
                 ((RedditPostRecyclerAdapter.ListingHolder) holder).bindListing(mRedditListing);
             } else {
-//                commentObject = CommentRecord.makeCommentRecord(mCommentRecords);
                 commentObject = mCommentRecords.get(position-1);
                 ((CommentsHolder)holder).bindComment(commentObject, mRedditListing.author);
             }
         } else {
             if (position<mCommentRecords.size()){
-//                commentObject = CommentRecord.makeCommentRecord(mCommentRecords);
                 commentObject = mCommentRecords.get(position);
                 ((CommentsHolder)holder).bindComment(commentObject, mRedditListing.author);
             }
-//            else {
-//                commentObject = mCommentRecords.get(position -1);
-//            }
-//            ((CommentsHolder)holder).bindComment(commentObject, mRedditListing.author);
         }
-//        if (getItemViewType(position)!=0) {
-//            if (MainActivity.usingTabletLayout) {
-//                commentObject = mCommentRecords.get(position);
-//            } else {
-//                commentObject = mCommentRecords.get(position);
-//            }
-//            ((CommentsHolder)holder).bindComment(commentObject, mRedditListing.author);
-//
-//        } else {
-//            CommentRecord commentObject;
-//            if (MainActivity.usingTabletLayout) {
-//                ((RedditPostRecyclerAdapter.ListingHolder) holder).bindListing(mRedditListing);
-//            } else {
-//                commentObject = mCommentRecords.get(position);
-//                ((CommentsHolder)holder).bindComment(commentObject, mRedditListing.author);
-//            }
-//        }
 //        setAnimation(holder.itemView, position);
     }
 
@@ -195,13 +141,9 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
         CommentRecord commentRecord;
         if (!MainActivity.usingTabletLayout) {
             if (position<mCommentRecords.size()) {
-//                mCommentRecords.moveToPosition(position);
-//                CommentRecord commentRecord = CommentRecord.makeCommentRecord(mCommentRecords);
                 commentRecord = mCommentRecords.get(position);
                 return commentRecord.depth + 1;
             } else {
-//                mCommentRecords.moveToPosition(position -1);
-//                CommentRecord commentRecord = CommentRecord.makeCommentRecord(mCommentRecords);
                 commentRecord = mCommentRecords.get(position -1);
                 return commentRecord.depth + 1;
             }
@@ -209,8 +151,6 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
             if (position==0){
                 return VIEW_TYPE_POST_INFO;
             } else {
-//                mCommentRecords.moveToPosition(position-1);
-//                CommentRecord commentRecord = CommentRecord.makeCommentRecord(mCommentRecords);
                 commentRecord = mCommentRecords.get(position - 1);
                 return commentRecord.depth + 1;
             }
@@ -224,29 +164,20 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
             if (position==0){
                 return 0;
             } else {
-//                mCommentRecords.moveToPosition(position -1);
-//                return mCommentRecords.getInt(ReaditProvider.COLUMN_TIMESTAMP);
                 commentRecord = mCommentRecords.get(position - 1);
                 return commentRecord.getId();
             }
         } else {
             if (position<mCommentRecords.size()) {
-//                mCommentRecords.moveToPosition(position);
-//                return mCommentRecords.getInt(ReaditProvider.COLUMN_TIMESTAMP);
                 commentRecord = mCommentRecords.get(position);
                 return commentRecord.getId();
             } else {
-//                mCommentRecords.moveToPosition(position - 1);
-//                return mCommentRecords.getInt(ReaditProvider.COLUMN_TIMESTAMP);
                 commentRecord = mCommentRecords.get(position - 1);
                 return commentRecord.getId();
             }
         }
     }
 
-    public void swapCursor(Cursor cursor){
-//        mCommentRecords = cursor;
-    }
 
     static class CommentsHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView author;
@@ -257,7 +188,8 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
         private CommentRecord mCommentObject;
         private Context mContext;
-        Drawable authorBackground;
+        final Drawable authorBackground;
+        final int goldColor;
 
         void bindComment(CommentRecord commentRecord, String postAuthor){
             mCommentObject = commentRecord;
@@ -287,6 +219,13 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
                     flairText.setText(GeneralUtils.returnFormattedStringFromHtml(commentRecord.authorFlairText));
                 }
             }
+            if (commentRecord.isGilded){
+                author.setTextColor(GeneralUtils.getSDKSensitiveColor(mContext, R.color.gold));
+            } else {
+                if (author.getCurrentTextColor() == goldColor) {
+                    author.setTextColor(GeneralUtils.getSDKSensitiveColor(mContext, android.R.color.white));
+                }
+            }
         }
 
         public CommentsHolder(View itemView) {
@@ -302,6 +241,7 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
             } else {
                 authorBackground = mContext.getResources().getDrawable(R.drawable.background_post_author);
             }
+            goldColor = GeneralUtils.getSDKSensitiveColor(mContext, R.color.gold);
         }
 
         public void clearAnimation()
