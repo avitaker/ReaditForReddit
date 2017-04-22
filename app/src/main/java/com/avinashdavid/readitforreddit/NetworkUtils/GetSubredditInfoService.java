@@ -65,7 +65,7 @@ public class GetSubredditInfoService extends IntentService {
                                             String descriptionHtml = data.getString(KEY_DESCRIPTION_HTML);
 
                                             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-                                            sharedPreferences.edit().putString(KEY_DESCRIPTION_HTML,descriptionHtml).commit();
+                                            sharedPreferences.edit().putString(KEY_DESCRIPTION_HTML,descriptionHtml).apply();
 
                                             Intent intent = new Intent();
                                             intent.setAction(Constants.BROADCAST_SIDEBAR);
