@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -65,6 +66,8 @@ public class CommentsActivity extends AppCompatActivity
 
     RecyclerView mCommentsRecyclerview;
     CollapsingToolbarLayout mCollapsingToolbarLayout;
+
+    FloatingActionButton fab;
 
     private String mAfter;
 
@@ -142,6 +145,7 @@ public class CommentsActivity extends AppCompatActivity
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        fab = (FloatingActionButton)findViewById(R.id.comments_fab);
 
         if (mPostId != null) {
             Timber.d("post id is " + mPostId);
@@ -157,6 +161,15 @@ public class CommentsActivity extends AppCompatActivity
 //                    restartLoader();
                     UpdateCommentsAsyncTask updateCommentsAsyncTask = new UpdateCommentsAsyncTask();
                     updateCommentsAsyncTask.execute(mPostId);
+                    mCommentsRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener(){
+                        @Override
+                        public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+                            if (dy > 0)
+                                fab.hide();
+                            else if (dy < 0)
+                                fab.show();
+                        }
+                    });
                 } else if (Constants.BROADCAST_ERROR_WHILE_LOADING_COMMENTS.equals(action)){
                     errorSnack = Snackbar.make(findViewById(R.id.activity_comments), R.string.message_error_loading_comments, Snackbar.LENGTH_INDEFINITE);
                     errorSnack.setAction(R.string.refresh, new CommentsRefreshListener());
@@ -216,6 +229,15 @@ public class CommentsActivity extends AppCompatActivity
                 }
             });
             (findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
+            mCommentsRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener(){
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+                    if (dy > 0)
+                        fab.hide();
+                    else if (dy < 0)
+                        fab.show();
+                }
+            });
         }
     }
 
