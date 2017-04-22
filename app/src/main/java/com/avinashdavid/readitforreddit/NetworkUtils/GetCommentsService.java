@@ -87,12 +87,12 @@ public class GetCommentsService extends IntentService {
             mSort = getResources().getStringArray(R.array.sort_listing_options)[0];
         }
         Timber.d(mUrl.toString());
-        CommentRecord.deleteAll(CommentRecord.class);
         final Context context = GetCommentsService.this.getApplicationContext();
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
                 (Request.Method.GET, mUrl.toString(), null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
+                        CommentRecord.deleteAll(CommentRecord.class);
                         try {
                             final ArrayList<JSONObject> parentReplyJsonObjects = new ArrayList<>();
                             final String linkId = response.getJSONObject(0).getJSONObject(DATA_KEY).getJSONArray(CHILDREN_KEY).getJSONObject(0).getJSONObject(DATA_KEY).getString(ID_KEY);
