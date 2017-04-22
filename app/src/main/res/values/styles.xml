@@ -131,6 +131,8 @@
     </style>
 
     <style name="LittleCaptions.Comment" parent="LittleCaptions">
+        <item name="android:textSize">11sp</item>
+        <item name="android:gravity">bottom</item>
         <item name="android:paddingLeft">2dp</item>
     </style>
 
