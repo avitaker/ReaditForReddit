@@ -210,7 +210,11 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
             } else {
                 score.setText(mContext.getString(R.string.format_points, commentRecord.score));
             }
-            time_elapsed.setText(GeneralUtils.returnFormattedTime(mContext, System.currentTimeMillis(), commentRecord.createdTime));
+            String rawTime = GeneralUtils.returnFormattedTime(mContext, System.currentTimeMillis(), commentRecord.createdTime);
+            if (commentRecord.isEdited){
+                rawTime = rawTime.concat("*");
+            }
+            time_elapsed.setText(rawTime);
             bodyText.setText(GeneralUtils.returnFormattedStringFromHtml(commentRecord.bodyHtml));
             bodyText.setMovementMethod(LinkMovementMethod.getInstance());
             if (commentRecord.authorFlairText!=null) {

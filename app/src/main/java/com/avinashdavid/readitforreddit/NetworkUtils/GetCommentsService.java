@@ -57,6 +57,7 @@ public class GetCommentsService extends IntentService {
     private static final String TIME_CREATED_KEY = "created_utc";
     private static final String KEY_AUTHOR_FLAIR = "author_flair_text";
     private static final String GILDED = "gilded";
+    private static final String EDITED = "edited";
 
     private static ArrayList<ContentValues> sContentValues;
 
@@ -98,8 +99,6 @@ public class GetCommentsService extends IntentService {
                             String linkId = response.getJSONObject(0).getJSONObject(DATA_KEY).getJSONArray(CHILDREN_KEY).getJSONObject(0).getJSONObject(DATA_KEY).getString(ID_KEY);
                             JSONArray childrenJsonArray = response.getJSONObject(1).getJSONObject(DATA_KEY).getJSONArray(CHILDREN_KEY);
                             parentReplyJsonObjects.addAll(getCommentDataJsonObjectsFromChildrenJsonArray(childrenJsonArray));
-//                            getContentValuesList(GetCommentsService.this, parentReplyJsonObjects, linkId);
-//                            getContentResolver().bulkInsert(ReaditContract.CommentEntry.getUriComments(linkId), toInsert);
                             makeCommentObjectsFromJsonObjects(context, parentReplyJsonObjects, linkId);
                             Intent intent = new Intent();
                             intent.setAction(Constants.BROADCAST_COMMENTS_LOADED);
@@ -146,7 +145,6 @@ public class GetCommentsService extends IntentService {
 //        Uri uri = ReaditContract.CommentEntry.getUriComments(linkId);
 //        ContentValues cv = null;
         for (int i = 0; i < jsonObjects.size(); i++){
-            Timber.e("Saving comment");
             JSONObject currentJsonObj = jsonObjects.get(i);
             CommentRecord commentObject = getChildrenCommentObjectsFromJsonDataObject(currentJsonObj, linkId);
             commentObject.save();
@@ -201,7 +199,9 @@ public class GetCommentsService extends IntentService {
             boolean hasReplies = !replyData.get(REPLIES_KEY).toString().equals("");
             String authorflair = replyData.getString(KEY_AUTHOR_FLAIR);
             boolean isGilded = replyData.getInt(GILDED)>0;
-            commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, scoreHidden, score, author, body, parent, timecreated, depth, hasReplies, authorflair, isGilded);
+            boolean isEdited = !replyData.getString(EDITED).equals("false");
+
+            commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, scoreHidden, score, author, body, parent, timecreated, depth, hasReplies, authorflair, isGilded, isEdited);
 
 
         } catch (Exception e){

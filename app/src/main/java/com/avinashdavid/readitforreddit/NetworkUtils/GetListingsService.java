@@ -113,7 +113,6 @@ public class GetListingsService extends IntentService {
 
                                         RedditListing redditListing = new RedditListing(postId, System.currentTimeMillis(), title, voteCount, commentCount, author, subreddit, timeCreated, selftext, domain, afterResponse, url, thumbnailUrl, isGilded);
                                         redditListing.save();
-//                                        getContentResolver().query(redditListing.)
                                     }
                                 }
                                 Intent localIntent = new Intent();

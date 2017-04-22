@@ -36,11 +36,12 @@ public class CommentRecord extends SugarRecord {
     public String authorFlairText;
 
     public boolean isGilded;
+    public boolean isEdited;
 
     public CommentRecord() {
     }
 
-    public CommentRecord(long timestamp, String commentId, String linkId, boolean scoreHidden, int score, String author, String bodyHtml, String parent, float createdTime, int depth, boolean hasReplies, String authorFlairText, boolean isGilded) {
+    public CommentRecord(long timestamp, String commentId, String linkId, boolean scoreHidden, int score, String author, String bodyHtml, String parent, float createdTime, int depth, boolean hasReplies, String authorFlairText, boolean isGilded, boolean isEdited) {
         this.timestamp = timestamp;
         this.commentId = commentId;
         this.linkId = linkId;
@@ -54,6 +55,7 @@ public class CommentRecord extends SugarRecord {
         this.hasReplies = hasReplies;
         this.authorFlairText = authorFlairText;
         this.isGilded = isGilded;
+        this.isEdited = isEdited;
     }
 
     public static ContentValues makeContentValues(@NonNull CommentRecord commentRecord){
