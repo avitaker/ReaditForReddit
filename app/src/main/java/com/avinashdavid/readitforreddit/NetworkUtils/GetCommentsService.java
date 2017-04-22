@@ -5,13 +5,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.avinashdavid.readitforreddit.Data.ReaditContract;
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
 import com.avinashdavid.readitforreddit.PostUtils.CommentRecord;
 import com.avinashdavid.readitforreddit.R;
@@ -93,13 +93,19 @@ public class GetCommentsService extends IntentService {
                 (Request.Method.GET, mUrl.toString(), null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        CommentRecord.deleteAll(CommentRecord.class);
                         try {
-                            ArrayList<JSONObject> parentReplyJsonObjects = new ArrayList<>();
-                            String linkId = response.getJSONObject(0).getJSONObject(DATA_KEY).getJSONArray(CHILDREN_KEY).getJSONObject(0).getJSONObject(DATA_KEY).getString(ID_KEY);
+                            final ArrayList<JSONObject> parentReplyJsonObjects = new ArrayList<>();
+                            final String linkId = response.getJSONObject(0).getJSONObject(DATA_KEY).getJSONArray(CHILDREN_KEY).getJSONObject(0).getJSONObject(DATA_KEY).getString(ID_KEY);
                             JSONArray childrenJsonArray = response.getJSONObject(1).getJSONObject(DATA_KEY).getJSONArray(CHILDREN_KEY);
                             parentReplyJsonObjects.addAll(getCommentDataJsonObjectsFromChildrenJsonArray(childrenJsonArray));
-                            makeCommentObjectsFromJsonObjects(context, parentReplyJsonObjects, linkId);
+                            AsyncTask asyncTask = new AsyncTask() {
+                                @Override
+                                protected Object doInBackground(Object[] params) {
+                                    makeCommentObjectsFromJsonObjects(context, parentReplyJsonObjects, linkId);
+                                    return true;
+                                }
+                            };
+                            asyncTask.execute(0);
                             Intent intent = new Intent();
                             intent.setAction(Constants.BROADCAST_COMMENTS_LOADED);
                             GetCommentsService.this.sendBroadcast(intent);
@@ -130,26 +136,11 @@ public class GetCommentsService extends IntentService {
         context.startService(intent);
     }
 
-    private static void getContentValuesList(Context context, ArrayList<JSONObject> jsonObjects, String linkId){
-        ContentValues cv;
-        try {
-            makeCommentObjectsFromJsonObjects(context, jsonObjects, linkId);
-        } finally {
-            ContentValues[] contentValues1 = new ContentValues[sContentValues.size()];
-            contentValues1 = sContentValues.toArray(contentValues1);
-            context.getContentResolver().bulkInsert(ReaditContract.CommentEntry.getUriComments(linkId), contentValues1);
-        }
-    }
-
     private static void makeCommentObjectsFromJsonObjects(Context context, ArrayList<JSONObject> jsonObjects, String linkId){
-//        Uri uri = ReaditContract.CommentEntry.getUriComments(linkId);
-//        ContentValues cv = null;
         for (int i = 0; i < jsonObjects.size(); i++){
             JSONObject currentJsonObj = jsonObjects.get(i);
             CommentRecord commentObject = getChildrenCommentObjectsFromJsonDataObject(currentJsonObj, linkId);
             commentObject.save();
-//            cv = CommentRecord.makeContentValues(commentObject);
-//            sContentValues.add(cv);
 
             if (commentObject.hasReplies){
                 ArrayList<JSONObject> childObjects = getRepliesJsonObjectsFromCommentDataObj(currentJsonObj);
