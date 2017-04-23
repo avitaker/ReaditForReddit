@@ -227,7 +227,11 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
                 author.setTextColor(GeneralUtils.getSDKSensitiveColor(mContext, R.color.gold));
             } else {
                 if (author.getCurrentTextColor() == goldColor) {
-                    author.setTextColor(GeneralUtils.getSDKSensitiveColor(mContext, android.R.color.white));
+                    if (commentRecord.author.equals(postAuthor)) {
+                        author.setTextColor(GeneralUtils.getSDKSensitiveColor(mContext, android.R.color.white));
+                    } else {
+                        author.setTextColor(GeneralUtils.getThemeAccentColor(mContext));
+                    }
                 }
             }
         }

@@ -25,7 +25,6 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
 
-import com.android.volley.RequestQueue;
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
 import com.avinashdavid.readitforreddit.MiscUtils.GPSUtils;
 import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils;
@@ -82,11 +81,9 @@ public class CommentsActivity extends AppCompatActivity
 
     LinearLayoutManager mLinearLayoutManager;
 
-    private RequestQueue mRequestQueue;
 
     private Intent mIntent;
-
-//    private Uri mUrl;
+    String lastPostId;
 
     private String mPostId;
 
@@ -107,7 +104,7 @@ public class CommentsActivity extends AppCompatActivity
     IntentFilter mIntentFilter;
 
     Cursor mCursor;
-
+    SharedPreferences sp;
 
     RedditListing mListing;
 
@@ -141,6 +138,7 @@ public class CommentsActivity extends AppCompatActivity
 
         mToolbar = (Toolbar)findViewById(R.id.my_toolbar);
         mCommentsRecyclerview = (RecyclerView)findViewById(R.id.comment_recyclerview);
+        sp = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -206,11 +204,9 @@ public class CommentsActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-//        if (findViewById(R.id.loadingPanel).getVisibility() == View.GONE){
-//            restartLoader();
-//        }
-        if (!mPostId.equals(GetCommentsService.sLastPostId)) {
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        lastPostId = sp.getString(getString(R.string.pref_last_post), null);
+        if (!mPostId.equals(lastPostId)) {
+            Timber.e("loading again");
             SharedPreferences.Editor editor = sp.edit();
             editor.putInt(Constants.KEY_COMMENTS_FIRST_CHILD, 0);
             editor.putInt(Constants.KEY_COMMENTS_OFFSET, 0);

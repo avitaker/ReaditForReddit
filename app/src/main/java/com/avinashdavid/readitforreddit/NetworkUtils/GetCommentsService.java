@@ -1,11 +1,12 @@
 package com.avinashdavid.readitforreddit.NetworkUtils;
 
 import android.app.IntentService;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
 import com.android.volley.Request;
@@ -59,30 +60,19 @@ public class GetCommentsService extends IntentService {
     private static final String GILDED = "gilded";
     private static final String EDITED = "edited";
 
-    private static ArrayList<ContentValues> sContentValues;
 
 
     public GetCommentsService() {
         super(GetCommentsService.class.getSimpleName());
-        sContentValues = new ArrayList<>();
-//        try{
-//            mRealm = Realm.getDefaultInstance();
-//
-//        }catch (Exception e){
-//
-//            // Get a Realm instance for this thread
-//            RealmConfiguration config = new RealmConfiguration.Builder()
-//                    .deleteRealmIfMigrationNeeded()
-//                    .build();
-//            mRealm = Realm.getInstance(config);
-//
-//        }
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         mUrl = intent.getParcelableExtra(EXTRA_URL);
         mSort = intent.getStringExtra(EXTRA_SORT);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String key = getString(R.string.pref_last_post);
+
         if (null == mSort){
             mSort = getResources().getStringArray(R.array.sort_listing_options)[0];
         }
@@ -132,7 +122,9 @@ public class GetCommentsService extends IntentService {
         Intent intent = new Intent(context, GetCommentsService.class);
         Uri url = UriGenerator.getUriCommentsForArticle(subreddit, articleId, sort);
         intent.putExtra(GetCommentsService.EXTRA_URL, url);
-        sLastPostId = articleId;
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        String key = context.getString(R.string.pref_last_post);
+        sp.edit().putString(key, articleId).apply();
         context.startService(intent);
     }
 

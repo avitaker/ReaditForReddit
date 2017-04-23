@@ -317,7 +317,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mCommentsLoadedBroadcastReceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    mPostId = GetCommentsService.sLastPostId;
+                    mPostId = mApplicationSharedPreferences.getString(getString(R.string.pref_last_post), null);
                     UpdateCommentsPaneAsyncTask updateCommentsPaneAsyncTask = new UpdateCommentsPaneAsyncTask();
                     updateCommentsPaneAsyncTask.execute(mPostId);
                 }
@@ -363,7 +363,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (mPostId==null){
                 return;
             }
-            if (!mPostId.equals(GetCommentsService.sLastPostId)) {
+            if (!mPostId.equals(mApplicationSharedPreferences.getString(getString(R.string.pref_last_post),null))) {
                 GetCommentsService.loadCommentsForArticle(MainActivity.this, null, mPostId, mSortString);
             } else {
                 initCommentsUi();
@@ -609,7 +609,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mSubredditObjectRealmResults = mRealm.where(SubredditObject.class).findAll().sort("subredditName");
             if (mSubredditObjectRealmResults.size()<=0) {
                 getSubredditsForNavigationMenu(null, null);
-//                setSubredditsInNavigationView("");
                 Timber.d("no subreddits in realm");
             } else {
                 StringBuilder sb = new StringBuilder();
