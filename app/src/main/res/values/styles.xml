@@ -10,6 +10,8 @@
         <item name="android:textColorPrimaryInverse">@android:color/white</item>
     </style>
 
+    <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar"/>
+
     <style name="ThemeRedditSaturated" parent="AppTheme">
         <item name="colorPrimary">@color/reddit_saturated</item>
         <item name="colorPrimaryDark">@color/reddit_dark_saturated</item>
@@ -71,13 +73,13 @@
         <item name="android:colorBackground">@color/plaster</item>
     </style>
 
-    <style name="DarkTheme" parent="AppTheme">
+    <style name="DarkTheme" parent="AppThemeDark">
         <item name="colorPrimary">@color/wine</item>
         <item name="colorPrimaryDark">@color/dark</item>
-        <item name="colorAccent">@color/currant</item>
+        <item name="colorAccent">@color/tan</item>
         <item name="android:colorBackground">@color/grey_800</item>
-        <item name="android:textColorPrimaryInverse">@android:color/background_dark</item>
-        <item name="android:textColor">@color/milk</item>
+        <!--<item name="android:textColorPrimaryInverse">@android:color/background_dark</item>-->
+        <!--<item name="android:textColor">@color/milk</item>-->
     </style>
 
     <style name="PostDisplayCard">
@@ -95,7 +97,7 @@
     </style>
 
     <style name="CommentText">
-        <item name="android:textColor">@android:color/background_dark</item>
+        <!--<item name="android:textColor">@android:color/background_dark</item>-->
     </style>
 
     <style name="VoteCount" parent="TextAppearance.AppCompat.SearchResult.Subtitle">

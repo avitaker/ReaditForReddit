@@ -3,13 +3,13 @@ package com.avinashdavid.readitforreddit;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.view.MenuItem;
 
+import com.avinashdavid.readitforreddit.MiscUtils.PreferenceUtils;
 import com.avinashdavid.readitforreddit.SubredditUtils.SubredditObject;
 import com.avinashdavid.readitforreddit.UI.SubredditRecyclerviewAdapter;
 
@@ -37,6 +37,7 @@ public class ManageSubredditsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PreferenceUtils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_manage_subreddits);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -55,13 +56,14 @@ public class ManageSubredditsActivity extends AppCompatActivity {
         setUpRecyclerAndAdapter();
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab.hide();
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -124,14 +126,27 @@ public class ManageSubredditsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        boolean changed = initialCount != subredditCount;
-        if (changed) {
-            setResult(Activity.RESULT_OK);
-        } else {
-            setResult(Activity.RESULT_CANCELED);
-        }
+//        boolean changed = initialCount != subredditCount;
+//        if (changed) {
+//            setResult(Activity.RESULT_OK);
+//        } else {
+//            setResult(Activity.RESULT_CANCELED);
+//        }
         setResult(Activity.RESULT_OK);
         finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home: {
+                    setResult(RESULT_OK);
+                finish();
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void killRealm(){
