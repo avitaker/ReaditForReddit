@@ -148,7 +148,7 @@ public class CommentsActivity extends AppCompatActivity
         if (mPostId != null) {
             Timber.d("post id is " + mPostId);
             setTransitionNamePost(findViewById(R.id.post_info_container), mPostId);
-            setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), mPostId);
+//            setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), mPostId);
             initializePostInfo(mPostId);
         }
         mReceiver = new BroadcastReceiver() {

@@ -335,11 +335,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    @Override
-    public void onActivityReenter(int resultCode, Intent data) {
-        super.onActivityReenter(resultCode, data);
-        onCreate(null);
-    }
+//    @Override
+//    public void onActivityReenter(int resultCode, Intent data) {
+//        onCreate(null);
+//        super.onActivityReenter(resultCode, data);
+//    }
 
     @Override
     protected void onStart() {
