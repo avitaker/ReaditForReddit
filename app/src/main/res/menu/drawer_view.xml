@@ -6,6 +6,12 @@
             android:orderInCategory="0"
             android:id="@+id/go.to.subreddit"
             android:title="@string/go_to"/>
+
+        <item
+            android:orderInCategory="0"
+            android:id="@+id/random.subreddit"
+            android:title="@string/go_to_random"/>
+
         <item
             android:orderInCategory="0"
             android:id="@+id/search.posts"
@@ -14,12 +20,7 @@
         <item
             android:orderInCategory="0"
             android:id="@+id/add.subscription"
-            android:title="@string/add_subscription"/>
-
-        <item
-            android:orderInCategory="0"
-            android:id="@+id/random.subreddit"
-            android:title="@string/go_to_random"/>
+            android:title="@string/title_activity_manage_subreddits"/>
 
     </group>
 

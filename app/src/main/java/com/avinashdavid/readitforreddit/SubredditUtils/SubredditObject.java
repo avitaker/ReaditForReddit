@@ -9,7 +9,7 @@ import io.realm.annotations.PrimaryKey;
 
 public class SubredditObject extends RealmObject {
     @PrimaryKey
-    String subredditName;
+    public String subredditName;
 
     long timestamp;
 

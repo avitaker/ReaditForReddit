@@ -27,5 +27,6 @@
     <dimen name="c_d_7_margin">24dp</dimen>
 
     <dimen name="widget_margin">8dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 
 </resources>

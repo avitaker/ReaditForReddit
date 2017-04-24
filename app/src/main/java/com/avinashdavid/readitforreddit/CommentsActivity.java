@@ -206,7 +206,6 @@ public class CommentsActivity extends AppCompatActivity
         super.onStart();
         lastPostId = sp.getString(getString(R.string.pref_last_post), null);
         if (!mPostId.equals(lastPostId)) {
-            Timber.e("loading again");
             SharedPreferences.Editor editor = sp.edit();
             editor.putInt(Constants.KEY_COMMENTS_FIRST_CHILD, 0);
             editor.putInt(Constants.KEY_COMMENTS_OFFSET, 0);

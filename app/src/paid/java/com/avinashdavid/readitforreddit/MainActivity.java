@@ -90,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int ID_RISING = 3;
     private static final int ID_TOP = 4;
 
+    public static final int CODE_MANAGE_SUBREDDITS = 7;
+
     Toolbar mToolbar;
     RecyclerView mListingRecyclerview;
     CollapsingToolbarLayout mCollapsingToolbarLayout;
@@ -265,14 +267,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Timber.d("received subreddit valid broadcast");
                     mApplicationSharedPreferences.edit().putBoolean(getString(R.string.pref_reload_subreddits), true).commit();
                     setSubredditsInNavigationView("");
-                    activity.unregisterReceiver(mAddSubBroadcastReceiver);
+                    stopAllReceivers();
                     activity.finish();
                     Intent intent1 = new Intent(activity, activity.getClass());
                     intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     activity.startActivity(intent1);
                     Snackbar.make(findViewById(R.id.activity_main),
                             R.string.message_subreddit_added, Snackbar.LENGTH_LONG).show();
-//                    Toast.makeText(activity, "Subreddit added", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(activity, "Subreddit mAdded", Toast.LENGTH_LONG).show();
                 } else if (action.equals(Constants.BROADCAST_SUBREDDIT_PRESENT)){
                     Snackbar.make(findViewById(R.id.activity_main),
                             R.string.message_subreddit_present, Snackbar.LENGTH_LONG).show();
@@ -494,6 +496,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode==CODE_MANAGE_SUBREDDITS){
+            if (resultCode == Activity.RESULT_OK){
+                setSubredditsInNavigationView("");
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (item.isChecked()) item.setChecked(false);
@@ -687,7 +700,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (itemId == R.id.search_posts){
             openSearchDialog();
         } else if (itemId == R.id.add_subscription){
-            openAddSubDialog();
+//            openAddSubDialog();
+            Intent intent = new Intent(this, ManageSubredditsActivity.class);
+            startActivityForResult(intent, CODE_MANAGE_SUBREDDITS);
         } else if (itemId == R.id.random_subreddit){
             GetListingsService.loadListingsRandom(this);
             mListingRecyclerview.setAdapter(null);

@@ -6,12 +6,14 @@
     <string name="go_to">Go to subreddit</string>
     <string name="search_posts">Search posts</string>
     <string name="add_subscription">Add subreddit subscription</string>
+    <string name="manage_subreddits">Manage Subreddits</string>
     <string name="go_to_random">Random subreddit</string>
 
     <!--Main page options menu-->
     <string name="sort">Sort</string>
     <string name="change.theme">Change theme</string>
     <string name="addThisSubreddit">Subscribe to this subreddit</string>
+
 
     <!--listings page-->
     <string name="format_numberofcomments"><xliff:g id="number_of_comments">%d</xliff:g> comments</string>
@@ -118,5 +120,7 @@
 
     <string name="widget_empty">Something went wrong. Open app to refresh widget.</string>
     <string name="cp_authority">com.avinashdavid.readitforreddit</string>
+    <string name="title_activity_manage_subreddits">Manage Subscriptions</string>
+    <string name="delete_subreddit">Delete subreddit</string>
 
 </resources>

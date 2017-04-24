@@ -77,7 +77,7 @@ dependencies {
 }
 
 task installRelease() {
-    dependsOn "installFreeRelease","installPaidRelease"
+    dependsOn "installFreeRelease", "installPaidRelease"
 //    android.applicationVariants.all { v ->
 //        if (v.name.endsWith('Release')) {
 //            String name = v.name.capitalize()

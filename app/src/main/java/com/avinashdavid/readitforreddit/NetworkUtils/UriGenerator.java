@@ -78,15 +78,18 @@ public class UriGenerator {
         if (null!=subreddit){
             builder.appendPath(subredditMarkerString).appendPath(subreddit);
         }
+        if (null!=sort && query==null){
+            builder.appendPath(sort);
+        }
         if (query!=null) {
             builder.appendPath("search");
             builder.appendQueryParameter("q", query);
+            if (null!=sort){
+                builder.appendQueryParameter(KEY_SORT, sort);
+            }
         }
         if (null!=after){
             builder.appendQueryParameter(KEY_AFTER, after);
-        }
-        if (null!=sort){
-            builder.appendQueryParameter(KEY_SORT, sort);
         }
         if (restrictSr){
             builder.appendQueryParameter(KEY_RESTRICT_SR, "on");

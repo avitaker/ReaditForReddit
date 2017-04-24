@@ -8,16 +8,23 @@
     <application
         android:name=".ReaditApp"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:hardwareAccelerated="true"
         android:theme="@style/AppTheme">
-
-        <meta-data android:name="DATABASE" android:value="widget_posts.db" />
-        <meta-data android:name="VERSION" android:value="3" />
-        <meta-data android:name="QUERY_LOG" android:value="true" />
-        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.avinashdavid.readitforreddit" />
+        <meta-data
+            android:name="DATABASE"
+            android:value="widget_posts.db"/>
+        <meta-data
+            android:name="VERSION"
+            android:value="3"/>
+        <meta-data
+            android:name="QUERY_LOG"
+            android:value="true"/>
+        <meta-data
+            android:name="DOMAIN_PACKAGE_NAME"
+            android:value="com.avinashdavid.readitforreddit"/>
 
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -27,39 +34,55 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".NetworkUtils.GetListingsService"
-                 android:enabled="true"
-                 android:exported="true"
-                 android:permission="android.permission.BIND_JOB_SERVICE"/>
-
+        <service
+            android:name=".NetworkUtils.GetListingsService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
         <service android:name=".NetworkUtils.GetCommentsService"/>
-
         <service android:name=".NetworkUtils.GetSubredditsService"/>
-
         <service android:name=".PostUtils.DeleteCommentsService"/>
 
-        <activity android:name=".CommentsActivity"
+        <activity
+            android:name=".CommentsActivity"
             android:parentActivityName=".MainActivity">
         </activity>
 
-        <receiver android:name=".Widget.SubredditWidgetProvider"
-                  android:label="@string/app_name">
+        <receiver
+            android:name=".Widget.SubredditWidgetProvider"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
                 <action android:name="com.avinashdavid.readitforreddit.BROADCAST_SUBREDDIT"/>
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
-                       android:resource="@xml/widget_provider_subreddit"/>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_provider_subreddit"/>
         </receiver>
-        <service android:name=".Widget.SubredditWidgetRemoteViewsService"
-                 android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
+        <service
+            android:name=".Widget.SubredditWidgetRemoteViewsService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
         <service android:name=".NetworkUtils.CheckNewSubredditService"/>
         <service android:name=".NetworkUtils.GetSubredditInfoService"/>
+
         <activity android:name=".LinkActivity"/>
+
         <provider
-            android:authorities="@string/cp_authority"
             android:name=".Data.ReaditProvider"
+            android:authorities="@string/cp_authority"
             android:exported="true"/>
+
+        <activity
+            android:name=".ManageSubredditsActivity"
+            android:label="@string/title_activity_manage_subreddits"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.avinashdavid.readitforreddit.MainActivity"/>
+        </activity>
     </application>
 
 </manifest>
