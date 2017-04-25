@@ -4,7 +4,7 @@
 
     <item android:id="@+id/sort.by"
           android:title="@string/sort"
-          android:icon="@drawable/ic_sort_white_24dp"
+          android:icon="?attr/sort_icon"
           app:showAsAction="ifRoom">
         <menu>
 
@@ -37,6 +37,8 @@
           android:icon="@drawable/ic_theme_white_24dp"
           app:showAsAction="never">
         <menu>
+            <item android:id="@+id/theme.white"
+                  android:title="@string/theme.white"/>
             <item android:id="@+id/theme.default"
                   android:title="@string/theme.reddit"/>
             <item android:id="@+id/theme.saturated"

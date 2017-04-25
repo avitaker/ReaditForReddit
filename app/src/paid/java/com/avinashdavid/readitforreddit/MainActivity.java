@@ -24,6 +24,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.method.LinkMovementMethod;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -193,7 +194,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         haveToReloadSubreddits = mApplicationSharedPreferences.getBoolean(getString(R.string.pref_reload_subreddits), true);
 
         mToolbar = (Toolbar)findViewById(R.id.my_toolbar);
-        mToolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.menu_icon, typedValue, true);
+        mToolbar.setNavigationIcon(typedValue.resourceId);
         mCollapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapsing_toolbar);
         setSupportActionBar(mToolbar);
 
@@ -556,6 +559,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             case R.id.theme_saturated:{
                 PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_SATURATED);
+                return true;
+            }
+            case R.id.theme_white:{
+                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_WHITE);
                 return true;
             }
             case R.id.theme_desert:{

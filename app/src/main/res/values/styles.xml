@@ -8,14 +8,43 @@
         <item name="colorAccent">@color/reddit_orange</item>
         <item name="android:colorBackground">@android:color/white</item>
         <item name="android:textColorPrimaryInverse">@android:color/white</item>
+        <item name="sort_icon">@drawable/ic_sort_white_24dp</item>
+        <item name="menu_icon">@drawable/ic_menu_white_24dp</item>
+        <item name="android:textColor">@android:color/background_dark</item>
     </style>
 
-    <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar"/>
+    <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">
+        <item name="sort_icon">@drawable/ic_sort_white_24dp</item>
+        <item name="menu_icon">@drawable/ic_menu_white_24dp</item>
+    </style>
+
+    <style name="AppTheme.Light" parent="AppTheme">
+        <!--<item name="android:windowLightStatusBar">true</item>-->
+        <item name="sort_icon">@drawable/ic_sort_black_24dp</item>
+        <item name="menu_icon">@drawable/ic_menu_black_24dp</item>
+    </style>
 
     <style name="ThemeRedditSaturated" parent="AppTheme">
         <item name="colorPrimary">@color/reddit_saturated</item>
         <item name="colorPrimaryDark">@color/reddit_dark_saturated</item>
         <item name="colorAccent">@color/reddit_accent_saturated</item>
+    </style>
+
+    <style name="ThemeWhite" parent="AppTheme.Light">
+        <item name="colorPrimary">@color/white_primary</item>
+        <item name="colorPrimaryDark">@color/white_primaryDark</item>
+        <item name="colorAccent">@color/white_accent</item>
+    </style>
+
+    <style name="ToolbarWhite" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="titleTextColor">@android:color/background_dark</item>
+    </style>
+
+    <style name="ThemeOverlay.MyApp.ActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
+        <!-- Parent theme sets colorControlNormal to textColorPrimary. -->
+        <item name="android:textColorPrimary">@color/abc_primary_text_material_light</item>
+        <item name="actionMenuTextColor">@color/abc_primary_text_material_light</item>
+        <item name="android:textColorSecondary">@color/abc_secondary_text_material_light</item>
     </style>
 
     <style name="ThemeDesert" parent="AppTheme">
@@ -92,7 +121,6 @@
     </style>
 
     <style name="PostDetails">
-        <item name="android:textColor">@android:color/white</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -123,7 +151,6 @@
 
     <style name="NormalWeightColorAccent" parent="BoldCaptionsAccent">
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="LittleCaptions" parent="TextAppearance.AppCompat.Caption">
@@ -141,6 +168,9 @@
     <style name="SelftextContainer">
         <item name="android:paddingTop">@dimen/padding_comment_item</item>
         <item name="android:paddingBottom">@dimen/padding_listing_cardview</item>
+    </style>
+
+    <style name="ThemePostInfo">
         <item name="android:textColor">@android:color/white</item>
     </style>
 

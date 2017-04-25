@@ -206,7 +206,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         haveToReloadSubreddits = mApplicationSharedPreferences.getBoolean(getString(R.string.pref_reload_subreddits), true);
 
         mToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        mToolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.menu_icon, typedValue, true);
+        mToolbar.setNavigationIcon(typedValue.resourceId);
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         setSupportActionBar(mToolbar);
 

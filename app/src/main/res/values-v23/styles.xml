@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme.Light" parent="AppTheme">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="sort_icon">@drawable/ic_sort_black_24dp</item>
+        <item name="menu_icon">@drawable/ic_menu_black_24dp</item>
+        <item name="appbar_theme">@style/ThemeOverlay.AppCompat.ActionBar</item>
+    </style>
+</resources>

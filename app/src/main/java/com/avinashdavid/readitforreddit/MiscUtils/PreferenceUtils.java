@@ -23,7 +23,6 @@ public class PreferenceUtils {
 
     private static int sTheme;
     public final static int THEME_DEFAULT = 0;
-    public static final int THEME_SATURATED = 9;
     public final static int THEME_OCEAN = 1;
     public final static int THEME_COFFEE = 2;
     public static final int THEME_APPLES = 3;
@@ -32,6 +31,8 @@ public class PreferenceUtils {
     public static final int THEME_COASTAL = 6;
     public static final int THEME_DARK_1 = 7;
     public static final int THEME_DESERT = 8;
+    public static final int THEME_SATURATED = 9;
+    public static final int THEME_WHITE = 10;
     /**
      * Set the theme of the Activity, and restart it by creating a new Activity of the same type.
      */
@@ -77,6 +78,9 @@ public class PreferenceUtils {
                 break;
             case THEME_SATURATED:
                 activity.setTheme(R.style.ThemeRedditSaturated);
+                break;
+            case THEME_WHITE:
+                activity.setTheme(R.style.ThemeWhite);
                 break;
             default:
                 activity.setTheme(R.style.AppTheme);

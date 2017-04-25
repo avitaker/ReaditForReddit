@@ -2,6 +2,11 @@
 <resources>
     <color name="gold">#D4AF37</color>
 
+    <color name="white_primary">#F5F5F5</color>
+    <color name="white_primaryDark">#E0E0E0</color>
+    <color name="white_accent">#2196F3</color>
+
+
     <color name="reddit_blue">#8bbdee</color>
     <color name="reddit_dark_blue">#5589ba</color>
     <color name="reddit_orange">#ff4500</color>

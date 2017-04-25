@@ -351,6 +351,7 @@ public class CommentsActivity extends AppCompatActivity
             case android.R.id.home:
                 setTransitionNamePost(findViewById(R.id.post_info_container), null);
                 setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), null);
+                supportFinishAfterTransition();
                 return true;
 //            case R.id.sort_top: {
 //                if (item.isChecked()) item.setChecked(false);

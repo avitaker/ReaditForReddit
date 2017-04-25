@@ -90,6 +90,7 @@
 
     <string name="theme.reddit">Reddit</string>
     <string name="theme.saturated">Reddit Saturated</string>
+    <string name="theme.white">Light</string>
     <string name="theme.desert">Desert</string>
     <string name="theme.ocean">Ocean</string>
     <string name="theme.coffee">Coffee</string>
