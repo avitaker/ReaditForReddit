@@ -118,6 +118,7 @@ public class CommentsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         PreferenceUtils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_comments);
+        supportPostponeEnterTransition();
 
         GPSUtils.setScreenName(this, "CommentsActivity");
         Timber.d("oncreate");
@@ -148,7 +149,7 @@ public class CommentsActivity extends AppCompatActivity
         if (mPostId != null) {
             Timber.d("post id is " + mPostId);
             setTransitionNamePost(findViewById(R.id.post_info_container), mPostId);
-//            setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), mPostId);
+            setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), mPostId);
             initializePostInfo(mPostId);
         }
         mReceiver = new BroadcastReceiver() {
@@ -234,6 +235,8 @@ public class CommentsActivity extends AppCompatActivity
                 }
             });
         }
+//        setTransitionNamePost(findViewById(R.id.post_info_container), null);
+//        setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), null);
     }
 
     @Override
@@ -246,6 +249,8 @@ public class CommentsActivity extends AppCompatActivity
 
     @Override
     protected void onPause() {
+//        setTransitionNamePost(findViewById(R.id.post_info_container), null);
+//        setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), null);
         try {
             unregisterReceiver(mReceiver);
         } catch (IllegalArgumentException e) {
@@ -258,6 +263,13 @@ public class CommentsActivity extends AppCompatActivity
             }
         }
         super.onPause();
+    }
+
+    @Override
+    public void onBackPressed() {
+        setTransitionNamePost(findViewById(R.id.post_info_container), null);
+        setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), null);
+        super.onBackPressed();
     }
 
     private void initUi(){
@@ -337,7 +349,8 @@ public class CommentsActivity extends AppCompatActivity
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                supportFinishAfterTransition();
+                setTransitionNamePost(findViewById(R.id.post_info_container), null);
+                setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), null);
                 return true;
 //            case R.id.sort_top: {
 //                if (item.isChecked()) item.setChecked(false);
@@ -435,6 +448,7 @@ public class CommentsActivity extends AppCompatActivity
             selftext_textview.setVisibility(View.VISIBLE);
             selftext_textview.setMovementMethod(LinkMovementMethod.getInstance());
         }
+        supportStartPostponedEnterTransition();
     }
 
 //    @Override

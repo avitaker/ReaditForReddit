@@ -199,7 +199,7 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
             mPostId = listing.mPostId;
             if (!MainActivity.usingTabletLayout) {
                 setTransitionNamePost(mContext, mRelativeLayout, mPostId);
-//                setTransitionNamePostBg(mContext, mCardRelativeLayout, mPostId);
+                setTransitionNamePostBg(mContext, mCardRelativeLayout, mPostId);
             }
             voteCount_textview.setText(Integer.toString(listing.voteCount));
             author_textview.setText(listing.author);
