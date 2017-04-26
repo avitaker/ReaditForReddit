@@ -17,6 +17,10 @@ public class ReaditDBHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "Readit.db";
 
+    public ReaditDBHelper(Context context){
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
     private static final String SQL_CREATE_REDDITLISTINGS =
             "CREATE TABLE " + ReaditContract.RedditListingEntry.TABLE_NAME + " (" +
                     ReaditContract.RedditListingEntry._ID + " INTEGER PRIMARY KEY " + COMMA_MARKER +
@@ -56,9 +60,6 @@ public class ReaditDBHelper extends SQLiteOpenHelper {
     private static final String SQL_DELETE_COMMENTS =
             "DROP TABLE IF EXISTS " + ReaditContract.CommentEntry.TABLE_NAME;
 
-    public ReaditDBHelper(Context context){
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-    }
 
     @Override
     public void onCreate(SQLiteDatabase db) {

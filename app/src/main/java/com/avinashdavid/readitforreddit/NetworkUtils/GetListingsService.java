@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 
 import com.android.volley.Request;
@@ -15,6 +16,8 @@ import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import timber.log.Timber;
 
@@ -68,16 +71,15 @@ public class GetListingsService extends IntentService {
         mUrl = intent.getParcelableExtra(EXTRA_URL);
         final boolean haveToSendWidgetData = intent.getBooleanExtra(EXTRA_FOR_WIDGET, false);
         final boolean isRandom = intent.getBooleanExtra(EXTRA_RANDOM, false);
-        Timber.d(mUrl.toString());
         mLoadAfter = intent.getStringExtra(EXTRA_LOAD_AFTER);
         if (null!=mLoadAfter){
             mUrl = mUrl.buildUpon().appendQueryParameter(QUERY_AFTER, mLoadAfter).build();
         } else {
-            Timber.d("mAfter is null");
             RedditListing.deleteAll(RedditListing.class);
         }
 
         final Context context = GetListingsService.this.getApplicationContext();
+        final ArrayList<RedditListing> redditListings = new ArrayList<>();
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, mUrl.toString(), null, new Response.Listener<JSONObject>() {
@@ -94,6 +96,7 @@ public class GetListingsService extends IntentService {
                                 if (haveToSendWidgetData){
                                     RedditListing.deleteAll(RedditListing.class);
                                 }
+
                                 for (int i =0; i<childrenArray.length(); i++){
                                     JSONObject listingObject = childrenArray.getJSONObject(i);
                                     if (listingObject.getString(KIND_KEY).equals(LINK_KIND)){
@@ -112,26 +115,33 @@ public class GetListingsService extends IntentService {
                                         boolean isGilded = linkObject.getInt(GILDED)>0;
 
                                         RedditListing redditListing = new RedditListing(postId, System.currentTimeMillis(), title, voteCount, commentCount, author, subreddit, timeCreated, selftext, domain, afterResponse, url, thumbnailUrl, isGilded);
-                                        redditListing.save();
+                                        redditListings.add(redditListing);
                                     }
                                 }
-                                Intent localIntent = new Intent();
-                                if (!isRandom) {
-                                    localIntent.setAction(Constants.BROADCAST_POSTS_LOADED);
-                                } else {
-                                    localIntent.setAction(Constants.BROADCAST_RANDOM_SUBREDDIT_POSTS_LOADED);
-                                }
-                                sendBroadcast(localIntent);
+
+                                SaveListingAsyncTask saveListingAsyncTask = new SaveListingAsyncTask(){
+                                    @Override
+                                    protected void onPostExecute(Void aVoid) {
+                                        Intent localIntent = new Intent();
+                                        if (!isRandom) {
+                                            localIntent.setAction(Constants.BROADCAST_POSTS_LOADED);
+                                        } else {
+                                            localIntent.setAction(Constants.BROADCAST_RANDOM_SUBREDDIT_POSTS_LOADED);
+                                        }
+                                        sendBroadcast(localIntent);
 //                                if (haveToSendWidgetData){
 //                                    Timber.d("have to send widget data");
 //
 //                                    Intent broadcastIntent = new Intent(BROADCAST_SUBREDDIT_WIDGET);
 //                                    context.sendBroadcast(broadcastIntent);
 //                                }
-                                Timber.d("have to send widget data");
 
-                                Intent broadcastIntent = new Intent(BROADCAST_SUBREDDIT_WIDGET);
-                                context.sendBroadcast(broadcastIntent);
+                                        Intent broadcastIntent = new Intent(BROADCAST_SUBREDDIT_WIDGET);
+                                        context.sendBroadcast(broadcastIntent);
+                                        super.onPostExecute(aVoid);
+                                    }
+                                };
+                                saveListingAsyncTask.execute(redditListings);
                             }
                         }
                         catch (Exception e){
@@ -179,5 +189,16 @@ public class GetListingsService extends IntentService {
         intent.putExtra(GetListingsService.EXTRA_URL, url);
         intent.putExtra(GetListingsService.EXTRA_RANDOM, true);
         context.startService(intent);
+    }
+
+    private class SaveListingAsyncTask extends AsyncTask<ArrayList<RedditListing>, Void, Void> {
+
+        @Override
+        protected Void doInBackground(ArrayList<RedditListing>... params) {
+            for (RedditListing redditListing: params[0]){
+                redditListing.save();
+            }
+            return null;
+        }
     }
 }

@@ -5,4 +5,5 @@
     <attr name="appbar_theme" format="reference"/>
     <attr name="toolbar_popup_theme" format="reference"/>
     <attr name="delete_icon" format="reference"/>
+    <attr name="post_accent_color" format="reference"/>
 </resources>

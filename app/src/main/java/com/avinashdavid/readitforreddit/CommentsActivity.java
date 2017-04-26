@@ -170,7 +170,7 @@ public class CommentsActivity extends AppCompatActivity
                         }
                     });
                 } else if (Constants.BROADCAST_ERROR_WHILE_LOADING_COMMENTS.equals(action)){
-                    errorSnack = Snackbar.make(findViewById(R.id.activity_comments), R.string.message_error_loading_comments, Snackbar.LENGTH_INDEFINITE);
+                    errorSnack = PreferenceUtils.getThemedSnackbar(CommentsActivity.this, R.id.activity_comments, getString(R.string.message_error_loading_comments), Snackbar.LENGTH_INDEFINITE);
                     errorSnack.setAction(R.string.refresh, new CommentsRefreshListener());
                     errorSnack.show();
                 }
@@ -256,7 +256,7 @@ public class CommentsActivity extends AppCompatActivity
         } catch (IllegalArgumentException e) {
             if (e.getMessage().contains("Receiver not registered")) {
                 // Ignore this exception. This is exactly what is desired
-                Timber.d("Tried to unregister the reciver when it's not registered");
+                Timber.e("Tried to unregister the reciver when it's not registered");
             } else {
                 // unexpected, re-throw
                 throw e;
@@ -273,7 +273,6 @@ public class CommentsActivity extends AppCompatActivity
     }
 
     private void initUi(){
-        Timber.d("calling initUi");
 //        realmResults.addChangeListener(new RealmChangeListener<RealmResults<CommentObject>>() {
 //            @Override
 //            public void onChange(RealmResults<CommentObject> element) {
@@ -301,8 +300,7 @@ public class CommentsActivity extends AppCompatActivity
             int firstVisiblePosition = mCommentsRecyclerview.getChildAdapterPosition(firstChild);
             int offset = firstChild.getTop();
 
-            Timber.d("Postition: " + firstVisiblePosition);
-            Timber.d("Offset: " + offset);
+
 
             sp.edit()
                     .putInt(Constants.KEY_COMMENTS_FIRST_CHILD, firstVisiblePosition)
@@ -315,7 +313,6 @@ public class CommentsActivity extends AppCompatActivity
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        Timber.d("calling saveinstancestate");
         super.onSaveInstanceState(outState);
 //        outState.putParcelable(EXTRA_URL, mUrl);
         outState.putString(EXTRA_POST_ID, mPostId);

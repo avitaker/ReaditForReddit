@@ -30,8 +30,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import timber.log.Timber;
-
 /**
  * Created by avinashdavid on 3/17/17.
  */
@@ -147,7 +145,6 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
         super.onViewAttachedToWindow(holder);
         if (holder.getAdapterPosition() > mRedditListings.size() - 3){
             String after = mRedditListings.get(mRedditListings.size()-1).after;
-            Timber.d("after is supposed to be " + after);
             mScrollListener.OnReachedLast(after);
         }
     }

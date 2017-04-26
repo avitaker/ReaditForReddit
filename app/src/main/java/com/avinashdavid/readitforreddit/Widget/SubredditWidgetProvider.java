@@ -24,8 +24,6 @@ import com.avinashdavid.readitforreddit.R;
 
 import java.util.ArrayList;
 
-import timber.log.Timber;
-
 /**
  * Created by avinashdavid on 3/16/17.
  */
@@ -40,7 +38,6 @@ public class SubredditWidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
-        Timber.d("maybe updaing widget");
 
         if (Constants.BROADCAST_SUBREDDIT_WIDGET.equals(intent.getAction())) {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -52,7 +49,6 @@ public class SubredditWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(final Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        Timber.d("onUpdate");
         final int N = appWidgetIds.length;
         SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
 

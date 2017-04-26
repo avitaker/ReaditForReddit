@@ -110,7 +110,6 @@ public class CheckNewSubredditService extends IntentService {
                                         @Override
                                         public void execute(Realm realm) {
                                             mRealm.copyToRealmOrUpdate(mSubredditObjectRealmList);
-                                            Timber.d("adding subreddit");
                                         }
                                     });
 

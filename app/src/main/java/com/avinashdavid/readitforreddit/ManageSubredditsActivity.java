@@ -19,7 +19,6 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
-import timber.log.Timber;
 
 public class ManageSubredditsActivity extends AppCompatActivity {
     Realm mRealm;
@@ -150,7 +149,6 @@ public class ManageSubredditsActivity extends AppCompatActivity {
     }
 
     public void killRealm(){
-        Timber.d("killing (not starting) realm");
         if (mRealm!=null){
             mRealm.close();
             mRealm = null;

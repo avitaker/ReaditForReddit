@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -25,6 +24,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.method.LinkMovementMethod;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,7 +32,6 @@ import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.avinashdavid.readitforreddit.Data.ReaditContract;
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
 import com.avinashdavid.readitforreddit.MiscUtils.GPSUtils;
 import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils;
@@ -130,8 +129,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     RealmResults<SubredditObject> mSubredditObjectRealmResults;
 
-    RealmResults<RedditPost> mRedditPostRealmResults;
-
     SharedPreferences mApplicationSharedPreferences;
     Parcelable mLayoutState;
 
@@ -161,12 +158,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Timber.d("onCreate");
         PreferenceUtils.onActivityCreateSetTheme(this);
         setContentView(R.layout.drawer_main_activity);
 
         GPSUtils.setScreenName(this, "MainActivityFree");
-        //TODO: Figure out how to add the test device or if this is even working
+
         AdView adView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
                 .setRequestAgent("android_studio:ad_template")
@@ -181,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mApplicationSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-        loadingSnack = Snackbar.make(findViewById(R.id.activity_main), R.string.message_loading_more_posts, Snackbar.LENGTH_INDEFINITE);
+        loadingSnack = PreferenceUtils.getThemedSnackbar(this, R.id.activity_main, getString(R.string.message_loading_more_posts), Snackbar.LENGTH_INDEFINITE);
         usingTabletLayout = (findViewById(R.id.comment_recyclerview) != null);
         mApplicationSharedPreferences.edit().putBoolean(getString(R.string.pref_boolean_use_tablet_layout), usingTabletLayout).apply();
 
@@ -260,8 +256,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 } else if (Constants.BROADCAST_ERROR_WHILE_RETREIVING_POSTS.equals(action)) {
                     mSwipeRefreshLayout.setRefreshing(false);
-                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.activity_main),
-                            R.string.error_while_loading_posts, Snackbar.LENGTH_LONG);
+                    Snackbar mySnackbar = PreferenceUtils.getThemedSnackbar(MainActivity.this, R.id.activity_main, getString(R.string.error_while_loading_posts), Snackbar.LENGTH_LONG);
                     mySnackbar.setAction(R.string.retry, new MyRefreshListener());
                     mySnackbar.show();
                 } else if (Constants.BROADCAST_SUBREDDITS_LOADED.equals(action)) {
@@ -279,7 +274,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 String action = intent.getAction();
                 Activity activity = MainActivity.this;
                 if (action.equals(Constants.BROADCAST_SUBREDDIT_ADDED)) {
-                    Timber.d("received subreddit valid broadcast");
                     mApplicationSharedPreferences.edit().putBoolean(getString(R.string.pref_reload_subreddits), true).commit();
                     setSubredditsInNavigationView("");
                     activity.unregisterReceiver(mAddSubBroadcastReceiver);
@@ -287,18 +281,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Intent intent1 = new Intent(activity, activity.getClass());
                     intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     activity.startActivity(intent1);
-                    Snackbar.make(findViewById(R.id.activity_main),
-                            R.string.message_subreddit_added, Snackbar.LENGTH_LONG).show();
-//                    Toast.makeText(activity, "Subreddit added", Toast.LENGTH_LONG).show();
-                } else if (action.equals(Constants.BROADCAST_SUBREDDIT_PRESENT)) {
-                    Snackbar.make(findViewById(R.id.activity_main),
-                            R.string.message_subreddit_present, Snackbar.LENGTH_LONG).show();
-                } else if (action.equals(Constants.BROADCAST_SUBREDDIT_BANNED)) {
-                    Snackbar.make(findViewById(R.id.activity_main),
-                            R.string.message_subreddit_banned, Snackbar.LENGTH_LONG).show();
-                } else if (action.equals(Constants.BROADCAST_NO_SUCH_SUBREDDIT)) {
-                    Snackbar.make(findViewById(R.id.activity_main),
-                            R.string.message_subreddit_not_valid, Snackbar.LENGTH_LONG).show();
+                    PreferenceUtils.getThemedSnackbar(activity, R.id.activity_main, getString(R.string.message_subreddit_added), Snackbar.LENGTH_LONG).show();
+                } else if (action.equals(Constants.BROADCAST_SUBREDDIT_PRESENT)){
+                    PreferenceUtils.getThemedSnackbar(activity, R.id.activity_main, getString(R.string.message_subreddit_present), Snackbar.LENGTH_LONG).show();
+                } else if (action.equals(Constants.BROADCAST_SUBREDDIT_BANNED)){
+                    PreferenceUtils.getThemedSnackbar(activity, R.id.activity_main, getString(R.string.message_subreddit_banned), Snackbar.LENGTH_LONG).show();
+                } else if (action.equals(Constants.BROADCAST_NO_SUCH_SUBREDDIT)){
+                    PreferenceUtils.getThemedSnackbar(activity, R.id.activity_main, getString(R.string.message_subreddit_not_valid), Snackbar.LENGTH_LONG).show();
                 }
             }
         };
@@ -353,7 +342,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
-        Timber.d("onStart");
         try {
             initUi(mSubredditString, mSearchQueryString, mSortString, mRestrictSearchBoolean, false);
         } finally {
@@ -437,7 +425,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Timber.d("onsaveinstance called");
         outState.putString(KEY_SUBREDDIT_NAME, mSubredditString);
         outState.putString(KEY_SORT, mSortString);
         outState.putString(KEY_SEARCH_STRING, mSearchQueryString);
@@ -479,7 +466,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void initCommentsUi() {
-        Timber.d("calling initCommentsUi");
 
         mCommentRecords = CommentRecord.listAll(CommentRecord.class);
         mItemCount = mCommentRecords.size();
@@ -487,7 +473,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void addMoreItems(String after) {
-        Timber.d("addMoreItems called for " + after);
         itemCount = mRedditListings.size();
         GetListingsService.loadListingsSearch(this, mSubredditString, mSearchQueryString, mAfter, mSortString, mRestrictSearchBoolean);
     }
@@ -541,10 +526,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         intent.putExtra(CheckNewSubredditService.EXTRA_URL, url);
                         startService(intent);
                     } else {
-                        Snackbar.make(findViewById(R.id.activity_main), R.string.cannot_subscribe_to_frontpage, Snackbar.LENGTH_LONG).show();
+                        PreferenceUtils.getThemedSnackbar(MainActivity.this, R.id.activity_main, getString(R.string.cannot_subscribe_to_frontpage), Snackbar.LENGTH_LONG).show();
+
                     }
                 } else {
-                    Snackbar.make(findViewById(R.id.activity_main), R.string.message_cant_add_search, Snackbar.LENGTH_LONG).show();
+                    PreferenceUtils.getThemedSnackbar(MainActivity.this, R.id.activity_main, getString(R.string.message_cant_add_search), Snackbar.LENGTH_LONG).show();
                 }
                 return true;
             }
@@ -556,24 +542,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_SATURATED);
                 return true;
             }
-            case R.id.theme_desert: {
-                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_DESERT);
-                return true;
-            }
-            case R.id.theme_ocean: {
-                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_OCEAN);
-                return true;
-            }
-            case R.id.theme_apples: {
-                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_APPLES);
-                return true;
-            }
-            case R.id.theme_coffee: {
-                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_COFFEE);
-                return true;
-            }
-            case R.id.theme_blueberry: {
-                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_BLUEBERRIES);
+            case R.id.theme_white:{
+                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_WHITE);
                 return true;
             }
             case R.id.theme_strawberries: {
@@ -594,7 +564,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void startRealm() {
-        Timber.d("starting (not killing) realm");
         try {
             mRealm = Realm.getDefaultInstance();
 
@@ -621,7 +590,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (mSubredditObjectRealmResults.size() <= 0) {
                 getSubredditsForNavigationMenu(null, null);
 //                setSubredditsInNavigationView("");
-                Timber.d("no subreddits in realm");
+                Timber.e("no subreddits in realm");
             } else {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < mSubredditObjectRealmResults.size(); i++) {
@@ -633,7 +602,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 SharedPreferences.Editor editor = mApplicationSharedPreferences.edit();
                 editor.putString(getString(R.string.pref_subreddit_list), sb.toString()).
                         apply();
-                Timber.d("current subreddit list is " + mApplicationSharedPreferences.getString(getString(R.string.pref_subreddit_list), "FUCK"));
                 editor.putBoolean(getString(R.string.pref_reload_subreddits), false).apply();
                 finish();
                 startActivity(new Intent(this, MainActivity.class));
@@ -654,7 +622,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     void getSubredditsForNavigationMenu(@Nullable String where, @Nullable String mineWhere) {
-        Timber.d("calling getSubredditsForNavigationMenu");
         if (mRealm == null) {
             startRealm();
         }
@@ -663,7 +630,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public List<RedditListing> getPosts(@Nullable String subredditString, @Nullable String searchQuery, @Nullable String after, @Nullable String sort, boolean restrictSr, boolean forceRefresh) {
         if (forceRefresh) {
-            Timber.d("have to refresh posts");
             if (searchQuery != null) {
                 GetListingsService.loadListingsSearch(this, subredditString, searchQuery, after, sort, restrictSr);
             } else {
@@ -725,7 +691,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void killRealm() {
-        Timber.d("killing (not starting) realm");
         if (mRealm != null) {
             mRealm.close();
             mRealm = null;
@@ -810,7 +775,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void limitSearchToSubreddit(View view) {
         mRestrictSearchBoolean = !mRestrictSearchBoolean;
-        Timber.d("restrict search is " + Boolean.toString(mRestrictSearchBoolean));
     }
 
     @Override
@@ -859,7 +823,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } catch (IllegalArgumentException e) {
             if (e.getMessage().contains("Receiver not registered")) {
                 // Ignore this exception. This is exactly what is desired
-                Timber.d("Tried to unregister the receiver when it's not registered");
+                Timber.e("Tried to unregister the receiver when it's not registered");
             } else {
                 // unexpected, re-throw
                 throw e;
@@ -903,9 +867,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         protected void onPostExecute(List<CommentRecord> commentRecords) {
 //            mCommentRecords = CommentRecord.listAll(CommentRecord.class);
-            Cursor cursor = getContentResolver().query(ReaditContract.CommentEntry.getUriComments(mPostId), null, null, null, null);
+//            Cursor cursor = getContentResolver().query(ReaditContract.CommentEntry.getUriComments(mPostId), null, null, null, null);
             mCommentsRedditListing = RedditListing.find(RedditListing.class, "m_post_id = ?", mPostId).get(0);
-            mCommentRecordRecyclerAdapter = new CommentRecordRecyclerAdapter(MainActivity.this, cursor, mCommentsRedditListing);
+            mCommentRecordRecyclerAdapter = new CommentRecordRecyclerAdapter(MainActivity.this, commentRecords, mCommentsRedditListing);
             mCommentRecordRecyclerAdapter.setHasStableIds(true);
 
             mCommentsRecyclerview.setAdapter(mCommentRecordRecyclerAdapter);

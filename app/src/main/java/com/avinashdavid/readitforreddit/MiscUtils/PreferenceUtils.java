@@ -3,6 +3,9 @@ package com.avinashdavid.readitforreddit.MiscUtils;
 import android.app.Activity;
 import android.content.Intent;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.view.View;
 
 import com.avinashdavid.readitforreddit.R;
 
@@ -46,7 +49,7 @@ public class PreferenceUtils {
 
     public static void onActivityCreateSetTheme(Activity activity)
     {
-        sTheme = PreferenceManager.getDefaultSharedPreferences(activity).getInt(activity.getString(R.string.pref_theme), THEME_DEFAULT);
+        sTheme = PreferenceManager.getDefaultSharedPreferences(activity).getInt(activity.getString(R.string.pref_theme), THEME_WHITE);
         switch (sTheme)
         {
             case THEME_DEFAULT:
@@ -86,6 +89,15 @@ public class PreferenceUtils {
                 activity.setTheme(R.style.AppTheme);
                 break;
         }
+    }
+
+    public static Snackbar getThemedSnackbar(Activity activity, int coordinatorViewId, String text, int duration){
+        Snackbar snackbar = Snackbar.make(activity.findViewById(coordinatorViewId), text, duration);
+        if (sTheme==THEME_WHITE){
+            View view = snackbar.getView();
+            view.setBackgroundColor(ContextCompat.getColor(activity, android.R.color.white));
+        }
+        return snackbar;
     }
 
 }

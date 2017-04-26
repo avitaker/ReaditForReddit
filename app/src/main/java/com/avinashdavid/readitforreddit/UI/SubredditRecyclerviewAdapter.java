@@ -15,8 +15,6 @@ import com.avinashdavid.readitforreddit.SubredditUtils.SubredditObject;
 
 import java.util.ArrayList;
 
-import timber.log.Timber;
-
 /**
  * Created by avinashdavid on 4/23/17.
  */
@@ -47,7 +45,6 @@ public class SubredditRecyclerviewAdapter extends RecyclerView.Adapter {
             subredditViewHolder.deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Timber.d("click delete");
                     boolean removed = ((ManageSubredditsActivity)mContext).removeItem(toPass);
                     if (removed){
                         mSubredditStringList.remove(toPass);

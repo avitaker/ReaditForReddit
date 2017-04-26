@@ -35,7 +35,6 @@ public class GetSubredditInfoService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        Timber.d("starting subredditinfoservice");
         if (intent==null){
             return;
         }
@@ -97,7 +96,6 @@ public class GetSubredditInfoService extends IntentService {
     }
 
     public static void loadSidebar(Context context, @NonNull String subredditName){
-        Timber.d("calling loadSidebar");
         Uri url = UriGenerator.getUriSubredditAbout(subredditName);
         Intent intent = new Intent(context, GetSubredditInfoService.class);
         intent.putExtra(EXTRA_URL, url);

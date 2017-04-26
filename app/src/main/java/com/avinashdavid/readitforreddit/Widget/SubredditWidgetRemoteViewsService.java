@@ -14,8 +14,6 @@ import com.avinashdavid.readitforreddit.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import timber.log.Timber;
-
 /**
  * Created by avinashdavid on 3/16/17.
  */
@@ -32,14 +30,12 @@ public class SubredditWidgetRemoteViewsService extends RemoteViewsService {
 
             @Override
             public void onCreate() {
-                Timber.d("SubredditWidgetRemoteViewsService started");
+
             }
 
             @Override
             public void onDataSetChanged() {
-                Timber.d("onDataSetChanged called");
                 mRedditPosts = RedditListing.listAll(RedditListing.class);
-                Timber.d("post count in datasetchanged " + Integer.toString(mRedditPosts.size()));
             }
 
             @Override
@@ -50,19 +46,16 @@ public class SubredditWidgetRemoteViewsService extends RemoteViewsService {
             @Override
             public int getCount() {
                 int returnInt = mRedditPosts == null ? 0:mRedditPosts.size();
-                Timber.d("posts count in getCount " + Integer.toString(returnInt));
                 return returnInt;
             }
 
             @Override
             public RemoteViews getViewAt(int position) {
                 if (position == ListView.INVALID_POSITION || mRedditPosts == null || mRedditPosts.get(position)==null){
-                    Timber.d("nothing to see here");
                     return null;
                 }
 
                 RedditListing redditPost = mRedditPosts.get(position);
-                Timber.d("getViewAt for redditpost: " + redditPost.mPostId);
 //                Timber.d("HARHAR" + mArrayLists.get(0).get(Constants.INDEX_TITLE_SUBREDDIT_WIDGET));
                 Context context = SubredditWidgetRemoteViewsService.this;
                 RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.item_widget);

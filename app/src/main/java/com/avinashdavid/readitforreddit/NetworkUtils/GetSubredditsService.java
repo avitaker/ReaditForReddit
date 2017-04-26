@@ -74,7 +74,6 @@ public class GetSubredditsService extends IntentService {
             //TODO handle empty intent
             return;
         }
-        Timber.d(mUrl.toString());
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, mUrl.toString(), null, new Response.Listener<JSONObject>() {
 

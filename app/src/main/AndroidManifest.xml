@@ -20,9 +20,6 @@
             android:name="VERSION"
             android:value="3"/>
         <meta-data
-            android:name="QUERY_LOG"
-            android:value="true"/>
-        <meta-data
             android:name="DOMAIN_PACKAGE_NAME"
             android:value="com.avinashdavid.readitforreddit"/>
 
@@ -66,13 +63,9 @@
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
         <service android:name=".NetworkUtils.CheckNewSubredditService"/>
         <service android:name=".NetworkUtils.GetSubredditInfoService"/>
+        <service android:name=".NetworkUtils.GetMorechildrenService"/>
 
         <activity android:name=".LinkActivity"/>
-
-        <provider
-            android:name=".Data.ReaditProvider"
-            android:authorities="@string/cp_authority"
-            android:exported="true"/>
 
         <activity
             android:name=".ManageSubredditsActivity"

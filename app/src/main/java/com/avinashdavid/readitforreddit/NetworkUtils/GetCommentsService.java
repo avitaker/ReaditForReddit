@@ -24,6 +24,22 @@ import java.util.ArrayList;
 
 import timber.log.Timber;
 
+import static com.avinashdavid.readitforreddit.MiscUtils.Constants.AUTHOR_KEY;
+import static com.avinashdavid.readitforreddit.MiscUtils.Constants.BODY_HTML;
+import static com.avinashdavid.readitforreddit.MiscUtils.Constants.CHILDREN_KEY;
+import static com.avinashdavid.readitforreddit.MiscUtils.Constants.DATA_KEY;
+import static com.avinashdavid.readitforreddit.MiscUtils.Constants.DEPTH_KEY;
+import static com.avinashdavid.readitforreddit.MiscUtils.Constants.EDITED;
+import static com.avinashdavid.readitforreddit.MiscUtils.Constants.GILDED;
+import static com.avinashdavid.readitforreddit.MiscUtils.Constants.ID_KEY;
+import static com.avinashdavid.readitforreddit.MiscUtils.Constants.KEY_AUTHOR_FLAIR;
+import static com.avinashdavid.readitforreddit.MiscUtils.Constants.KIND_KEY;
+import static com.avinashdavid.readitforreddit.MiscUtils.Constants.PARENT_KEY;
+import static com.avinashdavid.readitforreddit.MiscUtils.Constants.REPLIES_KEY;
+import static com.avinashdavid.readitforreddit.MiscUtils.Constants.SCORE_HIDDEN_KEY;
+import static com.avinashdavid.readitforreddit.MiscUtils.Constants.SCORE_KEY;
+import static com.avinashdavid.readitforreddit.MiscUtils.Constants.TIME_CREATED_KEY;
+
 /**
  * Created by avinashdavid on 3/8/17.
  */
@@ -43,28 +59,6 @@ public class GetCommentsService extends IntentService {
     public static final String EXTRA_URL = "extraUrlParcelableComments";
     public static final String EXTRA_SORT = "extraSort";
 
-    private static final String KIND_KEY = "kind";
-    private static final String LISTING_KIND = "Listing";
-    private static final String DATA_KEY = "data";
-    private static final String CHILDREN_KEY = "children";
-    private static final String DEPTH_KEY = "depth";
-    private static final String PARENT_KEY = "parent_id";
-    private static final String LINK_KIND = "t3";
-    private static final String COMMENT_KIND = "t1";
-    private static final String ID_KEY = "id";
-    private static final String SCORE_HIDDEN_KEY = "score_hidden";
-    private static final String SCORE_KEY = "score";
-    private static final String BODY_HTML = "body_html";
-    private static final String AUTHOR_KEY = "author";
-    private static final String REPLIES_KEY = "replies";
-    private static final String TIME_CREATED_KEY = "created_utc";
-    private static final String KEY_AUTHOR_FLAIR = "author_flair_text";
-    private static final String GILDED = "gilded";
-    private static final String EDITED = "edited";
-
-    private static final String MORE_KIND = "more";
-    private static final String COUNT_KEY = "count";
-
 
     public GetCommentsService() {
         super(GetCommentsService.class.getSimpleName());
@@ -80,7 +74,6 @@ public class GetCommentsService extends IntentService {
         if (null == mSort){
             mSort = getResources().getStringArray(R.array.sort_listing_options)[0];
         }
-        Timber.d(mUrl.toString());
         final Context context = GetCommentsService.this.getApplicationContext();
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
                 (Request.Method.GET, mUrl.toString(), null, new Response.Listener<JSONArray>() {
@@ -105,15 +98,14 @@ public class GetCommentsService extends IntentService {
                             GetCommentsService.this.sendBroadcast(intent);
                         }
                         catch (Exception e){
-                            Timber.d(e);
+                            Timber.e(e);
                         }
                     }
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
-                        Timber.e("error while retreiving comments data");
+                        Timber.e(error);
                         Intent errorIntent = new Intent(Constants.BROADCAST_ERROR_WHILE_LOADING_COMMENTS);
                         context.sendBroadcast(errorIntent);
                     }
@@ -132,7 +124,7 @@ public class GetCommentsService extends IntentService {
         context.startService(intent);
     }
 
-    private static void makeCommentObjectsFromJsonObjects(Context context, ArrayList<JSONObject> jsonObjects, String linkId){
+    public static void makeCommentObjectsFromJsonObjects(Context context, ArrayList<JSONObject> jsonObjects, String linkId){
         for (int i = 0; i < jsonObjects.size(); i++){
             JSONObject currentJsonObj = jsonObjects.get(i);
             CommentRecord commentObject = getChildrenCommentObjectsFromJsonDataObject(currentJsonObj, linkId);
@@ -151,7 +143,7 @@ public class GetCommentsService extends IntentService {
         }
     }
 
-    private static ArrayList<JSONObject> getRepliesJsonObjectsFromCommentDataObj(JSONObject commentDataObj){
+    public static ArrayList<JSONObject> getRepliesJsonObjectsFromCommentDataObj(JSONObject commentDataObj){
         ArrayList<JSONObject> list = new ArrayList<>();
         try {
             JSONArray repliesArray = commentDataObj.getJSONObject(REPLIES_KEY).getJSONObject(DATA_KEY).getJSONArray(CHILDREN_KEY);
@@ -168,7 +160,7 @@ public class GetCommentsService extends IntentService {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String kind = jsonObject.getString(KIND_KEY);
-                if (kind.equals(COMMENT_KIND)) {
+                if (kind.equals(Constants.COMMENT_KIND)) {
                     JSONObject replyData = jsonObject.getJSONObject(DATA_KEY);
                     jsonObjects.add(replyData);
                 }
@@ -186,7 +178,7 @@ public class GetCommentsService extends IntentService {
      *  - the commentobject's createdTime is set as a negative value (this will be used to distinguish it as a more object
      *  - the more object's depth is stored as is. This way, it will be displayed as the correct depth in the recyclerview
      */
-    private static CommentRecord getChildrenCommentObjectsFromJsonDataObject(JSONObject replyData, String linkId){
+    public static CommentRecord getChildrenCommentObjectsFromJsonDataObject(JSONObject replyData, String linkId){
         CommentRecord commentObject = null;
         int moreCount = 0;
         try {
@@ -195,13 +187,12 @@ public class GetCommentsService extends IntentService {
 //                String id = replyData.getString(ID_KEY);
 //                String author = "";
 //                String body = "";
-//                float timecreated = DEPTH_MORE;
+//                float timecreated = (float)replyData.getInt(DEPTH_KEY);
 //                String parent = replyData.getString(PARENT_KEY);
-//                int depth = replyData.getInt(DEPTH_KEY);
 //                boolean hasReplies = false;
 //                String authorflair = "";
 //
-//                commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, false, moreCount, author, body, parent, timecreated, depth, false, authorflair, false, false);
+//                commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, false, moreCount, author, body, parent, timecreated, DEPTH_MORE, false, authorflair, false, false);
 //                return commentObject;
 //            } catch (Exception e){
 //                String id = replyData.getString(ID_KEY);

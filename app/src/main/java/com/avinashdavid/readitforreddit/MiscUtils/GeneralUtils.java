@@ -112,4 +112,5 @@ public class GeneralUtils {
             return context.getResources().getColor(resourceId);
         }
     }
+
 }

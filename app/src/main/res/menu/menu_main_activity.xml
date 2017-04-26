@@ -43,22 +43,22 @@
                   android:title="@string/theme.reddit"/>
             <item android:id="@+id/theme.saturated"
                   android:title="@string/theme.saturated"/>
-            <item
-                android:id="@+id/theme.desert"
-                android:title="@string/theme.desert"/>
-            <item
-                android:id="@+id/theme.ocean"
-                android:title="@string/theme.ocean"/>
-            <item
-                android:id="@+id/theme.coffee"
-                android:title="@string/theme.coffee"/>
-            <item
-                android:id="@+id/theme.apples"
-                android:title="@string/theme.apples"/>
+            <!--<item-->
+                <!--android:id="@+id/theme.desert"-->
+                <!--android:title="@string/theme.desert"/>-->
+            <!--<item-->
+                <!--android:id="@+id/theme.ocean"-->
+                <!--android:title="@string/theme.ocean"/>-->
+            <!--<item-->
+                <!--android:id="@+id/theme.coffee"-->
+                <!--android:title="@string/theme.coffee"/>-->
+            <!--<item-->
+                <!--android:id="@+id/theme.apples"-->
+                <!--android:title="@string/theme.apples"/>-->
 
-            <item
-                android:id="@+id/theme.blueberry"
-                android:title="@string/theme.blueberry"/>
+            <!--<item-->
+                <!--android:id="@+id/theme.blueberry"-->
+                <!--android:title="@string/theme.blueberry"/>-->
             <item
                 android:id="@+id/theme.strawberries"
                 android:title="@string/theme.strawberries"/>

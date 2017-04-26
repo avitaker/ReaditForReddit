@@ -65,6 +65,7 @@ public class UriGenerator {
             builder.appendPath(subredditMarkerString).appendPath(subreddit);
         }
         builder.appendPath(PATH_SEGMENT_COMMENTS).appendPath(articleId);
+        builder.appendPath(".json");
         if (null!=sortOrder){
             builder.appendQueryParameter(KEY_SORT, sortOrder);
         }
@@ -101,6 +102,13 @@ public class UriGenerator {
     public static Uri getUriSubredditAbout(String subreddit){
         Uri.Builder builder = baseListingUri.buildUpon();
         builder.appendPath(subredditMarkerString).appendPath(subreddit).appendPath("about");
+        return builder.build();
+    }
+
+    public static Uri getUriMoreComments(String articleId){
+        Uri.Builder builder = baseListingUri.buildUpon();
+        builder.appendPath(PATH_SEGMENT_COMMENTS).appendPath(articleId);
+        builder.appendPath("api").appendPath("morechildren").appendQueryParameter("api_type", "json").appendQueryParameter("showmore","true").appendQueryParameter("link_id", "t3_"+articleId);
         return builder.build();
     }
 }

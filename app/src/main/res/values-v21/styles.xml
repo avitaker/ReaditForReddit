@@ -12,13 +12,13 @@
         <item name="android:windowEnterTransition">@android:transition/slide_right</item>
         <item name="android:windowExitTransition">@android:transition/slide_left</item>
 
-        <item name="android:textColor">@android:color/background_dark</item>
 
         <item name="sort_icon">@drawable/ic_sort_white_24dp</item>
         <item name="menu_icon">@drawable/ic_menu_white_24dp</item>
         <item name="appbar_theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="toolbar_popup_theme">@style/AppTheme.PopupOverlay</item>
         <item name="delete_icon">@drawable/ic_delete_black_24dp</item>
+        <item name="post_accent_color">@color/granola</item>
     </style>
 
     <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">
@@ -30,6 +30,7 @@
         <item name="appbar_theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="toolbar_popup_theme">@style/AppThemeDark.PopupOverlay</item>
         <item name="delete_icon">@drawable/ic_delete_white_24dp</item>
+        <item name="post_accent_color">@color/granola</item>
     </style>
 
     <style name="AppTheme.Light" parent="AppTheme">
@@ -39,6 +40,7 @@
         <item name="appbar_theme">@style/ThemeOverlay.AppCompat.ActionBar</item>
         <item name="toolbar_popup_theme">@style/AppTheme.PopupOverlay</item>
         <item name="delete_icon">@drawable/ic_delete_black_24dp</item>
+        <item name="android:textColor">@android:color/background_dark</item>
     </style>
 
 </resources>

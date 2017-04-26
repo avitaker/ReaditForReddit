@@ -29,7 +29,7 @@
     <string name="score_hidden">score hidden</string>
     <string name="message_error_loading_comments">An error occurred while retrieving comments</string>
 
-    <string name="format_more_comments">View <xliff:g id="more_comments">%d</xliff:g> more comments</string>
+    <string name="format_more_comments"><xliff:g id="more_comments">%d</xliff:g> more comments</string>
 
     <!--browser page-->
     <string name="activity_link">Browser</string>
@@ -92,14 +92,9 @@
     <string name="theme.reddit">Reddit</string>
     <string name="theme.saturated">Reddit Saturated</string>
     <string name="theme.white">Light</string>
-    <string name="theme.desert">Desert</string>
-    <string name="theme.ocean">Ocean</string>
-    <string name="theme.coffee">Coffee</string>
-    <string name="theme.apples">Apples</string>
-    <string name="theme.blueberry">Blueberry</string>
-    <string name="theme.strawberries">Berries and cream</string>
-    <string name="theme.coastal">Coastal holiday</string>
-    <string name="theme.dark">Dark 1</string>
+    <string name="theme.strawberries">Red</string>
+    <string name="theme.coastal">Solarized Reddit</string>
+    <string name="theme.dark">Dark (Red)</string>
 
     <string-array name="sort_listing_options">
         <item>hot</item>
