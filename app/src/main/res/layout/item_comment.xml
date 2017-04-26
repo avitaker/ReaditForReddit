@@ -24,8 +24,8 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:id="@+id/author"
-            android:paddingRight="4dp"
-            android:paddingEnd="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginEnd="4dp"
             style="@style/BoldCaptionsAccent"/>
 
         <TextView
@@ -67,4 +67,10 @@
         android:layout_below="@+id/info_linear_layout"
         android:id="@+id/bodyHtml"
         style="@style/CommentText"/>
+
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="@android:color/darker_gray"-->
+        <!--android:layout_alignParentBottom="true"/>-->
 </RelativeLayout>

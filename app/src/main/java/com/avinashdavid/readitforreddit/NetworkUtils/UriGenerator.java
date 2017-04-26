@@ -18,7 +18,7 @@ public class UriGenerator {
 
     private static final String KEY_RESTRICT_SR = "restrict_sr";
 
-    private static final int DEFAULT_COMMENT_DEPTH = 8;
+    private static final int DEFAULT_COMMENT_DEPTH = 10;
     public static final int DEFAULT_COMMENTS_LIMIT = 150;
 
     private static final Uri baseListingUri = Uri.parse("https://api.reddit.com/");

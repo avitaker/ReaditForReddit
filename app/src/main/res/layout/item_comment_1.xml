@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/comment_start_padding"
                 android:paddingEnd="0dp"
                 android:paddingRight="0dp"
-    android:background="@color/purple_300">
+    android:background="@color/depth1">
 
     <include layout="@layout/item_comment"/>
 

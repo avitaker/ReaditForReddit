@@ -38,6 +38,8 @@ public class GetCommentsService extends IntentService {
 
     private static int COMMENT_INDEX = 0;
 
+    public static final int DEPTH_MORE = -5;
+
     public static final String EXTRA_URL = "extraUrlParcelableComments";
     public static final String EXTRA_SORT = "extraSort";
 
@@ -60,6 +62,8 @@ public class GetCommentsService extends IntentService {
     private static final String GILDED = "gilded";
     private static final String EDITED = "edited";
 
+    private static final String MORE_KIND = "more";
+    private static final String COUNT_KEY = "count";
 
 
     public GetCommentsService() {
@@ -132,11 +136,17 @@ public class GetCommentsService extends IntentService {
         for (int i = 0; i < jsonObjects.size(); i++){
             JSONObject currentJsonObj = jsonObjects.get(i);
             CommentRecord commentObject = getChildrenCommentObjectsFromJsonDataObject(currentJsonObj, linkId);
-            commentObject.save();
+            if (commentObject.depth!=DEPTH_MORE) {
+                commentObject.save();
+            }
 
             if (commentObject.hasReplies){
                 ArrayList<JSONObject> childObjects = getRepliesJsonObjectsFromCommentDataObj(currentJsonObj);
                 makeCommentObjectsFromJsonObjects(context, childObjects, linkId);
+            }
+
+            if (commentObject.depth==DEPTH_MORE){
+                commentObject.save();
             }
         }
     }
@@ -157,7 +167,8 @@ public class GetCommentsService extends IntentService {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                if (jsonObject.getString(KIND_KEY).equals(COMMENT_KIND)){
+                String kind = jsonObject.getString(KIND_KEY);
+                if (kind.equals(COMMENT_KIND)) {
                     JSONObject replyData = jsonObject.getJSONObject(DATA_KEY);
                     jsonObjects.add(replyData);
                 }
@@ -168,28 +179,65 @@ public class GetCommentsService extends IntentService {
         return jsonObjects;
     }
 
+    /**
+     * To make things easier as far as view types in the recyclerview, a little shortcut has been taken here
+     * The "more" objects are also being saved as comment objects, but with following caveats
+     *  - the number of comments in the more jsonobject is being saved as the commentobject's score
+     *  - the commentobject's createdTime is set as a negative value (this will be used to distinguish it as a more object
+     *  - the more object's depth is stored as is. This way, it will be displayed as the correct depth in the recyclerview
+     */
     private static CommentRecord getChildrenCommentObjectsFromJsonDataObject(JSONObject replyData, String linkId){
         CommentRecord commentObject = null;
+        int moreCount = 0;
         try {
+//            try {
+//                moreCount = replyData.getInt(COUNT_KEY);
+//                String id = replyData.getString(ID_KEY);
+//                String author = "";
+//                String body = "";
+//                float timecreated = DEPTH_MORE;
+//                String parent = replyData.getString(PARENT_KEY);
+//                int depth = replyData.getInt(DEPTH_KEY);
+//                boolean hasReplies = false;
+//                String authorflair = "";
+//
+//                commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, false, moreCount, author, body, parent, timecreated, depth, false, authorflair, false, false);
+//                return commentObject;
+//            } catch (Exception e){
+//                String id = replyData.getString(ID_KEY);
+//                boolean scoreHidden = replyData.getBoolean(SCORE_HIDDEN_KEY);
+//                int score = replyData.getInt(SCORE_KEY);
+//                String author = replyData.getString(AUTHOR_KEY);
+//                String body = replyData.getString(BODY_HTML);
+//                float timecreated = (float) replyData.getLong(TIME_CREATED_KEY);
+//                String parent = replyData.getString(PARENT_KEY);
+//                int depth = replyData.getInt(DEPTH_KEY);
+//                boolean hasReplies = !replyData.get(REPLIES_KEY).toString().equals("");
+//                String authorflair = replyData.getString(KEY_AUTHOR_FLAIR);
+//                boolean isGilded = replyData.getInt(GILDED) > 0;
+//                boolean isEdited = !replyData.getString(EDITED).equals("false");
+//
+//                commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, scoreHidden, score, author, body, parent, timecreated, depth, hasReplies, authorflair, isGilded, isEdited);
+//                return commentObject;
+//            }
             String id = replyData.getString(ID_KEY);
             boolean scoreHidden = replyData.getBoolean(SCORE_HIDDEN_KEY);
             int score = replyData.getInt(SCORE_KEY);
             String author = replyData.getString(AUTHOR_KEY);
             String body = replyData.getString(BODY_HTML);
-            float timecreated = (float)replyData.getLong(TIME_CREATED_KEY);
+            float timecreated = (float) replyData.getLong(TIME_CREATED_KEY);
             String parent = replyData.getString(PARENT_KEY);
             int depth = replyData.getInt(DEPTH_KEY);
             boolean hasReplies = !replyData.get(REPLIES_KEY).toString().equals("");
             String authorflair = replyData.getString(KEY_AUTHOR_FLAIR);
-            boolean isGilded = replyData.getInt(GILDED)>0;
+            boolean isGilded = replyData.getInt(GILDED) > 0;
             boolean isEdited = !replyData.getString(EDITED).equals("false");
 
             commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, scoreHidden, score, author, body, parent, timecreated, depth, hasReplies, authorflair, isGilded, isEdited);
-
-
+            return commentObject;
         } catch (Exception e){
             Timber.e(e, "error in getChildrenCommentObjectsFromJsonDataObject");
         }
-        return commentObject;
+        return null;
     }
 }

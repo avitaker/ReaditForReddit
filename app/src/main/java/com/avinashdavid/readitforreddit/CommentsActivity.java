@@ -538,6 +538,10 @@ public class CommentsActivity extends AppCompatActivity
 
             findViewById(R.id.loadingPanel).setVisibility(View.GONE);
 
+//            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(CommentsActivity.this,
+//                    mLinearLayoutManager.getOrientation());
+//            mCommentsRecyclerview.addItemDecoration(dividerItemDecoration);
+
             mCommentsRecyclerview.setAdapter(mCommentsRecyclerViewAdapter);
 
             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(CommentsActivity.this);

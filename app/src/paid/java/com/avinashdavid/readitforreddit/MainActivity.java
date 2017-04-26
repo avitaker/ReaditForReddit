@@ -16,6 +16,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -250,6 +251,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     mSwipeRefreshLayout.setRefreshing(false);
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.activity_main),
                             R.string.error_while_loading_posts, Snackbar.LENGTH_LONG);
+                    View sbView = mySnackbar.getView();
+                    sbView.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.white));
                     mySnackbar.setAction(R.string.retry, new MyRefreshListener());
                     mySnackbar.show();
                 } else if (Constants.BROADCAST_SUBREDDITS_LOADED.equals(action)){
@@ -826,6 +829,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void OnReachedLast(String after) {
+        View sbView = loadingSnack.getView();
+        sbView.setBackgroundColor(ContextCompat.getColor(this, android.R.color.white));
         loadingSnack.show();
         if (mAfter==null){
             mAfter = after;

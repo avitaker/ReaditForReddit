@@ -17,6 +17,8 @@
         <item name="sort_icon">@drawable/ic_sort_white_24dp</item>
         <item name="menu_icon">@drawable/ic_menu_white_24dp</item>
         <item name="appbar_theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="toolbar_popup_theme">@style/AppTheme.PopupOverlay</item>
+        <item name="delete_icon">@drawable/ic_delete_black_24dp</item>
     </style>
 
     <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">
@@ -26,6 +28,8 @@
         <item name="sort_icon">@drawable/ic_sort_white_24dp</item>
         <item name="menu_icon">@drawable/ic_menu_white_24dp</item>
         <item name="appbar_theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="toolbar_popup_theme">@style/AppThemeDark.PopupOverlay</item>
+        <item name="delete_icon">@drawable/ic_delete_white_24dp</item>
     </style>
 
     <style name="AppTheme.Light" parent="AppTheme">
@@ -33,6 +37,8 @@
         <item name="sort_icon">@drawable/ic_sort_black_24dp</item>
         <item name="menu_icon">@drawable/ic_menu_black_24dp</item>
         <item name="appbar_theme">@style/ThemeOverlay.AppCompat.ActionBar</item>
+        <item name="toolbar_popup_theme">@style/AppTheme.PopupOverlay</item>
+        <item name="delete_icon">@drawable/ic_delete_black_24dp</item>
     </style>
 
 </resources>

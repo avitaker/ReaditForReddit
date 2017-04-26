@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.avinashdavid.readitforreddit.CommentsActivity;
 import com.avinashdavid.readitforreddit.MainActivity;
 import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils;
+import com.avinashdavid.readitforreddit.NetworkUtils.GetCommentsService;
 import com.avinashdavid.readitforreddit.PostUtils.CommentRecord;
 import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 import com.avinashdavid.readitforreddit.R;
@@ -47,6 +48,10 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
     private static final int VIEW_TYPE_DEPTH_5 = 6;
     private static final int VIEW_TYPE_DEPTH_6 = 7;
     private static final int VIEW_TYPE_DEPTH_7 = 8;
+    private static final int VIEW_TYPE_DEPTH_8 = 9;
+    private static final int VIEW_TYPE_DEPTH_9 = 10;
+    private static final int VIEW_TYPE_DEPTH_10 = 11;
+    private static final int VIEW_TYPE_MORE = -5;
 
     public CommentRecordRecyclerAdapter(@NonNull Context context, List<CommentRecord> commentRecords, RedditListing redditListing){
         try {
@@ -90,6 +95,18 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
             case VIEW_TYPE_DEPTH_7:
                 id = R.layout.item_comment_7;
                 break;
+            case VIEW_TYPE_DEPTH_8:
+                id = R.layout.item_comment_8;
+                break;
+            case VIEW_TYPE_DEPTH_9:
+                id = R.layout.item_comment_9;
+                break;
+            case VIEW_TYPE_DEPTH_10:
+                id = R.layout.item_comment_10;
+                break;
+            case VIEW_TYPE_MORE:
+                id = R.layout.item_more_comments;
+                break;
             default:
                 id = R.layout.item_comment;
                 break;
@@ -97,6 +114,8 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
         View view = mLayoutInflater.inflate(id, parent, false);
         if (viewType == VIEW_TYPE_POST_INFO){
             return new RedditPostRecyclerAdapter.ListingHolder(view);
+        } else if (viewType == VIEW_TYPE_MORE) {
+            return new MoreHolder(view);
         } else {
             return new CommentsHolder(view);
         }
@@ -109,13 +128,21 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
             if (getItemViewType(position)==0){
                 ((RedditPostRecyclerAdapter.ListingHolder) holder).bindListing(mRedditListing);
             } else {
-                commentObject = mCommentRecords.get(position-1);
-                ((CommentsHolder)holder).bindComment(commentObject, mRedditListing.author);
+                commentObject = mCommentRecords.get(position - 1);
+                if (getItemViewType(position)==VIEW_TYPE_MORE){
+                    ((MoreHolder) holder).bindMore(commentObject.score);
+                } else {
+                    ((CommentsHolder) holder).bindComment(commentObject, mRedditListing.author);
+                }
             }
         } else {
             if (position<mCommentRecords.size()){
                 commentObject = mCommentRecords.get(position);
-                ((CommentsHolder)holder).bindComment(commentObject, mRedditListing.author);
+                if (getItemViewType(position)==VIEW_TYPE_MORE){
+                    ((MoreHolder) holder).bindMore(commentObject.score);
+                } else {
+                    ((CommentsHolder) holder).bindComment(commentObject, mRedditListing.author);
+                }
             }
         }
 //        setAnimation(holder.itemView, position);
@@ -142,17 +169,29 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
         if (!MainActivity.usingTabletLayout) {
             if (position<mCommentRecords.size()) {
                 commentRecord = mCommentRecords.get(position);
-                return commentRecord.depth + 1;
+                if (commentRecord.depth!= GetCommentsService.DEPTH_MORE) {
+                    return commentRecord.depth + 1;
+                } else {
+                    return VIEW_TYPE_MORE;
+                }
             } else {
                 commentRecord = mCommentRecords.get(position -1);
-                return commentRecord.depth + 1;
+                if (commentRecord.depth!= GetCommentsService.DEPTH_MORE) {
+                    return commentRecord.depth + 1;
+                } else {
+                    return VIEW_TYPE_MORE;
+                }
             }
         } else {
             if (position==0){
                 return VIEW_TYPE_POST_INFO;
             } else {
                 commentRecord = mCommentRecords.get(position - 1);
-                return commentRecord.depth + 1;
+                if (commentRecord.depth!= GetCommentsService.DEPTH_MORE) {
+                    return commentRecord.depth + 1;
+                } else {
+                    return VIEW_TYPE_MORE;
+                }
             }
         }
     }
@@ -178,12 +217,33 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
         }
     }
 
+    static class MoreHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        TextView moreTextview;
+        Context mContext;
+
+        public MoreHolder(View itemView) {
+            super(itemView);
+            this.moreTextview = (TextView)itemView.findViewById(R.id.load_more_comments);
+            mContext = itemView.getContext();
+        }
+
+        void bindMore(int numberReplies){
+            moreTextview.setText(mContext.getString(R.string.format_more_comments, numberReplies));
+        }
+
+        @Override
+        public void onClick(View v) {
+            Timber.d("hyah");
+        }
+    }
+
 
     static class CommentsHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView author;
         TextView score;
         TextView time_elapsed;
         TextView bodyText;
+        View infoBox;
         TextView flairText;
 
         private CommentRecord mCommentObject;
@@ -193,46 +253,54 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
         void bindComment(CommentRecord commentRecord, String postAuthor){
             mCommentObject = commentRecord;
-            author.setText(commentRecord.author);
-            if (commentRecord.author.equals(postAuthor)){
-                GeneralUtils.setSDKSensitiveBackground(author, authorBackground);
-                author.setTextColor(mContext.getResources().getColor(R.color.milk));
-            } else {
-                if (authorBackground!=null && author.getBackground()!=null) {
-                    if (author.getBackground().equals(authorBackground)) {
-                        GeneralUtils.setSDKSensitiveBackground(author, null);
-                        author.setTextColor(GeneralUtils.getThemeAccentColor(mContext));
+            if (commentRecord.createdTime>0) {
+                author.setText(commentRecord.author);
+                if (commentRecord.author.equals(postAuthor)) {
+                    GeneralUtils.setSDKSensitiveBackground(author, authorBackground);
+                    author.setTextColor(mContext.getResources().getColor(R.color.milk));
+                } else {
+                    if (authorBackground != null && author.getBackground() != null) {
+                        if (author.getBackground().equals(authorBackground)) {
+                            GeneralUtils.setSDKSensitiveBackground(author, null);
+                            author.setTextColor(GeneralUtils.getThemeAccentColor(mContext));
+                        }
                     }
                 }
-            }
-            if (commentRecord.scoreHidden){
-                score.setText(mContext.getString(R.string.score_hidden));
-            } else {
-                score.setText(mContext.getString(R.string.format_points, commentRecord.score));
-            }
-            String rawTime = GeneralUtils.returnFormattedTime(mContext, System.currentTimeMillis(), commentRecord.createdTime);
-            if (commentRecord.isEdited){
-                rawTime = rawTime.concat("*");
-            }
-            time_elapsed.setText(rawTime);
-            bodyText.setText(GeneralUtils.returnFormattedStringFromHtml(commentRecord.bodyHtml));
-            bodyText.setMovementMethod(LinkMovementMethod.getInstance());
-            if (commentRecord.authorFlairText!=null) {
-                if (!commentRecord.authorFlairText.equals("null")) {
-                    flairText.setVisibility(View.VISIBLE);
-                    flairText.setText(GeneralUtils.returnFormattedStringFromHtml(commentRecord.authorFlairText));
+                if (commentRecord.scoreHidden) {
+                    score.setText(mContext.getString(R.string.score_hidden));
+                } else {
+                    score.setText(mContext.getString(R.string.format_points, commentRecord.score));
                 }
-            }
-            if (commentRecord.isGilded){
-                author.setTextColor(GeneralUtils.getSDKSensitiveColor(mContext, R.color.gold));
-            } else {
-                if (author.getCurrentTextColor() == goldColor) {
-                    if (commentRecord.author.equals(postAuthor)) {
-                        author.setTextColor(GeneralUtils.getSDKSensitiveColor(mContext, android.R.color.white));
-                    } else {
-                        author.setTextColor(GeneralUtils.getThemeAccentColor(mContext));
+                String rawTime = GeneralUtils.returnFormattedTime(mContext, System.currentTimeMillis(), commentRecord.createdTime);
+                if (commentRecord.isEdited) {
+                    rawTime = rawTime.concat("*");
+                }
+                time_elapsed.setText(rawTime);
+                bodyText.setText(GeneralUtils.returnFormattedStringFromHtml(commentRecord.bodyHtml));
+                bodyText.setMovementMethod(LinkMovementMethod.getInstance());
+                if (commentRecord.authorFlairText != null) {
+                    if (!commentRecord.authorFlairText.equals("null")) {
+                        flairText.setVisibility(View.VISIBLE);
+                        flairText.setText(GeneralUtils.returnFormattedStringFromHtml(commentRecord.authorFlairText));
                     }
                 }
+                if (commentRecord.isGilded) {
+                    author.setTextColor(GeneralUtils.getSDKSensitiveColor(mContext, R.color.gold));
+                } else {
+                    if (author.getCurrentTextColor() == goldColor) {
+                        if (commentRecord.author.equals(postAuthor)) {
+                            author.setTextColor(GeneralUtils.getSDKSensitiveColor(mContext, android.R.color.white));
+                        } else {
+                            author.setTextColor(GeneralUtils.getThemeAccentColor(mContext));
+                        }
+                    }
+                }
+            } else {
+//                TextView author;
+//                TextView score;
+//                TextView time_elapsed;
+//                TextView flairText;
+                author.setText(mContext.getString(R.string.format_more_comments, mCommentObject.score));
             }
         }
 
@@ -242,6 +310,7 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
             score = (TextView)itemView.findViewById(R.id.score);
             time_elapsed = (TextView)itemView.findViewById(R.id.time_elapsed);
             bodyText = (TextView)itemView.findViewById(R.id.bodyHtml);
+            infoBox = itemView.findViewById(R.id.info_linear_layout);
             flairText = (TextView)itemView.findViewById(R.id.flair_text);
             mContext = itemView.getContext();
             if (Build.VERSION.SDK_INT>=21) {
@@ -262,6 +331,7 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
             Timber.d("Clicked on a recyclerview item");
         }
     }
+
 
     private void setAnimation(View viewToAnimate, int position)
     {
