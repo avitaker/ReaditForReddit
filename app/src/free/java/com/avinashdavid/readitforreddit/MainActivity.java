@@ -141,6 +141,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     BroadcastReceiver mSubredditInfoReceiver;
     IntentFilter mSubredditInfoIntentFilter;
 
+    public static final int CODE_MANAGE_SUBREDDITS = 7;
+
 
     /**
      * COMMENTS VARIABLES
@@ -436,6 +438,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode==CODE_MANAGE_SUBREDDITS){
+            if (resultCode == Activity.RESULT_OK){
+                setSubredditsInNavigationView("");
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
     private void initUi(@Nullable String subredditString, @Nullable String searchString, @Nullable String sortString, boolean restrictSr, boolean forceRefresh) {
 //        Timber.d("calling initUi");
         mAfter = null;
@@ -665,7 +678,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (itemId == R.id.search_posts) {
             openSearchDialog();
         } else if (itemId == R.id.add_subscription) {
-            openAddSubDialog();
+//            openAddSubDialog();
+            Intent intent = new Intent(this, ManageSubredditsActivity.class);
+            startActivityForResult(intent, CODE_MANAGE_SUBREDDITS);
         } else if (itemId == R.id.random_subreddit) {
             GetListingsService.loadListingsRandom(this);
             mListingRecyclerview.setAdapter(null);

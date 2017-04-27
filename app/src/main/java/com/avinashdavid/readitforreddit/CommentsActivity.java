@@ -22,7 +22,6 @@ import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
@@ -86,8 +85,6 @@ public class CommentsActivity extends AppCompatActivity
     String lastPostId;
 
     private String mPostId;
-
-    private WebView mWebview;
 
     TextView voteCount_textview;
     TextView author_textview;

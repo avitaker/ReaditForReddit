@@ -18,7 +18,7 @@
         <item name="appbar_theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="toolbar_popup_theme">@style/AppTheme.PopupOverlay</item>
         <item name="delete_icon">@drawable/ic_delete_black_24dp</item>
-        <item name="post_accent_color">@color/granola</item>
+        <item name="post_accent_color">@color/milk</item>
     </style>
 
     <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">

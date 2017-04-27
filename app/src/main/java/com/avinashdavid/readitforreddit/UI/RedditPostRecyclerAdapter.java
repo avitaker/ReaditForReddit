@@ -98,8 +98,6 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-//                    Intent i = new Intent(mMainActivity, LinkActivity.class);
-//                    i.putExtra(LinkActivity.EXTRA_URL, redditPost.url);
                     FragmentManager fm = mMainActivity.getSupportFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
                     Fragment prev = fm.findFragmentByTag("dialog");

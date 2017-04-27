@@ -65,8 +65,6 @@
         <service android:name=".NetworkUtils.GetSubredditInfoService"/>
         <service android:name=".NetworkUtils.GetMorechildrenService"/>
 
-        <activity android:name=".LinkActivity"/>
-
         <activity
             android:name=".ManageSubredditsActivity"
             android:label="@string/title_activity_manage_subreddits"
