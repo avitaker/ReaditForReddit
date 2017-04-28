@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -11,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.util.Pair;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +32,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * Created by avinashdavid on 3/17/17.
  */
@@ -42,9 +46,15 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
 
     private RedditPostRecyclerAdapter.ScrollListener mScrollListener;
 
+    private static final String[] imageMarkers = new String[]{
+            ".jpg"
+    };
+
     private int VIEW_TYPE_EMPTY = 0;
     private int VIEW_TYPE_NORMAL = 1;
     private int VIEW_TYPE_LOADING = 2;
+    private int VIEW_TYPE_NO_THUMBNAIL = 3;
+    private int VIEW_TYPE_IMAGE_LINK = 4;
 
     public RedditPostRecyclerAdapter(@NonNull Context context, List<RedditListing> redditListings) {
         this.mMainActivity = (MainActivity)context;
@@ -65,19 +75,29 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
     @Override
     public ListingHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
-        if (viewType==VIEW_TYPE_NORMAL) {
+        boolean withImage = false;
+        if (viewType==VIEW_TYPE_NORMAL || viewType == VIEW_TYPE_IMAGE_LINK) {
             view = mLayoutInflater.inflate(R.layout.item_listing, parent, false);
+            withImage = true;
+        }
+        else if (viewType== VIEW_TYPE_NO_THUMBNAIL){
+            view = mLayoutInflater.inflate(R.layout.item_listing_no_image, parent, false);
         } else {
             view = mLayoutInflater.inflate(R.layout.widget_empty_view, parent, false);
         }
-        return new ListingHolder(view);
+        return new ListingHolder(view, withImage);
     }
 
     @Override
     public void onBindViewHolder(final ListingHolder holder, int position) {
-        if (getItemViewType(position)==VIEW_TYPE_NORMAL) {
+        int viewtype = getItemViewType(position);
+        if (viewtype==VIEW_TYPE_NORMAL || viewtype == VIEW_TYPE_NO_THUMBNAIL || viewtype == VIEW_TYPE_IMAGE_LINK) {
             final RedditListing redditPost = mRedditListings.get(position);
-            holder.bindListing(redditPost);
+            if (viewtype!=VIEW_TYPE_IMAGE_LINK) {
+                holder.bindListing(redditPost, false);
+            } else {
+                holder.bindListing(redditPost, true);
+            }
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -112,6 +132,8 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
                 }
             });
 
+
+
         }
     }
 
@@ -133,7 +155,19 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
         } else if (position >= mRedditListings.size()){
             returnInt = VIEW_TYPE_LOADING;
         } else {
-            returnInt = VIEW_TYPE_NORMAL;
+            RedditListing listing = mRedditListings.get(position);
+            String thumbnailUrl = listing.thumbnailUrl;
+            String url = listing.url;
+            if (thumbnailUrl.length()==0 || thumbnailUrl.equals("self") || thumbnailUrl.equals("default") || thumbnailUrl.equals("nsfw")) {
+                returnInt = VIEW_TYPE_NO_THUMBNAIL;
+            } else {
+                returnInt = VIEW_TYPE_NORMAL;
+                for (int i=0; i<imageMarkers.length; i++){
+                    if (url.contains(imageMarkers[i])){
+                        returnInt = VIEW_TYPE_IMAGE_LINK;
+                    }
+                }
+            }
         }
         return returnInt;
     }
@@ -165,10 +199,12 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
 
         public String mPostId;
         final int goldColor;
+        final int redColor;
+        ColorStateList ogColor;
 
         private RedditListing mRedditPost;
 
-        public ListingHolder(View itemView) {
+        public ListingHolder(View itemView, boolean withImage) {
             super(itemView);
             if (itemView.findViewById(R.id.post_info_container)!=null) {
                 voteCount_textview = (TextView) itemView.findViewById(R.id.voteCount_textview);
@@ -178,18 +214,23 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
                 commentCount_textview = (TextView) itemView.findViewById(R.id.numberOfComments_textview);
                 domain_textview = (TextView) itemView.findViewById(R.id.listing_domain_textview);
                 timecreated_textview = (TextView) itemView.findViewById(R.id.time_elapsed_textview);
-                thumbnail_imageview = (ImageView) itemView.findViewById(R.id.post_thumbnail);
+                if (withImage) {
+                    thumbnail_imageview = (ImageView) itemView.findViewById(R.id.post_thumbnail);
+                }
                 mRelativeLayout = (LinearLayout) itemView.findViewById(R.id.post_info_container);
                 mCardRelativeLayout = (RelativeLayout) itemView.findViewById(R.id.card_view);
+                ogColor = listTitle_textview.getTextColors();
                 mContext = itemView.getContext();
             } else {
                 mContext = itemView.getContext();
+                Timber.e("no postinfo");
             }
             goldColor = GeneralUtils.getSDKSensitiveColor(mContext, R.color.gold);
+            redColor = GeneralUtils.getSDKSensitiveColor(mContext, android.R.color.holo_red_dark);
         }
 
 
-        public void bindListing(RedditListing listing){
+        public void bindListing(RedditListing listing, boolean imageLink){
             mRedditPost = listing;
             mPostId = listing.mPostId;
             if (!MainActivity.usingTabletLayout) {
@@ -203,12 +244,31 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
             commentCount_textview.setText(mContext.getString(R.string.format_numberofcomments, listing.commentsCount));
             domain_textview.setText(listing.domain);
             timecreated_textview.setText(GeneralUtils.returnFormattedTime(mContext, System.currentTimeMillis(), listing.timeCreated));
-            String thumbnailUrl = listing.thumbnailUrl;
-            if (thumbnailUrl.length()==0 || thumbnailUrl.equals("self") || thumbnailUrl.equals("default")){
-                thumbnail_imageview.setVisibility(View.GONE);
-                mRelativeLayout.setWeightSum(4);
-            } else {
-                Picasso.with(mContext).load(listing.thumbnailUrl).into(thumbnail_imageview);
+            if (thumbnail_imageview!=null) {
+                Picasso picasso = Picasso.with(mContext);
+                if (imageLink){
+                    final String linkUrl = mRedditPost.url;
+//                    picasso.setIndicatorsEnabled(true);
+                    thumbnail_imageview.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            FragmentViewImage fragmentViewImage = FragmentViewImage.getImageViewFragment(linkUrl);
+                            FragmentManager fragmentManager = ((AppCompatActivity)mContext).getSupportFragmentManager();
+                            FragmentTransaction ft = fragmentManager.beginTransaction();
+                            Fragment prev = fragmentManager.findFragmentByTag(FragmentViewImage.TAG_IMAGE_FRAGMENT);
+                            if (prev != null) {
+                                ft.remove(prev);
+                            }
+                            ft.addToBackStack(null);
+
+                            fragmentViewImage.show(ft, FragmentViewImage.TAG_IMAGE_FRAGMENT);
+                        }
+                    });
+                } else {
+                    picasso.setIndicatorsEnabled(false);
+                }
+                picasso.load(listing.thumbnailUrl).into(thumbnail_imageview);
             }
 
             if (listing.isGilded){
@@ -216,6 +276,14 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
             } else {
                 if (author_textview.getCurrentTextColor() == goldColor) {
                     author_textview.setTextColor(GeneralUtils.getThemeAccentColor(mContext));
+                }
+            }
+
+            if (listing.isNSFW){
+                listTitle_textview.setTextColor(redColor);
+            } else {
+                if (listTitle_textview.getCurrentTextColor() == redColor){
+                    listTitle_textview.setTextColor(ogColor);
                 }
             }
         }

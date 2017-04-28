@@ -113,13 +113,20 @@
 
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/post_thumbnail"
+    <FrameLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        style="@style/PostThumbnail"
-        android:scaleType="fitCenter"/>
+        style="@style/PostThumbnail">
+
+        <ImageView
+            android:id="@+id/post_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"/>
+
+    </FrameLayout>
+
     <!--<LinearLayout-->
         <!--android:layout_below="@+id/third_linearlayout"-->
         <!--android:layout_width="match_parent"-->

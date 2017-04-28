@@ -57,6 +57,7 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
     private static final int VIEW_TYPE_DEPTH_8 = 9;
     private static final int VIEW_TYPE_DEPTH_9 = 10;
     private static final int VIEW_TYPE_DEPTH_10 = 11;
+    private static final int VIEW_TYPE_AUTHOR = 47;
     private BroadcastReceiver mMoreReceiver;
     private IntentFilter mIntentFilter;
 
@@ -177,7 +178,7 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
         }
         View view = mLayoutInflater.inflate(id, parent, false);
         if (viewType == VIEW_TYPE_POST_INFO){
-            return new RedditPostRecyclerAdapter.ListingHolder(view);
+            return new RedditPostRecyclerAdapter.ListingHolder(view, true);
         } else if (viewType < 0) {
             return new MoreHolder(view);
         } else {
@@ -190,7 +191,7 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
         CommentRecord commentObject;
         if (MainActivity.usingTabletLayout){
             if (getItemViewType(position)==0){
-                ((RedditPostRecyclerAdapter.ListingHolder) holder).bindListing(mRedditListing);
+                ((RedditPostRecyclerAdapter.ListingHolder) holder).bindListing(mRedditListing, false);
             } else {
                 commentObject = mCommentRecords.get(position - 1);
                 if (getItemViewType(position)<0){

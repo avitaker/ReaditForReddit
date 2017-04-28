@@ -64,6 +64,8 @@ dependencies {
     compile 'com.google.android:flexbox:0.2.5'
     compile 'com.github.satyan:sugar:1.4'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.github.chrisbanes:PhotoView:2.0.0'
+    compile 'com.facebook.fresco:fresco:0.6.1'
     testCompile 'junit:junit:4.12'
 }
 

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="horizontal"
+    android:id="@+id/post_info_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="4">
+
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/postinfo1"
+            android:layout_alignParentTop="true"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:flexWrap="wrap"
+            app:alignItems="stretch"
+            app:alignContent="stretch"
+            app:flexDirection="row">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/voteCount_textview"
+                style="@style/VoteCount"
+                android:gravity="bottom"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/author_textview"
+                style="@style/BoldCaptionsAccent"
+                android:gravity="bottom"/>
+
+            <TextView
+                android:text="@string/in"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/BoldCaptions"
+                android:gravity="bottom"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/subreddit_textview"
+                style="@style/BoldCaptionsAccent"
+                android:gravity="bottom"/>
+        </com.google.android.flexbox.FlexboxLayout>
+
+        <!--</LinearLayout>-->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/listingTitle_textview"
+            style="@style/PostTitle"
+            android:layout_below="@+id/postinfo1"/>
+
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/third_linearlayout"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:flexWrap="wrap"
+            app:alignItems="stretch"
+            app:alignContent="stretch"
+            android:layout_below="@+id/listingTitle_textview"
+            android:layout_alignParentBottom="true"
+            app:flexDirection="row">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/numberOfComments_textview"
+                style="@style/LittleCaptions"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/listing_domain_textview"
+                style="@style/LittleCaptions"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/time_elapsed_textview"
+                style="@style/LittleCaptions"/>
+
+        </com.google.android.flexbox.FlexboxLayout>
+
+        <!--</LinearLayout>-->
+
+    </RelativeLayout>
+
+</LinearLayout>

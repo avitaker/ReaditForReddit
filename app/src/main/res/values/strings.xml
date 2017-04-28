@@ -1,5 +1,5 @@
 <resources xmlns:xliff="http://schemas.android.com/tools">
-    <string name="app_name">Readit</string>
+    <string name="app_name">Roam</string>
 
     <!--Main page navigation view-->
     <string name="subreddits">Subreddits</string>

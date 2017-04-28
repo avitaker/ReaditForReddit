@@ -34,10 +34,12 @@ public class RedditListing extends SugarRecord {
 
     public boolean isGilded;
 
+    public boolean isNSFW;
+
     public RedditListing() {
     }
 
-    public RedditListing(String postId, long timestamp, String title, int voteCount, int commentsCount, String author, String subreddit, float timeCreated, String selftext_html, String domain, String after, String url, String thumbnailUrl, boolean isGilded) {
+    public RedditListing(String postId, long timestamp, String title, int voteCount, int commentsCount, String author, String subreddit, float timeCreated, String selftext_html, String domain, String after, String url, String thumbnailUrl, boolean isGilded, boolean isNSFW) {
         mPostId = postId;
         this.timestamp = timestamp;
         mTitle = title;
@@ -52,6 +54,7 @@ public class RedditListing extends SugarRecord {
         this.url = url;
         this.thumbnailUrl = thumbnailUrl;
         this.isGilded = isGilded;
+        this.isNSFW = isNSFW;
     }
 
     public static ContentValues makeContentValues(@NonNull RedditListing redditListing){

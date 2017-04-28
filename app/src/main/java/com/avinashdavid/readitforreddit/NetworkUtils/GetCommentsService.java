@@ -109,6 +109,8 @@ public class GetCommentsService extends IntentService {
                         Intent errorIntent = new Intent(Constants.BROADCAST_ERROR_WHILE_LOADING_COMMENTS);
                         context.sendBroadcast(errorIntent);
                     }
+
+                    
                 });
 
         NetworkSingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonArrayRequest);

@@ -113,8 +113,9 @@ public class GetListingsService extends IntentService {
                                         String selftext = linkObject.getString(SELFTEXT_HTML);
                                         String thumbnailUrl = linkObject.getString(THUMBNAIL_URL);
                                         boolean isGilded = linkObject.getInt(GILDED)>0;
+                                        boolean isNSFW = Boolean.valueOf(linkObject.getString("over_18"));
 
-                                        RedditListing redditListing = new RedditListing(postId, System.currentTimeMillis(), title, voteCount, commentCount, author, subreddit, timeCreated, selftext, domain, afterResponse, url, thumbnailUrl, isGilded);
+                                        RedditListing redditListing = new RedditListing(postId, System.currentTimeMillis(), title, voteCount, commentCount, author, subreddit, timeCreated, selftext, domain, afterResponse, url, thumbnailUrl, isGilded, isNSFW);
                                         redditListings.add(redditListing);
                                     }
                                 }
