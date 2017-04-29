@@ -23,18 +23,21 @@ import com.avinashdavid.readitforreddit.R;
 public class PostOptionsDialogFragment extends DialogFragment {
     String subredditName;
     String linkUrl;
+    String mTitle;
     SharedPreferences sp;
 
     public static final String TAG_POST_OPTIONS = "tagPostOptionsFrag";
 
     private static final String KEY_SUB = "keysub";
     private static final String KEY_LINK = "keylink";
+    private static final String KEY_TITLE = "keyTitle";
 
-    static PostOptionsDialogFragment newInstance(String linkUrl, String subredditName){
+    static PostOptionsDialogFragment newInstance(String postTitle, String linkUrl, String subredditName){
         PostOptionsDialogFragment fragment = new PostOptionsDialogFragment();
         Bundle args = new Bundle();
         args.putString(KEY_SUB, subredditName);
         args.putString(KEY_LINK, linkUrl);
+        args.putString(KEY_TITLE, postTitle);
         fragment.setArguments(args);
         return fragment;
     }
@@ -48,6 +51,7 @@ public class PostOptionsDialogFragment extends DialogFragment {
         }
         subredditName = args.getString(KEY_SUB);
         linkUrl = args.getString(KEY_LINK);
+        mTitle = args.getString(KEY_TITLE);
     }
 
     @Override
@@ -59,6 +63,20 @@ public class PostOptionsDialogFragment extends DialogFragment {
             public void onClick(View v) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(linkUrl));
                 startActivity(browserIntent);
+                dismiss();
+            }
+        });
+
+        TextView shareLink = (TextView)v.findViewById(R.id.share_post);
+        shareLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_SUBJECT, mTitle);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, linkUrl);
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
                 dismiss();
             }
         });
@@ -110,7 +128,7 @@ public class PostOptionsDialogFragment extends DialogFragment {
             });
         }
         return new AlertDialog.Builder(getActivity())
-                .setTitle(getString(R.string.post_options))
+                .setTitle(mTitle)
                 .setView(v)
                 .create();
     }

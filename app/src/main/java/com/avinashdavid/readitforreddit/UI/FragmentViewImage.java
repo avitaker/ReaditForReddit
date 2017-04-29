@@ -11,10 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.avinashdavid.readitforreddit.R;
-import com.github.chrisbanes.photoview.PhotoView;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
 import timber.log.Timber;
 
@@ -26,9 +27,10 @@ public class FragmentViewImage extends DialogFragment {
     public static final String TAG_IMAGE_FRAGMENT = "imageFragment";
     private static final String KEY_IMAGE_URL = "imageUrl";
     private String mLinkUrl;
-    private PhotoView mImageView;
+    private ImageView mImageView;
     int width;
     int height;
+    GlideDrawableImageViewTarget imageViewTarget;
 
     public static FragmentViewImage getImageViewFragment(String linkUrl){
         Bundle bundle = new Bundle();
@@ -40,13 +42,13 @@ public class FragmentViewImage extends DialogFragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        Timber.d("creating");
         Bundle arguments = getArguments();
         if (arguments!=null){
             mLinkUrl = arguments.getString(KEY_IMAGE_URL);
         } else if (savedInstanceState!=null){
             mLinkUrl = savedInstanceState.getString(KEY_IMAGE_URL);
         }
+        Timber.d(mLinkUrl);
 //        Fresco.initialize(getActivity());
         super.onCreate(savedInstanceState);
     }
@@ -69,12 +71,9 @@ public class FragmentViewImage extends DialogFragment {
 
 
         View view = inflater.inflate(R.layout.fragment_view_image, null);
-        mImageView = (PhotoView) view.findViewById(R.id.imageview_main);
+        mImageView = (ImageView) view.findViewById(R.id.imageview_main);
 
-
-//        AlertDialog dialog = new AlertDialog.Builder(getActivity())
-//                .setView(view)
-//                .create();
+        imageViewTarget = new GlideDrawableImageViewTarget(mImageView);
 
         dialog.setContentView(view);
 
@@ -84,7 +83,8 @@ public class FragmentViewImage extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        Picasso.with(getActivity()).load(mLinkUrl).fit().centerInside().into(mImageView);
+//        Picasso.with(getActivity()).load(mLinkUrl).fit().centerInside().into(mImageView);
+        Glide.with(getActivity()).load(mLinkUrl).fitCenter().into(imageViewTarget);
 //        mImageView.setImageURI(Uri.parse(mLinkUrl));
     }
 

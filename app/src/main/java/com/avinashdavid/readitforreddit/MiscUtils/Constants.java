@@ -46,6 +46,12 @@ public class Constants {
     public static final String GILDED = "gilded";
     public static final String EDITED = "edited";
 
+    public static final String VALUE_YEAR = "year";
+    public static final String VALUE_DAY = "day";
+    public static final String VALUE_MONTH = "month";
+    public static final String VALUE_WEEK = "week";
+    public static final String VALUE_ALL_TIME = "all";
+
     public static final String MORE_KIND = "more";
     public static final String COUNT_KEY = "count";
 }

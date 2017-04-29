@@ -31,6 +31,13 @@ public class GetListingsService extends IntentService {
     private Context mContext;
     private String mUrlString;
 
+    public static final int SORT_TOP_ALLTIME = 3;
+    public static final int SORT_TOP_DAY = 4;
+    public static final int SORT_TOP_WEEK = 5;
+    public static final int SORT_TOP_MONTH = 6;
+    public static final int SORT_TOP_YEAR = 7;
+
+
     private Uri mUrl;
 
     private String mLoadAfter;
@@ -165,7 +172,31 @@ public class GetListingsService extends IntentService {
 
     public static void loadListingsSubreddit(Context context, @Nullable String subreddit, @Nullable String sorting, int limit, @Nullable String after, boolean forWidget){
         Intent intent = new Intent(context, GetListingsService.class);
-        Uri url = UriGenerator.getUriPosts(subreddit, sorting, limit, after);
+        String sort = null;
+        if (sorting!=null) {
+            sort = sorting.toLowerCase();
+            if (sort.contains("top")) {
+                if (sort.length() > 3) {
+                    Integer time;
+                    if (sort.contains("all")) {
+                        time = SORT_TOP_ALLTIME;
+                    } else if (sort.contains("year")) {
+                        time = SORT_TOP_YEAR;
+                    } else if (sort.contains("month")) {
+                        time = SORT_TOP_MONTH;
+                    } else if (sort.contains("week")) {
+                        time = SORT_TOP_WEEK;
+                    } else if (sort.contains("day")) {
+                        time = SORT_TOP_DAY;
+                    } else {
+                        time = SORT_TOP_ALLTIME;
+                    }
+                    String rawSort = sort.substring(0, 3);
+                    sort = rawSort.concat(Integer.toString(time));
+                }
+            }
+        }
+        Uri url = UriGenerator.getUriPosts(subreddit, sort, limit, after);
         intent.putExtra(GetListingsService.EXTRA_URL, url);
         if (forWidget){
             intent.putExtra(EXTRA_FOR_WIDGET, true);
@@ -173,8 +204,32 @@ public class GetListingsService extends IntentService {
         context.startService(intent);
     }
 
-    public static void loadListingsSearch(Context context, @Nullable String subreddit, String query, @Nullable String after, @Nullable String sort, boolean restrictSr){
+    public static void loadListingsSearch(Context context, @Nullable String subreddit, String query, @Nullable String after, @Nullable String sorting, boolean restrictSr){
         Intent intent = new Intent(context, GetListingsService.class);
+        String sort = null;
+        if (sorting!=null) {
+            sort = sorting.toLowerCase();
+            if (sort.contains("top")) {
+                if (sort.length() > 3) {
+                    Integer time;
+                    if (sort.contains("all")) {
+                        time = SORT_TOP_ALLTIME;
+                    } else if (sort.contains("year")) {
+                        time = SORT_TOP_YEAR;
+                    } else if (sort.contains("month")) {
+                        time = SORT_TOP_MONTH;
+                    } else if (sort.contains("week")) {
+                        time = SORT_TOP_WEEK;
+                    } else if (sort.contains("day")) {
+                        time = SORT_TOP_DAY;
+                    } else {
+                        time = SORT_TOP_ALLTIME;
+                    }
+                    String rawSort = sort.substring(0, 3);
+                    sort = rawSort.concat(Integer.toString(time));
+                }
+            }
+        }
         Uri url = UriGenerator.getUriSearch(subreddit, query, after, sort, restrictSr);
         intent.putExtra(GetListingsService.EXTRA_URL, url);
         if (after!=null){

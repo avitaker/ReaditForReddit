@@ -40,12 +40,12 @@
                 style="@style/BoldCaptionsAccent"
                 android:gravity="bottom"/>
 
-                <TextView
-                    android:text="@string/in"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/BoldCaptions"
-                    android:gravity="bottom"/>
+            <TextView
+                android:text="@string/in"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/BoldCaptions"
+                android:gravity="bottom"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -104,19 +104,29 @@
         style="@style/PostThumbnail"
         android:background="@android:color/black">
 
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_aspectRatio="100%"
-            app:layout_widthPercent="100%">
+        <!--<FrameLayout-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="0dp"-->
+            <!--app:layout_aspectRatio="100%"-->
+            <!--app:layout_widthPercent="100%">-->
 
             <ImageView
                 android:id="@+id/post_thumbnail"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_aspectRatio="100%"
+                app:layout_widthPercent="100%"
                 android:scaleType="fitCenter"/>
 
-        </FrameLayout>
+
+        <!--</FrameLayout>-->
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_signal_cellular_4_bar_black_24dp"
+            android:layout_gravity="bottom|right"/>
 
 
     </android.support.percent.PercentFrameLayout>

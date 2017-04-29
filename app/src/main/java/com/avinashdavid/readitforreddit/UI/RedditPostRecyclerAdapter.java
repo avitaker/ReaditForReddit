@@ -76,8 +76,12 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
     public ListingHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         boolean withImage = false;
-        if (viewType==VIEW_TYPE_NORMAL || viewType == VIEW_TYPE_IMAGE_LINK) {
+        if (viewType==VIEW_TYPE_NORMAL) {
             view = mLayoutInflater.inflate(R.layout.item_listing, parent, false);
+            withImage = true;
+        }
+        else if (viewType == VIEW_TYPE_IMAGE_LINK){
+            view = mLayoutInflater.inflate(R.layout.item_listing_clickable_thumbnail, parent, false);
             withImage = true;
         }
         else if (viewType== VIEW_TYPE_NO_THUMBNAIL){
@@ -126,7 +130,7 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
                     }
                     ft.addToBackStack(null);
 
-                    PostOptionsDialogFragment newFragment = PostOptionsDialogFragment.newInstance(GeneralUtils.returnFormattedStringFromHtml(redditPost.url).toString(), redditPost.subreddit);
+                    PostOptionsDialogFragment newFragment = PostOptionsDialogFragment.newInstance(redditPost.mTitle, GeneralUtils.returnFormattedStringFromHtml(redditPost.url).toString(), redditPost.subreddit);
                     newFragment.show(ft, PostOptionsDialogFragment.TAG_POST_OPTIONS);
                     return true;
                 }
@@ -266,7 +270,7 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
                         }
                     });
                 } else {
-                    picasso.setIndicatorsEnabled(false);
+
                 }
                 picasso.load(listing.thumbnailUrl).into(thumbnail_imageview);
             }

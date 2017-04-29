@@ -526,6 +526,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 onRefresh();
                 return true;
             }
+            case R.id.sort_top_day: {
+                mSortString = item.getTitle().toString();
+                onRefresh();
+                return true;
+            }
+            case R.id.sort_top_week: {
+                mSortString = item.getTitle().toString();
+                onRefresh();
+                return true;
+            }
+            case R.id.sort_top_month: {
+                mSortString = item.getTitle().toString();
+                onRefresh();
+                return true;
+            }
+            case R.id.sort_top_year: {
+                mSortString = item.getTitle().toString();
+                onRefresh();
+                return true;
+            }
+            case R.id.sort_top_all:{
+                mSortString = item.getTitle().toString();
+                onRefresh();
+                return true;
+            }
             case R.id.add_this_subreddit:{
                 if (mSearchQueryString==null) {
                     if (mSubredditString!=null) {

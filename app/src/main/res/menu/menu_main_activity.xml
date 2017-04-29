@@ -21,7 +21,21 @@
                 <item
                     android:id="@+id/sort.top"
                     android:title="@string/sort_top"/>
-
+                <item
+                    android:id="@+id/sort.top.day"
+                    android:title="@string/sort_top_day"/>
+                <item
+                    android:id="@+id/sort.top.week"
+                    android:title="@string/sort_top_week"/>
+                <item
+                    android:id="@+id/sort.top.month"
+                    android:title="@string/sort_top_month"/>
+                <item
+                    android:id="@+id/sort.top.year"
+                    android:title="@string/sort_top_year"/>
+                <item
+                    android:id="@+id/sort.top.all"
+                    android:title="@string/sort_top_all_time"/>
             </group>
 
         </menu>

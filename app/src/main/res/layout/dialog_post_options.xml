@@ -19,6 +19,13 @@
         style="@style/PostOptionsItem"/>
 
     <TextView
+        android:id="@+id/share_post"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/share"
+        style="@style/PostOptionsItem"/>
+
+    <TextView
         android:id="@+id/view_subreddit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

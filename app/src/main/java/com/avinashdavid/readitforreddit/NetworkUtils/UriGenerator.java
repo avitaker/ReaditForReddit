@@ -3,6 +3,8 @@ package com.avinashdavid.readitforreddit.NetworkUtils;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
+import timber.log.Timber;
+
 /**
  * Created by avinashdavid on 3/6/17.
  */
@@ -33,7 +35,38 @@ public class UriGenerator {
             builder.appendPath(subredditMarkerString).appendPath(subreddit);
         }
         if (sorting!=null){
-            builder.appendPath(sorting);
+            String sort = sorting.toLowerCase();
+            if (!sort.contains("top")) {
+                builder.appendPath(sorting);
+            } else {
+                builder.appendPath("top");
+                if (sorting.length()>3) {
+                    String timeString;
+                    int codeInt = Integer.parseInt(sorting.substring(sorting.length() - 1));
+                    switch (codeInt){
+                        case GetListingsService.SORT_TOP_ALLTIME:
+                            timeString = "all";
+                            break;
+                        case GetListingsService.SORT_TOP_DAY:
+                            timeString = "day";
+                            break;
+                        case GetListingsService.SORT_TOP_MONTH:
+                            timeString = "month";
+                            break;
+                        case GetListingsService.SORT_TOP_WEEK:
+                            timeString = "week";
+                            break;
+                        case GetListingsService.SORT_TOP_YEAR:
+                            timeString = "year";
+                            break;
+                        default:
+                            timeString = "all";
+                            break;
+                    }
+                    builder.appendQueryParameter("sort","top").appendQueryParameter("t",timeString);
+                }
+
+            }
         }
         if (limit != 0) {
             builder.appendQueryParameter(KEY_LIMIT, Integer.toString(limit));
@@ -74,13 +107,46 @@ public class UriGenerator {
         return builder.build();
     }
 
-    public static Uri getUriSearch(@Nullable String subreddit, @Nullable String query, @Nullable String after, @Nullable String sort, boolean restrictSr){
+    public static Uri getUriSearch(@Nullable String subreddit, @Nullable String query, @Nullable String after, @Nullable String sorting, boolean restrictSr){
+        Timber.d("calling search");
         Uri.Builder builder = baseListingUri.buildUpon();
         if (null!=subreddit){
             builder.appendPath(subredditMarkerString).appendPath(subreddit);
         }
-        if (null!=sort && query==null){
-            builder.appendPath(sort);
+        String sort = null;
+        if (null!=sorting && query==null){
+            sort = sorting.toLowerCase();
+            if (!sort.contains("top")) {
+                builder.appendPath(sorting);
+            } else {
+                builder.appendPath("top");
+                if (sorting.length()>3) {
+                    String timeString;
+                    int codeInt = Integer.parseInt(sorting.substring(sorting.length() - 1));
+                    switch (codeInt){
+                        case GetListingsService.SORT_TOP_ALLTIME:
+                            timeString = "all";
+                            break;
+                        case GetListingsService.SORT_TOP_DAY:
+                            timeString = "day";
+                            break;
+                        case GetListingsService.SORT_TOP_MONTH:
+                            timeString = "month";
+                            break;
+                        case GetListingsService.SORT_TOP_WEEK:
+                            timeString = "week";
+                            break;
+                        case GetListingsService.SORT_TOP_YEAR:
+                            timeString = "year";
+                            break;
+                        default:
+                            timeString = "all";
+                            break;
+                    }
+                    builder.appendQueryParameter("sort","top").appendQueryParameter("t",timeString);
+                }
+
+            }
         }
         if (query!=null) {
             builder.appendPath("search");

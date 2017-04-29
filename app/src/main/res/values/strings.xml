@@ -57,6 +57,7 @@
     <string name="post_options">Post options</string>
     <string name="open_in_browser">Open link</string>
     <string name="view_subreddit">Go to %s</string>
+    <string name="share">Share link</string>
 
     <string name="cancel">Cancel</string>
 
@@ -74,10 +75,15 @@
     <string name="format_yearselapsed"><xliff:g id="years_since_posting">%d</xliff:g> yrs</string>
     <string name="format_year"><xliff:g id="years_since_posting">%d</xliff:g> yr</string>
 
-    <string name="sort_hot">hot</string>
-    <string name="sort_new">new</string>
-    <string name="sort_rising">rising</string>
-    <string name="sort_top">top</string>
+    <string name="sort_hot">Hot</string>
+    <string name="sort_new">New</string>
+    <string name="sort_rising">Rising</string>
+    <string name="sort_top">Top</string>
+    <string name="sort_top_all_time">Top (all time)</string>
+    <string name="sort_top_day">Top (day)</string>
+    <string name="sort_top_week">Top (week)</string>
+    <string name="sort_top_month">Top (month)</string>
+    <string name="sort_top_year">Top (year)</string>
     <string name="sort_confidence">confidence</string>
     <string name="sort_controversial">controversial</string>
     <string name="sort_old">old</string>
