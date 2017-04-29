@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
@@ -105,6 +106,8 @@ public class CommentsActivity extends AppCompatActivity
 
     RedditListing mListing;
 
+    int versionNum;
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -114,8 +117,11 @@ public class CommentsActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         PreferenceUtils.onActivityCreateSetTheme(this);
+        versionNum = Build.VERSION.SDK_INT;
         setContentView(R.layout.activity_comments);
-        supportPostponeEnterTransition();
+        if (versionNum >=21) {
+            supportPostponeEnterTransition();
+        }
 
         GPSUtils.setScreenName(this, "CommentsActivity");
         Timber.d("oncreate");
@@ -124,14 +130,10 @@ public class CommentsActivity extends AppCompatActivity
             //TODO set empty view
             Timber.d("nothing here");
         } else if (mIntent != null) {
-//            mUrl = mIntent.getParcelableExtra(EXTRA_URL);
             mPostId = mIntent.getStringExtra(EXTRA_POST_ID);
         }
         if (savedInstanceState!=null && savedInstanceState.getString(EXTRA_POST_ID)!= null){
-//            mUrl = savedInstanceState.getParcelable(EXTRA_URL);
             mPostId = savedInstanceState.getString(EXTRA_POST_ID);
-//            Timber.d("post id in savedinstancestate is " + mPostId);
-//            mLayoutState = savedInstanceState.getParcelable(KEY_LAYOUTMANAGER_STATE);
         }
 
         mToolbar = (Toolbar)findViewById(R.id.my_toolbar);
@@ -144,9 +146,10 @@ public class CommentsActivity extends AppCompatActivity
         fab = (FloatingActionButton)findViewById(R.id.comments_fab);
 
         if (mPostId != null) {
-            Timber.d("post id is " + mPostId);
-            setTransitionNamePost(findViewById(R.id.post_info_container), mPostId);
-            setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), mPostId);
+            if (versionNum>=21) {
+                setTransitionNamePost(findViewById(R.id.post_info_container), mPostId);
+                setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), mPostId);
+            }
             initializePostInfo(mPostId);
         }
         mReceiver = new BroadcastReceiver() {
@@ -154,7 +157,6 @@ public class CommentsActivity extends AppCompatActivity
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 if (Constants.BROADCAST_COMMENTS_LOADED.equals(action)) {
-//                    restartLoader();
                     UpdateCommentsAsyncTask updateCommentsAsyncTask = new UpdateCommentsAsyncTask();
                     updateCommentsAsyncTask.execute(mPostId);
                     mCommentsRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener(){
@@ -182,11 +184,6 @@ public class CommentsActivity extends AppCompatActivity
         mCommentsRecyclerview.setLayoutManager(mLinearLayoutManager);
 
         mCommentsRecyclerview.setNestedScrollingEnabled(true);
-
-//        if (savedInstanceState!=null && savedInstanceState.getString(EXTRA_POST_ID)!= null){
-//            restartLoader();
-//        }
-//        getSupportLoaderManager().initLoader(1, null, (LoaderManager.LoaderCallbacks<Cursor>) this);
     }
 
     @TargetApi(21)
@@ -264,8 +261,10 @@ public class CommentsActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        setTransitionNamePost(findViewById(R.id.post_info_container), null);
-        setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), null);
+        if (versionNum>=21) {
+            setTransitionNamePost(findViewById(R.id.post_info_container), null);
+            setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), null);
+        }
         super.onBackPressed();
     }
 
@@ -343,9 +342,11 @@ public class CommentsActivity extends AppCompatActivity
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                setTransitionNamePost(findViewById(R.id.post_info_container), null);
-                setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), null);
-                supportFinishAfterTransition();
+                if (versionNum>=21) {
+                    setTransitionNamePost(findViewById(R.id.post_info_container), null);
+                    setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), null);
+                    supportFinishAfterTransition();
+                }
                 return true;
 //            case R.id.sort_top: {
 //                if (item.isChecked()) item.setChecked(false);
@@ -443,78 +444,10 @@ public class CommentsActivity extends AppCompatActivity
             selftext_textview.setVisibility(View.VISIBLE);
             selftext_textview.setMovementMethod(LinkMovementMethod.getInstance());
         }
-        supportStartPostponedEnterTransition();
+        if (versionNum>=21) {
+            supportStartPostponedEnterTransition();
+        }
     }
-
-//    @Override
-//    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-//        if (mPostId==null){
-//            return null;
-//        }
-//        if (!mPostId.equals(GetCommentsService.sLastPostId)) {
-//            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-//            SharedPreferences.Editor editor = sp.edit();
-//            editor.putInt(Constants.KEY_COMMENTS_FIRST_CHILD, 0);
-//            editor.putInt(Constants.KEY_COMMENTS_OFFSET, 0);
-//            editor.apply();
-//            GetCommentsService.loadCommentsForArticle(CommentsActivity.this, null, mPostId, mSortString);
-//        } else {
-//            initUi();
-////            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-////            mFirstVisibleChild = sp.getInt(Constants.KEY_COMMENTS_FIRST_CHILD, 0);
-////            mOffset = sp.getInt(Constants.KEY_COMMENTS_OFFSET, 0);
-////            mCommentsRecyclerview.scrollToPosition(mFirstVisibleChild);
-////            mCommentsRecyclerview.post(new Runnable() {
-////                @Override
-////                public void run() {
-////                    mCommentsRecyclerview.scrollBy(0, -mOffset);
-////                }
-////            });
-//        }
-//        return new CursorLoader(CommentsActivity.this, ReaditContract.CommentEntry.getUriComments(mPostId), null, null, null, null);
-//    }
-//
-//    @Override
-//    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-//        Timber.d("onLoadFinished");
-//        mCursor = data;
-//        if (errorSnack!=null){
-//            errorSnack.dismiss();
-//            errorSnack = null;
-//        }
-//
-//        mCommentsRecyclerViewAdapter = new CommentRecordRecyclerAdapter(this, mCursor, mListing);
-//        mCommentsRecyclerViewAdapter.setHasStableIds(true);
-//        mItemCount = mCursor.getCount();
-//
-//        if (mItemCount>0) {
-//            findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-//        }
-//
-//        mCommentsRecyclerview.setAdapter(mCommentsRecyclerViewAdapter);
-//        mCommentsRecyclerview.setAdapter(mCommentsRecyclerViewAdapter);
-//
-//        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-//        mFirstVisibleChild = sp.getInt(Constants.KEY_COMMENTS_FIRST_CHILD, 0);
-//        mOffset = sp.getInt(Constants.KEY_COMMENTS_OFFSET, 0);
-//        mCommentsRecyclerview.scrollToPosition(mFirstVisibleChild);
-//        mCommentsRecyclerview.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                mCommentsRecyclerview.scrollBy(0, -mOffset);
-//            }
-//        });
-//
-//        mLinearLayoutManager.onRestoreInstanceState(mLayoutState);
-//
-////        UpdateCommentsAsyncTask updateCommentsAsyncTask = new UpdateCommentsAsyncTask();
-////        updateCommentsAsyncTask.execute(mPostId);
-//    }
-//
-//    @Override
-//    public void onLoaderReset(Loader<Cursor> loader) {
-//        mCommentsRecyclerViewAdapter.swapCursor(null);
-//    }
 
     class UpdateCommentsAsyncTask extends GetCommentsAsyncTask{
         @Override

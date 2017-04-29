@@ -119,36 +119,33 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
+                    android:theme="@style/ThemePostInfo"
                     style="@style/SelftextContainer"/>
 
             </LinearLayout>
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/my_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="?attr/toolbar_popup_theme"
-            app:layout_collapseMode="pin">
-
-            <TextView
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/my_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/activity_comments"
-                style="@style/Base.TextAppearance.Widget.AppCompat.Toolbar.Title"
-                android:gravity="bottom"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin"/>
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                android:navigationIcon="?attr/menu_icon"
+                app:popupTheme="?attr/toolbar_popup_theme"
+                app:layout_collapseMode="pin">
 
-        </android.support.v7.widget.Toolbar>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/activity_comments"
+                    style="@style/Base.TextAppearance.Widget.AppCompat.Toolbar.Title"
+                    android:gravity="bottom"
+                    android:layout_marginBottom="@dimen/activity_horizontal_margin"/>
+
+            </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
-
-    <!--<android.support.v4.widget.NestedScrollView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
 
 
     <RelativeLayout
@@ -163,13 +160,13 @@
             android:indeterminate="true" />
     </RelativeLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/comment_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:scrollbars="vertical"
-            />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/comment_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:scrollbars="vertical"
+        />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/comments_fab"
@@ -178,13 +175,9 @@
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
         android:src="@drawable/ic_open_in_browser_black_24dp"
-        android:tint="@color/blue_grey_50"
+        android:tint="@color/milk"
         app:layout_anchor="@id/comment_recyclerview"
         app:layout_anchorGravity="bottom|right|end"
         android:onClick="openInLocalBrowser"/>
-
-    <!--</android.support.v4.widget.NestedScrollView>-->
-
-
 
 </android.support.design.widget.CoordinatorLayout>

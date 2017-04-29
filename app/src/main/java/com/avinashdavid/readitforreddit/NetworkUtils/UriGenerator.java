@@ -79,34 +79,6 @@ public class UriGenerator {
         return builder.build();
     }
 
-    public static Uri getUriSubredditList(@Nullable String where, @Nullable String mineWhere){
-        Uri.Builder builder = baseListingUri.buildUpon().appendPath(KEY_SUBREDDITS);
-        if (null != where){
-            builder.appendPath(where);
-            if (null!=mineWhere){
-                builder.appendPath(mineWhere);
-            }
-        } else {
-            builder.appendPath("default");
-        }
-        return builder.build();
-    }
-
-    public static Uri getUriCommentsForArticle(@Nullable String subreddit, String articleId, @Nullable String sortOrder){
-        Uri.Builder builder = baseListingUri.buildUpon();
-        if (null!=subreddit){
-            builder.appendPath(subredditMarkerString).appendPath(subreddit);
-        }
-        builder.appendPath(PATH_SEGMENT_COMMENTS).appendPath(articleId);
-        builder.appendPath(".json");
-        if (null!=sortOrder){
-            builder.appendQueryParameter(KEY_SORT, sortOrder);
-        }
-        builder.appendQueryParameter(KEY_COMMENT_DEPTH, Integer.toString(DEFAULT_COMMENT_DEPTH));
-//        builder.appendQueryParameter(KEY_LIMIT, Integer.toString(DEFAULT_COMMENTS_LIMIT));
-        return builder.build();
-    }
-
     public static Uri getUriSearch(@Nullable String subreddit, @Nullable String query, @Nullable String after, @Nullable String sorting, boolean restrictSr){
         Timber.d("calling search");
         Uri.Builder builder = baseListingUri.buildUpon();
@@ -162,6 +134,34 @@ public class UriGenerator {
             builder.appendQueryParameter(KEY_RESTRICT_SR, "on");
         }
         builder.appendQueryParameter(KEY_LIMIT, Integer.toString(20));
+        return builder.build();
+    }
+
+    public static Uri getUriSubredditList(@Nullable String where, @Nullable String mineWhere){
+        Uri.Builder builder = baseListingUri.buildUpon().appendPath(KEY_SUBREDDITS);
+        if (null != where){
+            builder.appendPath(where);
+            if (null!=mineWhere){
+                builder.appendPath(mineWhere);
+            }
+        } else {
+            builder.appendPath("default");
+        }
+        return builder.build();
+    }
+
+    public static Uri getUriCommentsForArticle(@Nullable String subreddit, String articleId, @Nullable String sortOrder){
+        Uri.Builder builder = baseListingUri.buildUpon();
+        if (null!=subreddit){
+            builder.appendPath(subredditMarkerString).appendPath(subreddit);
+        }
+        builder.appendPath(PATH_SEGMENT_COMMENTS).appendPath(articleId);
+        builder.appendPath(".json");
+        if (null!=sortOrder){
+            builder.appendQueryParameter(KEY_SORT, sortOrder);
+        }
+        builder.appendQueryParameter(KEY_COMMENT_DEPTH, Integer.toString(DEFAULT_COMMENT_DEPTH));
+//        builder.appendQueryParameter(KEY_LIMIT, Integer.toString(DEFAULT_COMMENTS_LIMIT));
         return builder.build();
     }
 

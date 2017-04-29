@@ -14,6 +14,7 @@
 
         <item name="delete_icon">@drawable/ic_delete_black_24dp</item>
         <item name="post_accent_color">@color/milk</item>
+        <item name="post_text_color">@color/milk</item>
     </style>
 
     <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">
@@ -23,6 +24,7 @@
         <item name="toolbar_popup_theme">@style/AppThemeDark.PopupOverlay</item>
         <item name="delete_icon">@drawable/ic_delete_white_24dp</item>
         <item name="post_accent_color">@color/granola</item>
+        <item name="post_text_color">@color/milk</item>
     </style>
 
     <style name="AppTheme.Light" parent="AppTheme">
@@ -33,6 +35,7 @@
         <item name="toolbar_popup_theme">@style/AppTheme.PopupOverlay</item>
         <item name="delete_icon">@drawable/ic_delete_black_24dp</item>
         <item name="android:textColor">@android:color/background_dark</item>
+        <item name="post_text_color">@android:color/background_dark</item>
     </style>
 
     <style name="ThemeRedditSaturated" parent="AppTheme">
@@ -183,7 +186,7 @@
     </style>
 
     <style name="ThemePostInfo">
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">?attr/post_text_color</item>
     </style>
 
     <style name="WidgetToolbar">

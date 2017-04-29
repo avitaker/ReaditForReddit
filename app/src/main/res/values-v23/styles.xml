@@ -8,5 +8,6 @@
         <item name="toolbar_popup_theme">@style/AppTheme.PopupOverlay</item>
         <item name="delete_icon">@drawable/ic_delete_black_24dp</item>
         <item name="android:textColor">@android:color/background_dark</item>
+        <item name="post_text_color">@android:color/background_dark</item>
     </style>
 </resources>
