@@ -72,6 +72,32 @@
             android:scrollbars="vertical"/>
 
 
-    </android.support.v4.widget.SwipeRefreshLayout>s
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <RelativeLayout
+        android:id="@+id/firstTimeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <ProgressBar
+            android:id="@+id/loadingPanel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/firstTimeTextview"
+            android:text="@string/firstTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/loadingPanel"
+            style="@style/FirsttimeText"
+            android:gravity="center_horizontal"/>
+
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

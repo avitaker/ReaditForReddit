@@ -8,10 +8,12 @@
     <string name="add_subscription">Add subreddit subscription</string>
     <string name="go_to_random">Random subreddit</string>
 
+    <string name="firstTime">Doing initial setup</string>
+
     <!--Main page options menu-->
     <string name="sort">Sort</string>
     <string name="change.theme">Change theme</string>
-    <string name="addThisSubreddit">Subscribe to this subreddit</string>
+    <string name="addThisSubreddit">Subscribe</string>
 
 
     <!--listings page-->
@@ -57,7 +59,10 @@
     <string name="post_options">Post options</string>
     <string name="open_in_browser">Open link</string>
     <string name="view_subreddit">Go to %s</string>
-    <string name="share">Share link</string>
+    <string name="share">Share</string>
+
+    <string name="share_link">Link</string>
+    <string name="share_comments">Comments</string>
 
     <string name="cancel">Cancel</string>
 
@@ -113,6 +118,7 @@
     <string name="pref_subreddit_list">sp_SubList</string>
     <string name="pref_reload_subreddits">sp_RelSubs</string>
     <string name="pref_current_subreddit">sp_CurSub</string>
+    <string name="pref_search_string">sp_searchString</string>
     <string name="pref_theme">theme_setting</string>
     <string name="pref_boolean_use_tablet_layout">tablet_boolean</string>
     <string name="pref_last_post">lastPost</string>

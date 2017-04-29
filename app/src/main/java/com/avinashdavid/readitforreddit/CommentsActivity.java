@@ -15,6 +15,9 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +26,7 @@ import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
@@ -35,11 +39,15 @@ import com.avinashdavid.readitforreddit.NetworkUtils.UriGenerator;
 import com.avinashdavid.readitforreddit.PostUtils.CommentRecord;
 import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 import com.avinashdavid.readitforreddit.UI.CommentRecordRecyclerAdapter;
+import com.avinashdavid.readitforreddit.UI.FragmentViewImage;
 import com.avinashdavid.readitforreddit.UI.GetCommentsAsyncTask;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import timber.log.Timber;
+
+import static com.avinashdavid.readitforreddit.UI.RedditPostRecyclerAdapter.imageMarkers;
 
 public class CommentsActivity extends AppCompatActivity
 //        implements LoaderManager.LoaderCallbacks<Cursor>
@@ -95,6 +103,8 @@ public class CommentsActivity extends AppCompatActivity
     TextView domain_textview;
     TextView timecreated_textview;
     TextView selftext_textview;
+
+    ImageView thumbnailImgView;
 
     Snackbar errorSnack;
 
@@ -169,7 +179,7 @@ public class CommentsActivity extends AppCompatActivity
                         }
                     });
                 } else if (Constants.BROADCAST_ERROR_WHILE_LOADING_COMMENTS.equals(action)){
-                    errorSnack = PreferenceUtils.getThemedSnackbar(CommentsActivity.this, R.id.activity_comments, getString(R.string.message_error_loading_comments), Snackbar.LENGTH_INDEFINITE);
+                    errorSnack = PreferenceUtils.getThemedSnackbar(CommentsActivity.this, R.id.activity_comments, getString(R.string.message_error_loading_comments) + ": " + intent.getStringExtra(Constants.KEY_NETWORK_REQUEST_ERROR), Snackbar.LENGTH_INDEFINITE);
                     errorSnack.setAction(R.string.refresh, new CommentsRefreshListener());
                     errorSnack.show();
                 }
@@ -201,6 +211,7 @@ public class CommentsActivity extends AppCompatActivity
         super.onStart();
         lastPostId = sp.getString(getString(R.string.pref_last_post), null);
         if (!mPostId.equals(lastPostId)) {
+            CommentRecord.deleteAll(CommentRecord.class);
             SharedPreferences.Editor editor = sp.edit();
             editor.putInt(Constants.KEY_COMMENTS_FIRST_CHILD, 0);
             editor.putInt(Constants.KEY_COMMENTS_OFFSET, 0);
@@ -376,6 +387,24 @@ public class CommentsActivity extends AppCompatActivity
 //            }
 //            default:
 //                return super.onOptionsItemSelected(item);
+            case R.id.share_activity_comments:
+                return true;
+            case R.id.share_link:
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_SUBJECT, mListing.mTitle);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, mListing.url);
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
+                return true;
+            case R.id.share_comments:
+                sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_SUBJECT, "A Reddit comment thread");
+                sendIntent.putExtra(Intent.EXTRA_TEXT, (UriGenerator.getShareableUriComments(mPostId)).toString());
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
+                return true;
             case R.id.sort_by:
                 return true;
             default:
@@ -399,6 +428,7 @@ public class CommentsActivity extends AppCompatActivity
         domain_textview = (TextView)findViewById(R.id.listing_domain_textview);
         timecreated_textview = (TextView)findViewById(R.id.time_elapsed_textview);
         selftext_textview = (TextView)findViewById(R.id.selftext_container);
+        thumbnailImgView = (ImageView)findViewById(R.id.post_thumbnail);
 
         mListing = RedditListing.find(RedditListing.class, "m_post_id = ?", postId).get(0);
 
@@ -435,6 +465,7 @@ public class CommentsActivity extends AppCompatActivity
                 }
             }
         });
+
         listTitle_textview.setText(GeneralUtils.returnFormattedStringFromHtml(listing.mTitle));
         commentCount_textview.setText(getString(R.string.format_numberofcomments, listing.commentsCount));
         domain_textview.setText(listing.domain);
@@ -443,6 +474,37 @@ public class CommentsActivity extends AppCompatActivity
             selftext_textview.setText(GeneralUtils.returnFormattedStringFromHtml(listing.selftext_html));
             selftext_textview.setVisibility(View.VISIBLE);
             selftext_textview.setMovementMethod(LinkMovementMethod.getInstance());
+        }
+        String thumbnailUrl = listing.thumbnailUrl;
+        if (thumbnailUrl.length()==0 || thumbnailUrl.equals("self") || thumbnailUrl.equals("default") || thumbnailUrl.equals("nsfw")) {
+            findViewById(R.id.imageContainer).setVisibility(View.GONE);
+        } else {
+            Picasso.with(this).load(listing.thumbnailUrl).into(thumbnailImgView);
+            boolean clickable = false;
+            for (int i=0; i<imageMarkers.length; i++){
+                if (listing.url.contains(imageMarkers[i])){
+                    clickable = true;
+                }
+            }
+            if (!clickable){
+                findViewById(R.id.imgMarker).setVisibility(View.GONE);
+            } else {
+                thumbnailImgView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        FragmentViewImage fragmentViewImage = FragmentViewImage.getImageViewFragment(listing.url);
+                        FragmentManager fragmentManager = (CommentsActivity.this).getSupportFragmentManager();
+                        FragmentTransaction ft = fragmentManager.beginTransaction();
+                        Fragment prev = fragmentManager.findFragmentByTag(FragmentViewImage.TAG_IMAGE_FRAGMENT);
+                        if (prev != null) {
+                            ft.remove(prev);
+                        }
+                        ft.addToBackStack(null);
+
+                        fragmentViewImage.show(ft, FragmentViewImage.TAG_IMAGE_FRAGMENT);
+                    }
+                });
+            }
         }
         if (versionNum>=21) {
             supportStartPostponedEnterTransition();

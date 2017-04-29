@@ -105,8 +105,10 @@ public class GetCommentsService extends IntentService {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Timber.e(error);
+                        String message = error.getMessage();
+                        Timber.e(message);
                         Intent errorIntent = new Intent(Constants.BROADCAST_ERROR_WHILE_LOADING_COMMENTS);
+                        errorIntent.putExtra(Constants.KEY_NETWORK_REQUEST_ERROR, message);
                         context.sendBroadcast(errorIntent);
                     }
 

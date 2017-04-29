@@ -15,9 +15,10 @@ import android.widget.ImageView;
 
 import com.avinashdavid.readitforreddit.R;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-
-import timber.log.Timber;
+import com.bumptech.glide.request.target.Target;
 
 /**
  * Created by avinashdavid on 4/27/17.
@@ -31,6 +32,7 @@ public class FragmentViewImage extends DialogFragment {
     int width;
     int height;
     GlideDrawableImageViewTarget imageViewTarget;
+    View progressBar;
 
     public static FragmentViewImage getImageViewFragment(String linkUrl){
         Bundle bundle = new Bundle();
@@ -48,14 +50,11 @@ public class FragmentViewImage extends DialogFragment {
         } else if (savedInstanceState!=null){
             mLinkUrl = savedInstanceState.getString(KEY_IMAGE_URL);
         }
-        Timber.d(mLinkUrl);
-//        Fresco.initialize(getActivity());
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-//        int title = getArguments().getInt("title");
 
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -73,6 +72,8 @@ public class FragmentViewImage extends DialogFragment {
         View view = inflater.inflate(R.layout.fragment_view_image, null);
         mImageView = (ImageView) view.findViewById(R.id.imageview_main);
 
+        progressBar = view.findViewById(R.id.loadingPanel);
+
         imageViewTarget = new GlideDrawableImageViewTarget(mImageView);
 
         dialog.setContentView(view);
@@ -84,7 +85,19 @@ public class FragmentViewImage extends DialogFragment {
     public void onStart() {
         super.onStart();
 //        Picasso.with(getActivity()).load(mLinkUrl).fit().centerInside().into(mImageView);
-        Glide.with(getActivity()).load(mLinkUrl).fitCenter().into(imageViewTarget);
+        Glide.with(getActivity()).load(mLinkUrl).listener(new RequestListener<String, GlideDrawable>() {
+            @Override
+            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                progressBar.setVisibility(View.GONE);
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                progressBar.setVisibility(View.GONE);
+                return false;
+            }
+        }).fitCenter().into(imageViewTarget);
 //        mImageView.setImageURI(Uri.parse(mLinkUrl));
     }
 

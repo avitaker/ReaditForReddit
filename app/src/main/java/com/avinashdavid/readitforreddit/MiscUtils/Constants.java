@@ -19,6 +19,8 @@ public class Constants {
     public static final String BROADCAST_SIDEBAR_ERROR = "com.avinashdavid.readitforreddit.SIDEBAR_ERROR";
     public static final String BROADCAST_SIDEBAR = "com.avinashdavid.readitforreddit.SIDEBAR_LOADED";
 
+    public static final String KEY_NETWORK_REQUEST_ERROR = "netErr";
+
     public static final String BROADCAST_MORE_COMMENTS_LOADED = "com.avinashdavid.readitforreddit.BROADCAST_MORE_COMMENTS";
     public static final String BROADCAST_MORE_COMMENTS_ERROR = "com.avinashdavid.readitforreddit.BROADCAST_ERROR_MORE_COMMENTS";
 

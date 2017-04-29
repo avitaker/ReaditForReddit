@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item android:id="@+id/sort.by"
           android:title="@string/sort"
           android:icon="?attr/sort_icon"
@@ -28,6 +29,18 @@
 
             </group>
 
+        </menu>
+    </item>
+
+    <item android:id="@+id/share.activity.comments"
+          android:title="@string/share"
+          app:showAsAction="never">
+        <menu>
+            <item android:id="@+id/share.link"
+                  android:title="@string/share_link"/>
+            <item android:id="@+id/share.comments"
+                  android:title="@string/share_comments"/>
+            android:icon="@drawable/ic_theme_white_24dp"
         </menu>
     </item>
 </menu>

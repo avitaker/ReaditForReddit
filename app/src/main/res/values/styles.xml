@@ -199,14 +199,13 @@
 
     <style name="PostThumbnail">
         <item name="android:layout_marginLeft">8dp</item>
-        <item name="android:layout_marginRight">8dp</item>
         <item name="android:colorBackground">@android:color/darker_gray</item>
     </style>
 
     <style name="SidebarHeader">
         <item name="android:background">?attr/colorPrimary</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">?attr/post_text_color</item>
         <item name="android:textStyle">italic</item>
         <item name="android:minHeight">?attr/actionBarSize</item>
         <item name="android:paddingTop">@dimen/padding_listing_cardview</item>
@@ -245,4 +244,7 @@
         <item name="android:windowIsFloating">false</item>
     </style>
 
+    <style name="FirsttimeText" parent="Base.TextAppearance.AppCompat.Display1">
+
+    </style>
 </resources>

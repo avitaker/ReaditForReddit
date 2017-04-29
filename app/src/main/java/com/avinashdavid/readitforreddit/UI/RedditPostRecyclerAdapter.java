@@ -46,7 +46,7 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
 
     private RedditPostRecyclerAdapter.ScrollListener mScrollListener;
 
-    private static final String[] imageMarkers = new String[]{
+    public static final String[] imageMarkers = new String[]{
             ".jpg"
     };
 

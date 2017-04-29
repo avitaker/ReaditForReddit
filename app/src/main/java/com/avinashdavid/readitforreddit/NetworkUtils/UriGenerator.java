@@ -1,6 +1,7 @@
 package com.avinashdavid.readitforreddit.NetworkUtils;
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import timber.log.Timber;
@@ -176,5 +177,9 @@ public class UriGenerator {
         builder.appendPath(PATH_SEGMENT_COMMENTS).appendPath(articleId);
         builder.appendPath("api").appendPath("morechildren").appendQueryParameter("api_type", "json").appendQueryParameter("showmore","true").appendQueryParameter("link_id", "t3_"+articleId);
         return builder.build();
+    }
+
+    public static Uri getShareableUriComments(@NonNull String postId){
+        return Uri.parse("https://www.reddit.com/").buildUpon().appendPath(PATH_SEGMENT_COMMENTS).appendPath(postId).build();
     }
 }

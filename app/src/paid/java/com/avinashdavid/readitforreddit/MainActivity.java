@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String KEY_SEARCH_STRING = "searchStr_SI";
     private static final String KEY_RESTRICT_SEARCH = "restrictSr_SI";
     private static final String KEY_LAYOUTMANAGER_STATE = "KeyForLayoutManagerState";
+    private static final String KEY_SELECTED_SORT_ID = "keyselectedSort";
 
     private static final String KEY_COMMENTS_POSTID = "keyPostId";
 
@@ -86,10 +87,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String TAG_SEARCH_POSTS = "searchPosts";
     private static final String TAG_ADD_SUBREDDIT = "addSubreddit";
 
-    private static final int ID_HOT = 1;
-    private static final int ID_NEW = 2;
-    private static final int ID_RISING = 3;
-    private static final int ID_TOP = 4;
 
     public static final int CODE_MANAGE_SUBREDDITS = 7;
 
@@ -142,6 +139,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     BroadcastReceiver mSubredditInfoReceiver;
     IntentFilter mSubredditInfoIntentFilter;
 
+    int selectedSortID = R.id.sort_hot;
+
 
     /**
      * COMMENTS VARIABLES
@@ -182,8 +181,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (usingTabletLayout){
                 mPostId = savedInstanceState.getString(KEY_COMMENTS_POSTID);
             }
+            selectedSortID = savedInstanceState.getInt(KEY_SELECTED_SORT_ID);
         } else {
             mSubredditString = mApplicationSharedPreferences.getString(getString(R.string.pref_current_subreddit), null);
+            mSearchQueryString = mApplicationSharedPreferences.getString(getString(R.string.pref_search_string), null);
         }
 
         if (getIntent().getStringExtra(CommentsActivity.EXTRA_POST_ID)!=null){
@@ -208,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startRealm();
 
 
-        mSubredditObjectRealmResults = mRealm.where(SubredditObject.class).findAll().sort("subredditName");
+//        mSubredditObjectRealmResults = mRealm.where(SubredditObject.class).findAll().sort("subredditName");
         String rawString = mApplicationSharedPreferences.getString(getString(R.string.pref_subreddit_list), "");
         setSubredditsInNavigationView(rawString);
         setSidebarText((TextView)findViewById(R.id.sidebar_text));
@@ -247,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 } else if (Constants.BROADCAST_ERROR_WHILE_RETREIVING_POSTS.equals(action)){
                     mSwipeRefreshLayout.setRefreshing(false);
-                    Snackbar mySnackbar = PreferenceUtils.getThemedSnackbar(MainActivity.this, R.id.activity_main, getString(R.string.error_while_loading_posts), Snackbar.LENGTH_LONG);
+                    Snackbar mySnackbar = PreferenceUtils.getThemedSnackbar(MainActivity.this, R.id.activity_main, getString(R.string.error_while_loading_posts), Snackbar.LENGTH_INDEFINITE);
                     mySnackbar.setAction(R.string.retry, new MyRefreshListener());
                     mySnackbar.show();
                 } else if (Constants.BROADCAST_SUBREDDITS_LOADED.equals(action)){
@@ -431,10 +432,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (usingTabletLayout){
             outState.putString(KEY_COMMENTS_POSTID, mPostId);
         }
+        outState.putInt(KEY_SELECTED_SORT_ID, selectedSortID);
     }
 
     private void initUi(@Nullable String subredditString, @Nullable String searchString, @Nullable String sortString, boolean restrictSr, boolean forceRefresh){
-//        Timber.d("calling initUi");
+
         mAfter = null;
 
         mRedditListings = getPosts(subredditString, searchString, null, sortString, restrictSr, forceRefresh);
@@ -459,7 +461,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mCollapsingToolbarLayout.setTitle(getString(R.string.format_search_results, searchString));
         }
 
-//        mListingsLinearLayoutManager.onRestoreInstanceState(mLayoutState);
     }
 
     private void initCommentsUi(){
@@ -498,6 +499,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(selectedSortID).setChecked(true);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (item.isChecked()) item.setChecked(false);
@@ -507,46 +515,55 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 mDrawerLayout.openDrawer(Gravity.START);
                 return true;
             case R.id.sort_hot: {
+                selectedSortID = itemId;
                 mSortString = item.getTitle().toString();
                 onRefresh();
                 return true;
             }
             case R.id.sort_new: {
+                selectedSortID = itemId;
                 mSortString = item.getTitle().toString();
                 onRefresh();
                 return true;
             }
             case R.id.sort_rising: {
+                selectedSortID = itemId;
                 mSortString = item.getTitle().toString();
                 onRefresh();
                 return true;
             }
             case R.id.sort_top: {
+                selectedSortID = itemId;
                 mSortString = item.getTitle().toString();
                 onRefresh();
                 return true;
             }
             case R.id.sort_top_day: {
+                selectedSortID = itemId;
                 mSortString = item.getTitle().toString();
                 onRefresh();
                 return true;
             }
             case R.id.sort_top_week: {
+                selectedSortID = itemId;
                 mSortString = item.getTitle().toString();
                 onRefresh();
                 return true;
             }
             case R.id.sort_top_month: {
+                selectedSortID = itemId;
                 mSortString = item.getTitle().toString();
                 onRefresh();
                 return true;
             }
             case R.id.sort_top_year: {
+                selectedSortID = itemId;
                 mSortString = item.getTitle().toString();
                 onRefresh();
                 return true;
             }
             case R.id.sort_top_all:{
+                selectedSortID = itemId;
                 mSortString = item.getTitle().toString();
                 onRefresh();
                 return true;
@@ -641,6 +658,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             mSubredditObjectRealmResults = mRealm.where(SubredditObject.class).findAll().sort("subredditName");
             if (mSubredditObjectRealmResults.size()<=0) {
+                mListingRecyclerview.setVisibility(View.GONE);
+                findViewById(R.id.firstTimeLayout).setVisibility(View.VISIBLE);
                 getSubredditsForNavigationMenu(null, null);
                 Timber.e("no subreddits in realm");
             } else {
@@ -703,9 +722,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int itemId = item.getItemId();
         if (itemId == R.id.goToFrontpage){
             mSubredditString = null;
-            mSearchQueryString = null;
-            mRestrictSearchBoolean = false;
             setDefaultSubreddit(null);
+
             mSwipeRefreshLayout.post(new Runnable() {
                 @Override
                 public void run() {
@@ -742,6 +760,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             });
         }
         mAfter = null;
+        mSearchQueryString = null;
+        mRestrictSearchBoolean = false;
+        mApplicationSharedPreferences.edit().putString(getString(R.string.pref_search_string), null).apply();
         setDefaultSubreddit(mSubredditString);
         mDrawerLayout.closeDrawer(Gravity.START);
         return true;
@@ -757,6 +778,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onRefresh() {
+        mSwipeRefreshLayout.setRefreshing(true);
         mAfter = null;
 //        findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
         mListingRecyclerview.setAdapter(null);
@@ -821,6 +843,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mSwipeRefreshLayout.setRefreshing(true);
 
         mSearchQueryString = query;
+        mApplicationSharedPreferences.edit().putString(getString(R.string.pref_search_string), mSearchQueryString).apply();
         deleteAll(RedditListing.class);
         onRefresh();
     }
@@ -928,7 +951,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         protected void onPostExecute(List<CommentRecord> commentRecords) {
             mCommentRecords = CommentRecord.listAll(CommentRecord.class);
-//            Cursor cursor = getContentResolver().query(ReaditContract.CommentEntry.getUriComments(mPostId), null, null, null, null);
+
             mCommentsRedditListing = RedditListing.find(RedditListing.class, "m_post_id = ?", mPostId).get(0);
             mCommentRecordRecyclerAdapter = new CommentRecordRecyclerAdapter(MainActivity.this, mCommentRecords, mCommentsRedditListing);
             mCommentRecordRecyclerAdapter.setHasStableIds(true);
@@ -936,7 +959,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mCommentsRecyclerview.setAdapter(mCommentRecordRecyclerAdapter);
 
             mCommentsLinearLayoutManager.onRestoreInstanceState(mLayoutState);
-//            mCommentRecordRecyclerAdapter.notifyItemRangeInserted(mItemCount, mCommentRecords.size()-mItemCount);
+
             mItemCount = mCommentRecords.size();
         }
     }
