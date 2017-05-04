@@ -15,6 +15,10 @@
     <string name="change.theme">Change theme</string>
     <string name="addThisSubreddit">Subscribe</string>
 
+    <string name="link_share_title">A post on Reddit</string>
+
+    <string name="comments_share_title">A Reddit comment thread</string>
+
 
     <!--listings page-->
     <string name="format_numberofcomments"><xliff:g id="number_of_comments">%d</xliff:g> comments</string>

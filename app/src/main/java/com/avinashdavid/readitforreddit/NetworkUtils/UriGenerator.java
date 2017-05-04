@@ -172,11 +172,13 @@ public class UriGenerator {
         return builder.build();
     }
 
-    public static Uri getUriMoreComments(String articleId){
+    public static Uri getUriMoreComments(String articleId, String children){
+        Timber.d("children at uri generator are " + children);
         Uri.Builder builder = baseListingUri.buildUpon();
-        builder.appendPath(PATH_SEGMENT_COMMENTS).appendPath(articleId);
-        builder.appendPath("api").appendPath("morechildren").appendQueryParameter("api_type", "json").appendQueryParameter("showmore","true").appendQueryParameter("link_id", "t3_"+articleId);
-        return builder.build();
+        builder.appendPath("api").appendPath("morechildren").appendQueryParameter("api_type", "json").appendQueryParameter("link_id", "t3_"+articleId);
+        StringBuilder soFar = new StringBuilder(builder.build().toString());
+        soFar.append("&children=" + children);
+        return Uri.parse(soFar.toString());
     }
 
     public static Uri getShareableUriComments(@NonNull String postId){

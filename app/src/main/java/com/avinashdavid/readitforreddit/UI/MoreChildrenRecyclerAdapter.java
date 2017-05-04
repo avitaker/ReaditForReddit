@@ -4,15 +4,11 @@ package com.avinashdavid.readitforreddit.UI;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
@@ -28,8 +24,7 @@ import com.avinashdavid.readitforreddit.CommentsActivity;
 import com.avinashdavid.readitforreddit.MainActivity;
 import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils;
 import com.avinashdavid.readitforreddit.NetworkUtils.GetCommentsService;
-import com.avinashdavid.readitforreddit.NetworkUtils.GetMorechildrenService;
-import com.avinashdavid.readitforreddit.PostUtils.CommentRecord;
+import com.avinashdavid.readitforreddit.PostUtils.MoreChildrenCommentRecord;
 import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 import com.avinashdavid.readitforreddit.R;
 
@@ -41,14 +36,16 @@ import timber.log.Timber;
  * Created by avinashdavid on 3/18/17.
  */
 
-public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class MoreChildrenRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<CommentRecord> mCommentRecords;
-    //    private Cursor mCommentRecords;
+    private List<MoreChildrenCommentRecord> mMoreChildrenCommentRecords;
+    public static String sLastMoreCommentsParent;
+    //    private Cursor mMoreChildrenCommentRecords;
     private RedditListing mRedditListing;
     private Activity mCommentsActivity;
     private LayoutInflater mLayoutInflater;
     private int lastPosition = -1;
+    private int parentDepth;
 
     private static final int VIEW_TYPE_POST_INFO = 0;
     private static final int VIEW_TYPE_DEPTH_0 = 1;
@@ -66,28 +63,17 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
     private BroadcastReceiver mMoreReceiver;
     private IntentFilter mIntentFilter;
 
-    public CommentRecordRecyclerAdapter(@NonNull Context context, List<CommentRecord> commentRecords, RedditListing redditListing){
+    public MoreChildrenRecyclerAdapter(@NonNull Context context, List<MoreChildrenCommentRecord> moreChildrenCommentRecords, RedditListing redditListing, String parentId, int parentDepth){
         try {
             this.mCommentsActivity = (CommentsActivity) context;
         } catch (ClassCastException e){
-            this.mCommentsActivity = (Activity)context;
+            this.mCommentsActivity = (AppCompatActivity)context;
         }
         this.mLayoutInflater = LayoutInflater.from(mCommentsActivity);
-        this.mCommentRecords = commentRecords;
+        this.mMoreChildrenCommentRecords = moreChildrenCommentRecords;
         this.mRedditListing = redditListing;
-        this.mMoreReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String parent = intent.getStringExtra(GetMorechildrenService.KEY_PARENT_ID);
-                int startIndex = intent.getIntExtra(GetMorechildrenService.KEY_INSERT_START_POSITION, Integer.MAX_VALUE);
-                List<CommentRecord> newRecords = CommentRecord.find(CommentRecord.class, "parent = ?", parent);
-                int itemsInserted = newRecords.size();
-                Timber.d(Integer.toString(itemsInserted));
-                mCommentRecords.addAll(startIndex, newRecords);
-                notifyItemRangeInserted(startIndex, itemsInserted);
-            }
-        };
-        mIntentFilter = new IntentFilter();
+        this.parentDepth = parentDepth;
+        sLastMoreCommentsParent = parentId;
     }
 
 //    @Override
@@ -193,12 +179,12 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        CommentRecord commentObject;
+        MoreChildrenCommentRecord commentObject;
         if (MainActivity.usingTabletLayout){
             if (getItemViewType(position)==0){
                 ((RedditPostRecyclerAdapter.ListingHolder) holder).bindListing(mRedditListing, false);
             } else {
-                commentObject = mCommentRecords.get(position - 1);
+                commentObject = mMoreChildrenCommentRecords.get(position - 1);
                 if (getItemViewType(position)<0){
                     ((MoreHolder) holder).bindMore(commentObject, position);
                 } else {
@@ -206,8 +192,8 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
                 }
             }
         } else {
-            if (position<mCommentRecords.size()){
-                commentObject = mCommentRecords.get(position);
+            if (position< mMoreChildrenCommentRecords.size()){
+                commentObject = mMoreChildrenCommentRecords.get(position);
                 if (getItemViewType(position)<0){
                     ((MoreHolder) holder).bindMore(commentObject, position);
                 } else {
@@ -221,9 +207,9 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
     @Override
     public int getItemCount() {
         if (!MainActivity.usingTabletLayout) {
-            return mCommentRecords == null ? 0 : mCommentRecords.size();
+            return mMoreChildrenCommentRecords == null ? 0 : mMoreChildrenCommentRecords.size();
         } else {
-            return mCommentRecords == null ? 1 : mCommentRecords.size()+1;
+            return mMoreChildrenCommentRecords == null ? 1 : mMoreChildrenCommentRecords.size()+1;
         }
     }
 
@@ -235,27 +221,27 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
     @Override
     public int getItemViewType(int position) {
-        CommentRecord commentRecord;
+        MoreChildrenCommentRecord commentRecord;
         if (!MainActivity.usingTabletLayout) {
-            if (position<mCommentRecords.size()) {
-                commentRecord = mCommentRecords.get(position);
+            if (position< mMoreChildrenCommentRecords.size()) {
+                commentRecord = mMoreChildrenCommentRecords.get(position);
             } else {
-                commentRecord = mCommentRecords.get(position -1);
+                commentRecord = mMoreChildrenCommentRecords.get(position -1);
             }
             if (commentRecord.depth!= GetCommentsService.DEPTH_MORE) {
-                return commentRecord.depth + 1;
+                return commentRecord.depth + 1 - parentDepth;
             } else {
-                return (int)-commentRecord.createdTime - 1;
+                return (int)-commentRecord.createdTime - 1 + parentDepth;
             }
         } else {
             if (position==0){
                 return VIEW_TYPE_POST_INFO;
             } else {
-                commentRecord = mCommentRecords.get(position - 1);
+                commentRecord = mMoreChildrenCommentRecords.get(position - 1);
                 if (commentRecord.depth != GetCommentsService.DEPTH_MORE) {
-                    return commentRecord.depth + 1;
+                    return commentRecord.depth + 1 - parentDepth;
                 } else {
-                    return (int)-commentRecord.createdTime - 1;
+                    return (int)-commentRecord.createdTime - 1 + parentDepth;
                 }
             }
         }
@@ -263,20 +249,20 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
     @Override
     public long getItemId(int position) {
-        CommentRecord commentRecord;
+        MoreChildrenCommentRecord commentRecord;
         if (MainActivity.usingTabletLayout){
             if (position==0){
                 return 0;
             } else {
-                commentRecord = mCommentRecords.get(position - 1);
+                commentRecord = mMoreChildrenCommentRecords.get(position - 1);
                 return commentRecord.getId();
             }
         } else {
-            if (position<mCommentRecords.size()) {
-                commentRecord = mCommentRecords.get(position);
+            if (position< mMoreChildrenCommentRecords.size()) {
+                commentRecord = mMoreChildrenCommentRecords.get(position);
                 return commentRecord.getId();
             } else {
-                commentRecord = mCommentRecords.get(position - 1);
+                commentRecord = mMoreChildrenCommentRecords.get(position - 1);
                 return commentRecord.getId();
             }
         }
@@ -286,7 +272,7 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
         View infoBox;
         TextView moreTextview;
         Context mContext;
-        CommentRecord mMoreObject;
+        MoreChildrenCommentRecord mMoreObject;
 
 
         public MoreHolder(View itemView) {
@@ -299,29 +285,15 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
             infoBox.setVisibility(View.GONE);
         }
 
-        void bindMore(final CommentRecord commentRecord, final int position){
+        void bindMore(MoreChildrenCommentRecord commentRecord, final int position){
             this.mMoreObject = commentRecord;
             moreTextview.setText(mContext.getString(R.string.format_more_comments, commentRecord.score));
-
+            final String linkId = commentRecord.linkId;
+            final String parentId = commentRecord.parent;
             moreTextview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final String linkId = commentRecord.linkId;
-                    final String parentId = commentRecord.parent;
-                    final String children = commentRecord.bodyHtml;
-                    final float depth = commentRecord.createdTime;
                     Timber.d("load more comments for LINK: " + linkId + " and PARENT: " + parentId);
-                    FragmentMoreChildren fragmentViewImage = FragmentMoreChildren.getFragmentMoreChildren(linkId, parentId, children, depth);
-                    FragmentManager fragmentManager = ((AppCompatActivity)mContext).getSupportFragmentManager();
-                    FragmentTransaction ft = fragmentManager.beginTransaction();
-                    Fragment prev = fragmentManager.findFragmentByTag(FragmentMoreChildren.TAG_MORECHILDREN_FRAGMENT);
-                    if (prev != null) {
-                        ft.remove(prev);
-                    }
-                    ft.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-                    ft.addToBackStack(null);
-
-                    fragmentViewImage.show(ft, FragmentMoreChildren.TAG_MORECHILDREN_FRAGMENT);
 //                    GetMorechildrenService.loadMoreComments(mContext, linkId, parentId, position);
                 }
             });
@@ -337,7 +309,7 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
         View infoBox;
         TextView flairText;
 
-        private CommentRecord mCommentObject;
+        private MoreChildrenCommentRecord mMoreChildrenCommentRecord;
         private Context mContext;
         final Drawable authorBackground;
         final int goldColor;
@@ -359,8 +331,8 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
             goldColor = GeneralUtils.getSDKSensitiveColor(mContext, R.color.gold);
         }
 
-        void bindComment(final CommentRecord commentRecord, String postAuthor){
-            mCommentObject = commentRecord;
+        void bindComment(final MoreChildrenCommentRecord commentRecord, String postAuthor){
+            mMoreChildrenCommentRecord = commentRecord;
             author.setText(commentRecord.author);
             if (commentRecord.author.equals(postAuthor)) {
                 GeneralUtils.setSDKSensitiveBackground(author, authorBackground);

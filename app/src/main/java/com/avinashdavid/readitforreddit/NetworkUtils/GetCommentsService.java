@@ -27,6 +27,7 @@ import timber.log.Timber;
 import static com.avinashdavid.readitforreddit.MiscUtils.Constants.AUTHOR_KEY;
 import static com.avinashdavid.readitforreddit.MiscUtils.Constants.BODY_HTML;
 import static com.avinashdavid.readitforreddit.MiscUtils.Constants.CHILDREN_KEY;
+import static com.avinashdavid.readitforreddit.MiscUtils.Constants.COUNT_KEY;
 import static com.avinashdavid.readitforreddit.MiscUtils.Constants.DATA_KEY;
 import static com.avinashdavid.readitforreddit.MiscUtils.Constants.DEPTH_KEY;
 import static com.avinashdavid.readitforreddit.MiscUtils.Constants.EDITED;
@@ -34,6 +35,7 @@ import static com.avinashdavid.readitforreddit.MiscUtils.Constants.GILDED;
 import static com.avinashdavid.readitforreddit.MiscUtils.Constants.ID_KEY;
 import static com.avinashdavid.readitforreddit.MiscUtils.Constants.KEY_AUTHOR_FLAIR;
 import static com.avinashdavid.readitforreddit.MiscUtils.Constants.KIND_KEY;
+import static com.avinashdavid.readitforreddit.MiscUtils.Constants.MORE_KIND;
 import static com.avinashdavid.readitforreddit.MiscUtils.Constants.PARENT_KEY;
 import static com.avinashdavid.readitforreddit.MiscUtils.Constants.REPLIES_KEY;
 import static com.avinashdavid.readitforreddit.MiscUtils.Constants.SCORE_HIDDEN_KEY;
@@ -91,11 +93,19 @@ public class GetCommentsService extends IntentService {
                                     makeCommentObjectsFromJsonObjects(context, parentReplyJsonObjects, linkId);
                                     return true;
                                 }
+
+                                @Override
+                                protected void onPostExecute(Object o) {
+                                    super.onPostExecute(o);
+                                    Intent intent = new Intent();
+                                    intent.setAction(Constants.BROADCAST_COMMENTS_LOADED);
+                                    GetCommentsService.this.sendBroadcast(intent);
+                                }
                             };
                             asyncTask.execute(0);
-                            Intent intent = new Intent();
-                            intent.setAction(Constants.BROADCAST_COMMENTS_LOADED);
-                            GetCommentsService.this.sendBroadcast(intent);
+//                            Intent intent = new Intent();
+//                            intent.setAction(Constants.BROADCAST_COMMENTS_LOADED);
+//                            GetCommentsService.this.sendBroadcast(intent);
                         }
                         catch (Exception e){
                             Timber.e(e);
@@ -164,7 +174,7 @@ public class GetCommentsService extends IntentService {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String kind = jsonObject.getString(KIND_KEY);
-                if (kind.equals(Constants.COMMENT_KIND)) {
+                if (kind.equals(Constants.COMMENT_KIND) || kind.equals(MORE_KIND)) {
                     JSONObject replyData = jsonObject.getJSONObject(DATA_KEY);
                     jsonObjects.add(replyData);
                 }
@@ -186,52 +196,54 @@ public class GetCommentsService extends IntentService {
         CommentRecord commentObject = null;
         int moreCount = 0;
         try {
-//            try {
-//                moreCount = replyData.getInt(COUNT_KEY);
-//                String id = replyData.getString(ID_KEY);
-//                String author = "";
-//                String body = "";
-//                float timecreated = (float)replyData.getInt(DEPTH_KEY);
-//                String parent = replyData.getString(PARENT_KEY);
-//                boolean hasReplies = false;
-//                String authorflair = "";
-//
-//                commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, false, moreCount, author, body, parent, timecreated, DEPTH_MORE, false, authorflair, false, false);
-//                return commentObject;
-//            } catch (Exception e){
-//                String id = replyData.getString(ID_KEY);
-//                boolean scoreHidden = replyData.getBoolean(SCORE_HIDDEN_KEY);
-//                int score = replyData.getInt(SCORE_KEY);
-//                String author = replyData.getString(AUTHOR_KEY);
-//                String body = replyData.getString(BODY_HTML);
-//                float timecreated = (float) replyData.getLong(TIME_CREATED_KEY);
-//                String parent = replyData.getString(PARENT_KEY);
-//                int depth = replyData.getInt(DEPTH_KEY);
-//                boolean hasReplies = !replyData.get(REPLIES_KEY).toString().equals("");
-//                String authorflair = replyData.getString(KEY_AUTHOR_FLAIR);
-//                boolean isGilded = replyData.getInt(GILDED) > 0;
-//                boolean isEdited = !replyData.getString(EDITED).equals("false");
-//
-//                commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, scoreHidden, score, author, body, parent, timecreated, depth, hasReplies, authorflair, isGilded, isEdited);
-//                return commentObject;
-//            }
-            String id = replyData.getString(ID_KEY);
-            boolean scoreHidden = replyData.getBoolean(SCORE_HIDDEN_KEY);
-            int score = replyData.getInt(SCORE_KEY);
-            String author = replyData.getString(AUTHOR_KEY);
-            String body = replyData.getString(BODY_HTML);
-            float timecreated = (float) replyData.getLong(TIME_CREATED_KEY);
-            String parent = replyData.getString(PARENT_KEY);
-            int depth = replyData.getInt(DEPTH_KEY);
-            boolean hasReplies = !replyData.get(REPLIES_KEY).toString().equals("");
-            String authorflair = replyData.getString(KEY_AUTHOR_FLAIR);
-            boolean isGilded = replyData.getInt(GILDED) > 0;
-            boolean isEdited = !replyData.getString(EDITED).equals("false");
+            try {
+                moreCount = replyData.getInt(COUNT_KEY);
+                String id = replyData.getString(ID_KEY);
+                String author = "";
+                String bodyRaw = replyData.getJSONArray(CHILDREN_KEY).toString().substring(1);
+                String body = bodyRaw.substring(0, bodyRaw.length()-1).replace("\"","");
+                Timber.d("more: " + body);
+                float timecreated = (float)replyData.getInt(DEPTH_KEY);
+                String parent = replyData.getString(PARENT_KEY);
+                boolean hasReplies = false;
+                String authorflair = "";
 
-            commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, scoreHidden, score, author, body, parent, timecreated, depth, hasReplies, authorflair, isGilded, isEdited);
-            return commentObject;
+                commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, false, moreCount, author, body, parent, timecreated, DEPTH_MORE, false, authorflair, false, false);
+                return commentObject;
+            } catch (Exception e){
+                String id = replyData.getString(ID_KEY);
+                boolean scoreHidden = replyData.getBoolean(SCORE_HIDDEN_KEY);
+                int score = replyData.getInt(SCORE_KEY);
+                String author = replyData.getString(AUTHOR_KEY);
+                String body = replyData.getString(BODY_HTML);
+                float timecreated = (float) replyData.getLong(TIME_CREATED_KEY);
+                String parent = replyData.getString(PARENT_KEY);
+                int depth = replyData.getInt(DEPTH_KEY);
+                boolean hasReplies = !replyData.get(REPLIES_KEY).toString().equals("");
+                String authorflair = replyData.getString(KEY_AUTHOR_FLAIR);
+                boolean isGilded = replyData.getInt(GILDED) > 0;
+                boolean isEdited = !replyData.getString(EDITED).equals("false");
+
+                commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, scoreHidden, score, author, body, parent, timecreated, depth, hasReplies, authorflair, isGilded, isEdited);
+                return commentObject;
+            }
+//            String id = replyData.getString(ID_KEY);
+//            boolean scoreHidden = replyData.getBoolean(SCORE_HIDDEN_KEY);
+//            int score = replyData.getInt(SCORE_KEY);
+//            String author = replyData.getString(AUTHOR_KEY);
+//            String body = replyData.getString(BODY_HTML);
+//            float timecreated = (float) replyData.getLong(TIME_CREATED_KEY);
+//            String parent = replyData.getString(PARENT_KEY);
+//            int depth = replyData.getInt(DEPTH_KEY);
+//            boolean hasReplies = !replyData.get(REPLIES_KEY).toString().equals("");
+//            String authorflair = replyData.getString(KEY_AUTHOR_FLAIR);
+//            boolean isGilded = replyData.getInt(GILDED) > 0;
+//            boolean isEdited = !replyData.getString(EDITED).equals("false");
+//
+//            commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, scoreHidden, score, author, body, parent, timecreated, depth, hasReplies, authorflair, isGilded, isEdited);
+//            return commentObject;
         } catch (Exception e){
-            Timber.e(e, "error in getChildrenCommentObjectsFromJsonDataObject");
+            Timber.e(e, "error in getMoreChildrenCommentObjectsFromJsonDataObject");
         }
         return null;
     }

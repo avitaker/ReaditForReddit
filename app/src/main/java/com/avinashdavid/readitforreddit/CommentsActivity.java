@@ -400,7 +400,7 @@ public class CommentsActivity extends AppCompatActivity
             case R.id.share_comments:
                 sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_SUBJECT, "A Reddit comment thread");
+                sendIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.comments_share_title));
                 sendIntent.putExtra(Intent.EXTRA_TEXT, (UriGenerator.getShareableUriComments(mPostId)).toString());
                 sendIntent.setType("text/plain");
                 startActivity(sendIntent);

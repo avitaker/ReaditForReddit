@@ -21,7 +21,7 @@
             android:value="widget_posts.db"/>
         <meta-data
             android:name="VERSION"
-            android:value="4"/>
+            android:value="10"/>
         <meta-data
             android:name="DOMAIN_PACKAGE_NAME"
             android:value="com.avinashdavid.readitforreddit"/>
