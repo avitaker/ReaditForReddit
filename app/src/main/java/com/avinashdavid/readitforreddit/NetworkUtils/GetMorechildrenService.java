@@ -113,7 +113,6 @@ public class GetMorechildrenService extends IntentService {
 
     public static void loadMoreComments(Context context, String linkId, String parentId, String children, int startPosition){
         Uri url = UriGenerator.getUriMoreComments(linkId, children);
-        Timber.e(url.toString());
         Intent intent = new Intent(context, GetMorechildrenService.class);
         intent.putExtra(GetMorechildrenService.EXTRA_LINK, url);
         intent.putExtra(GetMorechildrenService.KEY_PARENT_ID, parentId);

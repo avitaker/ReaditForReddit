@@ -22,7 +22,7 @@
             android:id="@+id/btn_close_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_close_black_24dp"
+            android:src="?attr/more_close"
             android:background="@android:color/transparent"
             android:padding="@dimen/c_d_2_margin"/>
 

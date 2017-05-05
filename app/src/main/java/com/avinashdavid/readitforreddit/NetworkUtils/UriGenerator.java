@@ -173,7 +173,6 @@ public class UriGenerator {
     }
 
     public static Uri getUriMoreComments(String articleId, String children){
-        Timber.d("children at uri generator are " + children);
         Uri.Builder builder = baseListingUri.buildUpon();
         builder.appendPath("api").appendPath("morechildren").appendQueryParameter("api_type", "json").appendQueryParameter("link_id", "t3_"+articleId);
         StringBuilder soFar = new StringBuilder(builder.build().toString());

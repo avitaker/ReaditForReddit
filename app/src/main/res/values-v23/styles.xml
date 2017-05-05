@@ -9,5 +9,7 @@
         <item name="delete_icon">@drawable/ic_delete_black_24dp</item>
         <item name="android:textColor">@android:color/background_dark</item>
         <item name="post_text_color">@android:color/background_dark</item>
+        <item name="more_background">@android:color/background_light</item>
+        <item name="more_close">@drawable/ic_close_black_24dp</item>
     </style>
 </resources>

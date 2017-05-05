@@ -310,7 +310,7 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
                     final String parentId = commentRecord.parent;
                     final String children = commentRecord.bodyHtml;
                     final float depth = commentRecord.createdTime;
-                    Timber.d("load more comments for LINK: " + linkId + " and PARENT: " + parentId);
+//                    Timber.d("load more comments for LINK: " + linkId + " and PARENT: " + parentId);
                     FragmentMoreChildren fragmentViewImage = FragmentMoreChildren.getFragmentMoreChildren(linkId, parentId, children, depth);
                     FragmentManager fragmentManager = ((AppCompatActivity)mContext).getSupportFragmentManager();
                     FragmentTransaction ft = fragmentManager.beginTransaction();

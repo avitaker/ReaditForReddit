@@ -202,7 +202,6 @@ public class GetCommentsService extends IntentService {
                 String author = "";
                 String bodyRaw = replyData.getJSONArray(CHILDREN_KEY).toString().substring(1);
                 String body = bodyRaw.substring(0, bodyRaw.length()-1).replace("\"","");
-                Timber.d("more: " + body);
                 float timecreated = (float)replyData.getInt(DEPTH_KEY);
                 String parent = replyData.getString(PARENT_KEY);
                 boolean hasReplies = false;
