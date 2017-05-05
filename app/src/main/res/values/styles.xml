@@ -15,6 +15,8 @@
         <item name="delete_icon">@drawable/ic_delete_black_24dp</item>
         <item name="post_accent_color">@color/milk</item>
         <item name="post_text_color">@color/milk</item>
+        <item name="more_background">@android:color/background_light</item>
+        <item name="more_close">@drawable/ic_close_black_24dp</item>
     </style>
 
     <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">
@@ -25,6 +27,8 @@
         <item name="delete_icon">@drawable/ic_delete_white_24dp</item>
         <item name="post_accent_color">@color/granola</item>
         <item name="post_text_color">@color/milk</item>
+        <item name="more_background">@android:color/background_dark</item>
+        <item name="more_close">@drawable/ic_close_white_24dp</item>
     </style>
 
     <style name="AppTheme.Light" parent="AppTheme">
@@ -36,6 +40,8 @@
         <item name="delete_icon">@drawable/ic_delete_black_24dp</item>
         <item name="android:textColor">@android:color/background_dark</item>
         <item name="post_text_color">@android:color/background_dark</item>
+        <item name="more_background">@android:color/background_light</item>
+        <item name="more_close">@drawable/ic_close_black_24dp</item>
     </style>
 
     <style name="ThemeRedditSaturated" parent="AppTheme">
@@ -115,6 +121,7 @@
         <item name="colorPrimaryDark">@color/sea</item>
         <item name="colorAccent">@color/coral</item>
         <item name="android:colorBackground">@color/plaster</item>
+        <item name="more_background">@color/plaster</item>
     </style>
 
     <style name="DarkTheme" parent="AppThemeDark">
@@ -122,6 +129,7 @@
         <item name="colorPrimaryDark">@color/dark</item>
         <item name="colorAccent">@color/tan</item>
         <item name="android:colorBackground">@color/grey_800</item>
+        <item name="more_background">@color/grey_800</item>
         <!--<item name="android:textColorPrimaryInverse">@android:color/background_dark</item>-->
         <!--<item name="android:textColor">@color/milk</item>-->
     </style>
@@ -247,11 +255,15 @@
     <style name="MoreDialogTheme" parent="android:Theme.Dialog">
 
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+
+        <item name="android:padding">0dp</item>
+        <item name="android:windowMinWidthMajor">100%</item>
+        <item name="android:windowMinWidthMinor">100%</item>
 
 
         <!-- No backgrounds, titles or window float -->
-        <item name="android:windowBackground">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">true</item>
     </style>

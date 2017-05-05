@@ -35,7 +35,7 @@
     <string name="score_hidden">score hidden</string>
     <string name="message_error_loading_comments">An error occurred while retrieving comments</string>
 
-    <string name="format_more_comments"><xliff:g id="more_comments">%d</xliff:g> more comments</string>
+    <string name="load_more_comments">Load more</string>
 
     <!--browser page-->
     <string name="activity_link">Browser</string>

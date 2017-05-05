@@ -21,9 +21,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.avinashdavid.readitforreddit.CommentsActivity;
-import com.avinashdavid.readitforreddit.MainActivity;
 import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils;
 import com.avinashdavid.readitforreddit.NetworkUtils.GetCommentsService;
+import com.avinashdavid.readitforreddit.PostUtils.CommentRecord;
 import com.avinashdavid.readitforreddit.PostUtils.MoreChildrenCommentRecord;
 import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 import com.avinashdavid.readitforreddit.R;
@@ -41,11 +41,15 @@ public class MoreChildrenRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
     private List<MoreChildrenCommentRecord> mMoreChildrenCommentRecords;
     public static String sLastMoreCommentsParent;
     //    private Cursor mMoreChildrenCommentRecords;
+    CommentRecord mParentRecord;
     private RedditListing mRedditListing;
     private Activity mCommentsActivity;
     private LayoutInflater mLayoutInflater;
     private int lastPosition = -1;
     private int parentDepth;
+
+    private static final int VIEW_TYPE_TOOLBAR = 23;
+    private static final int ID_TOOLBAR = -23;
 
     private static final int VIEW_TYPE_POST_INFO = 0;
     private static final int VIEW_TYPE_DEPTH_0 = 1;
@@ -72,6 +76,7 @@ public class MoreChildrenRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
         this.mLayoutInflater = LayoutInflater.from(mCommentsActivity);
         this.mMoreChildrenCommentRecords = moreChildrenCommentRecords;
         this.mRedditListing = redditListing;
+//        this.mParentRecord = commentRecord;
         this.parentDepth = parentDepth;
         sLastMoreCommentsParent = parentId;
     }
@@ -94,6 +99,9 @@ public class MoreChildrenRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int id = 0;
         switch (viewType){
+            case VIEW_TYPE_TOOLBAR:
+                id = R.layout.header_more_comments;
+                break;
             case VIEW_TYPE_POST_INFO:
                 id = R.layout.post_details;
                 break;
@@ -168,9 +176,10 @@ public class MoreChildrenRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
                 break;
         }
         View view = mLayoutInflater.inflate(id, parent, false);
-        if (viewType == VIEW_TYPE_POST_INFO){
-            return new RedditPostRecyclerAdapter.ListingHolder(view, true);
-        } else if (viewType < 0) {
+//        if (viewType == VIEW_TYPE_TOOLBAR){
+//            return new ToolbarHolder(view);
+//        }
+        if (viewType < 0) {
             return new MoreHolder(view);
         } else {
             return new CommentsHolder(view);
@@ -180,37 +189,29 @@ public class MoreChildrenRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         MoreChildrenCommentRecord commentObject;
-        if (MainActivity.usingTabletLayout){
-            if (getItemViewType(position)==0){
-                ((RedditPostRecyclerAdapter.ListingHolder) holder).bindListing(mRedditListing, false);
+        if (position< mMoreChildrenCommentRecords.size()){
+            commentObject = mMoreChildrenCommentRecords.get(position);
+            if (getItemViewType(position)<0){
+                ((MoreHolder) holder).bindMore(commentObject, position);
             } else {
-                commentObject = mMoreChildrenCommentRecords.get(position - 1);
-                if (getItemViewType(position)<0){
-                    ((MoreHolder) holder).bindMore(commentObject, position);
-                } else {
-                    ((CommentsHolder) holder).bindComment(commentObject, mRedditListing.author);
-                }
-            }
-        } else {
-            if (position< mMoreChildrenCommentRecords.size()){
-                commentObject = mMoreChildrenCommentRecords.get(position);
-                if (getItemViewType(position)<0){
-                    ((MoreHolder) holder).bindMore(commentObject, position);
-                } else {
-                    ((CommentsHolder) holder).bindComment(commentObject, mRedditListing.author);
-                }
+                ((CommentsHolder) holder).bindComment(commentObject, mRedditListing.author);
             }
         }
-//        setAnimation(holder.itemView, position);
+
+//        if (getItemViewType(position)!=VIEW_TYPE_TOOLBAR) {
+//            commentObject = mMoreChildrenCommentRecords.get(position - 1);
+//            if (getItemViewType(position)<0){
+//                ((MoreHolder) holder).bindMore(commentObject, position);
+//            } else {
+//                ((CommentsHolder) holder).bindComment(commentObject, mRedditListing.author);
+//            }
+//        }
     }
 
     @Override
     public int getItemCount() {
-        if (!MainActivity.usingTabletLayout) {
-            return mMoreChildrenCommentRecords == null ? 0 : mMoreChildrenCommentRecords.size();
-        } else {
-            return mMoreChildrenCommentRecords == null ? 1 : mMoreChildrenCommentRecords.size()+1;
-        }
+//        return mMoreChildrenCommentRecords == null ? 1 : mMoreChildrenCommentRecords.size()+1;
+        return mMoreChildrenCommentRecords == null ? 0 : mMoreChildrenCommentRecords.size();
     }
 
     @Override
@@ -222,49 +223,44 @@ public class MoreChildrenRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public int getItemViewType(int position) {
         MoreChildrenCommentRecord commentRecord;
-        if (!MainActivity.usingTabletLayout) {
-            if (position< mMoreChildrenCommentRecords.size()) {
-                commentRecord = mMoreChildrenCommentRecords.get(position);
-            } else {
-                commentRecord = mMoreChildrenCommentRecords.get(position -1);
-            }
-            if (commentRecord.depth!= GetCommentsService.DEPTH_MORE) {
-                return commentRecord.depth + 1 - parentDepth;
-            } else {
-                return (int)-commentRecord.createdTime - 1 + parentDepth;
-            }
+        if (position< mMoreChildrenCommentRecords.size()) {
+            commentRecord = mMoreChildrenCommentRecords.get(position);
         } else {
-            if (position==0){
-                return VIEW_TYPE_POST_INFO;
-            } else {
-                commentRecord = mMoreChildrenCommentRecords.get(position - 1);
-                if (commentRecord.depth != GetCommentsService.DEPTH_MORE) {
-                    return commentRecord.depth + 1 - parentDepth;
-                } else {
-                    return (int)-commentRecord.createdTime - 1 + parentDepth;
-                }
-            }
+            commentRecord = mMoreChildrenCommentRecords.get(position -1);
         }
+        if (commentRecord.depth!= GetCommentsService.DEPTH_MORE) {
+            return commentRecord.depth + 1 - parentDepth;
+        } else {
+            return (int)-commentRecord.createdTime - 1 + parentDepth;
+        }
+//
+//        if (position==0){
+//            return VIEW_TYPE_TOOLBAR;
+//        } else {
+//            commentRecord = mMoreChildrenCommentRecords.get(position - 1);
+//            if (commentRecord.depth != GetCommentsService.DEPTH_MORE) {
+//                return commentRecord.depth + 1 - parentDepth;
+//            } else {
+//                return (int)-commentRecord.createdTime - 1 + parentDepth;
+//            }
+//        }
     }
 
     @Override
     public long getItemId(int position) {
         MoreChildrenCommentRecord commentRecord;
-        if (MainActivity.usingTabletLayout){
-            if (position==0){
-                return 0;
-            } else {
-                commentRecord = mMoreChildrenCommentRecords.get(position - 1);
-                return commentRecord.getId();
-            }
+//        if (position==0){
+//            return ID_TOOLBAR;
+//        } else {
+//            commentRecord = mMoreChildrenCommentRecords.get(position - 1);
+//            return commentRecord.getId();
+//        }
+        if (position< mMoreChildrenCommentRecords.size()) {
+            commentRecord = mMoreChildrenCommentRecords.get(position);
+            return commentRecord.getId();
         } else {
-            if (position< mMoreChildrenCommentRecords.size()) {
-                commentRecord = mMoreChildrenCommentRecords.get(position);
-                return commentRecord.getId();
-            } else {
-                commentRecord = mMoreChildrenCommentRecords.get(position - 1);
-                return commentRecord.getId();
-            }
+            commentRecord = mMoreChildrenCommentRecords.get(position - 1);
+            return commentRecord.getId();
         }
     }
 
@@ -287,7 +283,7 @@ public class MoreChildrenRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
 
         void bindMore(MoreChildrenCommentRecord commentRecord, final int position){
             this.mMoreObject = commentRecord;
-            moreTextview.setText(mContext.getString(R.string.format_more_comments, commentRecord.score));
+            moreTextview.setText(mContext.getString(R.string.load_more_comments));
             final String linkId = commentRecord.linkId;
             final String parentId = commentRecord.parent;
             moreTextview.setOnClickListener(new View.OnClickListener() {
@@ -333,6 +329,50 @@ public class MoreChildrenRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
 
         void bindComment(final MoreChildrenCommentRecord commentRecord, String postAuthor){
             mMoreChildrenCommentRecord = commentRecord;
+            author.setText(commentRecord.author);
+            if (commentRecord.author.equals(postAuthor)) {
+                GeneralUtils.setSDKSensitiveBackground(author, authorBackground);
+                author.setTextColor(mContext.getResources().getColor(R.color.milk));
+            } else {
+                if (authorBackground != null && author.getBackground() != null) {
+                    if (author.getBackground().equals(authorBackground)) {
+                        GeneralUtils.setSDKSensitiveBackground(author, null);
+                        author.setTextColor(GeneralUtils.getThemeAccentColor(mContext));
+                    }
+                }
+            }
+            if (commentRecord.scoreHidden) {
+                score.setText(mContext.getString(R.string.score_hidden));
+            } else {
+                score.setText(mContext.getString(R.string.format_points, commentRecord.score));
+            }
+            String rawTime = GeneralUtils.returnFormattedTime(mContext, System.currentTimeMillis(), commentRecord.createdTime);
+            if (commentRecord.isEdited) {
+                rawTime = rawTime.concat("*");
+            }
+            time_elapsed.setText(rawTime);
+            bodyText.setText(GeneralUtils.returnFormattedStringFromHtml(commentRecord.bodyHtml));
+            bodyText.setMovementMethod(LinkMovementMethod.getInstance());
+            if (commentRecord.authorFlairText != null) {
+                if (!commentRecord.authorFlairText.equals("null")) {
+                    flairText.setVisibility(View.VISIBLE);
+                    flairText.setText(GeneralUtils.returnFormattedStringFromHtml(commentRecord.authorFlairText));
+                }
+            }
+            if (commentRecord.isGilded) {
+                author.setTextColor(GeneralUtils.getSDKSensitiveColor(mContext, R.color.gold));
+            } else {
+                if (author.getCurrentTextColor() == goldColor) {
+                    if (commentRecord.author.equals(postAuthor)) {
+                        author.setTextColor(GeneralUtils.getSDKSensitiveColor(mContext, android.R.color.white));
+                    } else {
+                        author.setTextColor(GeneralUtils.getThemeAccentColor(mContext));
+                    }
+                }
+            }
+        }
+
+        void bindComment(final CommentRecord commentRecord, String postAuthor){
             author.setText(commentRecord.author);
             if (commentRecord.author.equals(postAuthor)) {
                 GeneralUtils.setSDKSensitiveBackground(author, authorBackground);

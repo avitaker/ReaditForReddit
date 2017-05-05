@@ -68,7 +68,6 @@ public class FragmentViewImage extends DialogFragment {
         Window window = dialog.getWindow();
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-
         View view = inflater.inflate(R.layout.fragment_view_image, null);
         mImageView = (ImageView) view.findViewById(R.id.imageview_main);
 

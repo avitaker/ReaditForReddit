@@ -301,7 +301,7 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
         void bindMore(final CommentRecord commentRecord, final int position){
             this.mMoreObject = commentRecord;
-            moreTextview.setText(mContext.getString(R.string.format_more_comments, commentRecord.score));
+            moreTextview.setText(mContext.getString(R.string.load_more_comments));
 
             moreTextview.setOnClickListener(new View.OnClickListener() {
                 @Override

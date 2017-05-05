@@ -5,15 +5,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Display;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +19,7 @@ import android.view.WindowManager;
 
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
 import com.avinashdavid.readitforreddit.NetworkUtils.GetMorechildrenService;
+import com.avinashdavid.readitforreddit.PostUtils.CommentRecord;
 import com.avinashdavid.readitforreddit.PostUtils.MoreChildrenCommentRecord;
 import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 import com.avinashdavid.readitforreddit.R;
@@ -43,10 +41,13 @@ public class FragmentMoreChildren extends DialogFragment {
     String mParentId;
     String mChildren;
     int parentDepth;
+    CommentRecord mParentRecord;
+
     BroadcastReceiver mMoreChildrenReceiver;
     IntentFilter mIntentFilter;
     List<MoreChildrenCommentRecord> mMoreChildrenCommentRecords;
     View view;
+    LinearLayoutManager mLinearLayoutManager;
 
     int width, height;
 
@@ -79,31 +80,17 @@ public class FragmentMoreChildren extends DialogFragment {
             mChildren = savedInstanceState.getString(KEY_MORE_CHILDREN);
             parentDepth = savedInstanceState.getInt(KEY_PARENT_DEPTH);
         }
-
+//        mParentRecord = CommentRecord.find(CommentRecord.class, "comment_id = ?", mParentId).get(0);
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        width = size.x;
-        height = size.y;
 
         Dialog dialog=new Dialog(getActivity(), R.style.MoreDialogTheme);
 
-//        Window window = dialog.getWindow();
-//        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         Window window = dialog.getWindow();
-        window.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL);
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-//        WindowManager.LayoutParams params = window.getAttributes();
-//        params.y = width;
-////        params.y = 100;
-//        window.setAttributes(params);
 
         return dialog;
     }
@@ -114,6 +101,8 @@ public class FragmentMoreChildren extends DialogFragment {
 
         view = inflater.inflate(R.layout.fragment_more_children, container, false);
         mRecyclerView = (RecyclerView)view.findViewById(R.id.morechildren_recyclerview);
+        mLinearLayoutManager = new LinearLayoutManager(getActivity());
+//        mLinearLayoutManager.setStackFromEnd(true);
         mMoreChildrenReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -121,7 +110,7 @@ public class FragmentMoreChildren extends DialogFragment {
                     mMoreChildrenCommentRecords = MoreChildrenCommentRecord.listAll(MoreChildrenCommentRecord.class);
                     mAdapter = new MoreChildrenRecyclerAdapter(getActivity(), mMoreChildrenCommentRecords, RedditListing.find(RedditListing.class, "m_post_id = ?", mLinkId).get(0), mParentId, parentDepth);
                     mAdapter.setHasStableIds(true);
-                    mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    mRecyclerView.setLayoutManager(mLinearLayoutManager);
                     mRecyclerView.setAdapter(mAdapter);
                 } else {
                     //TODO: HANDLE ERROR
@@ -138,9 +127,15 @@ public class FragmentMoreChildren extends DialogFragment {
             mMoreChildrenCommentRecords = MoreChildrenCommentRecord.listAll(MoreChildrenCommentRecord.class);
             mAdapter = new MoreChildrenRecyclerAdapter(getActivity(), mMoreChildrenCommentRecords, RedditListing.find(RedditListing.class, "m_post_id = ?", mLinkId).get(0), mParentId, parentDepth);
             mAdapter.setHasStableIds(true);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            mRecyclerView.setLayoutManager(mLinearLayoutManager);
             mRecyclerView.setAdapter(mAdapter);
         }
+        view.findViewById(R.id.btn_close_more).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         return view;
     }
 

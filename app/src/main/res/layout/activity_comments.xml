@@ -156,6 +156,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
+                    android:textColorLink="?attr/post_accent_color"
                     android:theme="@style/ThemePostInfo"
                     style="@style/SelftextContainer"/>
 
