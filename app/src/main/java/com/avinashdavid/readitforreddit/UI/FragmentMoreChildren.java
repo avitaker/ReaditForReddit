@@ -48,6 +48,7 @@ public class FragmentMoreChildren extends DialogFragment {
     List<MoreChildrenCommentRecord> mMoreChildrenCommentRecords;
     View view;
     LinearLayoutManager mLinearLayoutManager;
+    View progressBar;
 
     int width, height;
 
@@ -101,17 +102,15 @@ public class FragmentMoreChildren extends DialogFragment {
 
         view = inflater.inflate(R.layout.fragment_more_children, container, false);
         mRecyclerView = (RecyclerView)view.findViewById(R.id.morechildren_recyclerview);
+        progressBar = view.findViewById(R.id.loadingPanel);
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
 //        mLinearLayoutManager.setStackFromEnd(true);
         mMoreChildrenReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent.getAction().equals(Constants.BROADCAST_MORE_COMMENTS_LOADED)){
-                    mMoreChildrenCommentRecords = MoreChildrenCommentRecord.listAll(MoreChildrenCommentRecord.class);
-                    mAdapter = new MoreChildrenRecyclerAdapter(getActivity(), mMoreChildrenCommentRecords, RedditListing.find(RedditListing.class, "m_post_id = ?", mLinkId).get(0), mParentId, parentDepth);
-                    mAdapter.setHasStableIds(true);
-                    mRecyclerView.setLayoutManager(mLinearLayoutManager);
-                    mRecyclerView.setAdapter(mAdapter);
+                    initUi();
+
                 } else {
                     //TODO: HANDLE ERROR
                 }
@@ -124,11 +123,7 @@ public class FragmentMoreChildren extends DialogFragment {
         } else if (!MoreChildrenRecyclerAdapter.sLastMoreCommentsParent.equals(mParentId)){
             GetMorechildrenService.loadMoreComments(getActivity(), mLinkId, mParentId, mChildren, 0);
         } else {
-            mMoreChildrenCommentRecords = MoreChildrenCommentRecord.listAll(MoreChildrenCommentRecord.class);
-            mAdapter = new MoreChildrenRecyclerAdapter(getActivity(), mMoreChildrenCommentRecords, RedditListing.find(RedditListing.class, "m_post_id = ?", mLinkId).get(0), mParentId, parentDepth);
-            mAdapter.setHasStableIds(true);
-            mRecyclerView.setLayoutManager(mLinearLayoutManager);
-            mRecyclerView.setAdapter(mAdapter);
+            initUi();
         }
         view.findViewById(R.id.btn_close_more).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,5 +160,14 @@ public class FragmentMoreChildren extends DialogFragment {
         outState.putString(KEY_PARENT_ID, mParentId);
         outState.putString(KEY_MORE_CHILDREN, mChildren);
         outState.putInt(KEY_PARENT_DEPTH, parentDepth);
+    }
+
+    private void initUi(){
+        progressBar.setVisibility(View.GONE);
+        mMoreChildrenCommentRecords = MoreChildrenCommentRecord.listAll(MoreChildrenCommentRecord.class);
+        mAdapter = new MoreChildrenRecyclerAdapter(getActivity(), mMoreChildrenCommentRecords, RedditListing.find(RedditListing.class, "m_post_id = ?", mLinkId).get(0), mParentId, parentDepth);
+        mAdapter.setHasStableIds(true);
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
     }
 }
