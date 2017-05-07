@@ -169,7 +169,8 @@
                 android:background="?attr/colorPrimary"
                 android:navigationIcon="?attr/menu_icon"
                 app:popupTheme="?attr/toolbar_popup_theme"
-                app:layout_collapseMode="pin">
+                app:layout_collapseMode="pin"
+                android:onClick="commentScrollToTop">
 
                 <TextView
                     android:layout_width="match_parent"

@@ -345,8 +345,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } finally {
             mFirstChildPosition = mApplicationSharedPreferences.getInt(Constants.KEY_POSTS_SCROLL_POSITION, 0);
             mOffset = mApplicationSharedPreferences.getInt(Constants.KEY_POSTS_OFFSET, 0);
-            mListingRecyclerview.scrollToPosition(mFirstChildPosition);
-            mListingRecyclerview.scrollBy(0, -mOffset);
+            setMainScroll(mFirstChildPosition, mOffset);
 //            mListingRecyclerview.post(new Runnable() {
 //                @Override
 //                public void run() {
@@ -367,13 +366,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
                 int commentFirstChild = sp.getInt(Constants.KEY_COMMENTS_FIRST_CHILD, 0);
                 final int commentOffset = sp.getInt(Constants.KEY_COMMENTS_OFFSET, 0);
-                mCommentsRecyclerview.scrollToPosition(commentFirstChild);
-                mCommentsRecyclerview.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mCommentsRecyclerview.scrollBy(0, -commentOffset);
-                    }
-                });
+                setCommentScroll(commentFirstChild, commentOffset);
             }
         }
     }
@@ -394,10 +387,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             int firstVisiblePosition = mListingRecyclerview.getChildAdapterPosition(firstChild);
             int offset = firstChild.getTop();
 
-            mApplicationSharedPreferences.edit()
-                    .putInt(Constants.KEY_POSTS_SCROLL_POSITION, firstVisiblePosition)
-                    .putInt(Constants.KEY_POSTS_OFFSET, offset)
-                    .apply();
+            saveMainScroll(firstVisiblePosition, offset);
         }
 
         if (usingTabletLayout){
@@ -411,10 +401,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Timber.e(e);
                 }
 
-                mApplicationSharedPreferences.edit()
-                        .putInt(Constants.KEY_COMMENTS_FIRST_CHILD, firstVisiblePosition)
-                        .putInt(Constants.KEY_COMMENTS_OFFSET, offset)
-                        .apply();
+                saveCommentScroll(firstVisiblePosition, offset);
             }
         }
         super.onPause();
@@ -433,6 +420,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             outState.putString(KEY_COMMENTS_POSTID, mPostId);
         }
         outState.putInt(KEY_SELECTED_SORT_ID, selectedSortID);
+    }
+
+    private void setMainScroll(int firstChildPosition, int offset){
+        mListingRecyclerview.scrollToPosition(firstChildPosition);
+        mListingRecyclerview.scrollBy(0, -offset);
+    }
+
+    private void saveMainScroll(int firstChildPosition, int offset){
+        mApplicationSharedPreferences.edit()
+                .putInt(Constants.KEY_POSTS_SCROLL_POSITION, firstChildPosition)
+                .putInt(Constants.KEY_POSTS_OFFSET, offset)
+                .apply();
+    }
+
+    public void mainScrollToTop(View v){
+        saveMainScroll(0,0);
+//        setMainScroll(0,0);
+        mListingRecyclerview.smoothScrollToPosition(0);
+    }
+
+    private void setCommentScroll(int firstChildPosition, int offset){
+        mCommentsRecyclerview.scrollToPosition(firstChildPosition);
+        mCommentsRecyclerview.scrollBy(0, -offset);
+    }
+
+    private void saveCommentScroll(int firstChildPosition, int offset){
+        mApplicationSharedPreferences.edit()
+                .putInt(Constants.KEY_COMMENTS_FIRST_CHILD, firstChildPosition)
+                .putInt(Constants.KEY_COMMENTS_OFFSET, offset)
+                .apply();
     }
 
     private void initUi(@Nullable String subredditString, @Nullable String searchString, @Nullable String sortString, boolean restrictSr, boolean forceRefresh){

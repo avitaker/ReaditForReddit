@@ -16,6 +16,9 @@
     app:alignItems="stretch"
     app:alignContent="stretch"
     app:flexDirection="row">
+        <!--android:paddingTop="@dimen/padding_comment_item"-->
+        <!--android:paddingLeft="@dimen/padding_comment_item"-->
+        <!--android:paddingRight="@dimen/padding_comment_item">-->
 
         <TextView
             android:layout_width="wrap_content"
@@ -63,10 +66,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_below="@+id/info_linear_layout"
         android:id="@+id/bodyHtml"
         style="@style/CommentText"/>
+        <!--android:paddingRight="@dimen/padding_comment_item"-->
+        <!--android:paddingLeft="@dimen/padding_comment_item"-->
+        <!--android:paddingBottom="@dimen/padding_comment_item"/>-->
 
     <!--<View-->
         <!--android:layout_width="match_parent"-->

@@ -279,6 +279,25 @@ public class CommentsActivity extends AppCompatActivity
         super.onBackPressed();
     }
 
+    private void setCommentScroll(int firstChildPosition, int offset){
+        mCommentsRecyclerview.scrollToPosition(firstChildPosition);
+        mCommentsRecyclerview.scrollBy(0, -offset);
+    }
+
+    private void saveCommentScroll(int firstChildPosition, int offset){
+        sp.edit()
+                .putInt(Constants.KEY_COMMENTS_FIRST_CHILD, firstChildPosition)
+                .putInt(Constants.KEY_COMMENTS_OFFSET, offset)
+                .apply();
+    }
+
+    public void commentScrollToTop(View v){
+        saveCommentScroll(0,0);
+//        setCommentScroll(0,0);
+        mCommentsRecyclerview.smoothScrollToPosition(0);
+
+    }
+
     private void initUi(){
 //        realmResults.addChangeListener(new RealmChangeListener<RealmResults<CommentObject>>() {
 //            @Override
