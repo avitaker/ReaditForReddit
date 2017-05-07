@@ -62,6 +62,7 @@ public class GetMorechildrenService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         final Context context = GetMorechildrenService.this.getApplicationContext();
         final Uri mUrl = (Uri)intent.getParcelableExtra(EXTRA_LINK);
+        Timber.d(mUrl.toString());
         final String mParentId = intent.getStringExtra(KEY_PARENT_ID);
         final String linkId = intent.getStringExtra(KEY_LINK_ID);
         final int startPosition = intent.getIntExtra(KEY_INSERT_START_POSITION, Integer.MAX_VALUE);
@@ -129,9 +130,10 @@ public class GetMorechildrenService extends IntentService {
                 String kind = jsonObject.getString(KIND_KEY);
                 if (kind.equals(Constants.COMMENT_KIND)) {
                     JSONObject replyData = jsonObject.getJSONObject(DATA_KEY);
-                    if (replyData.getString(PARENT_KEY).equals(parentId)) {
-                        jsonObjects.add(replyData);
-                    }
+                    jsonObjects.add(replyData);
+//                    if (replyData.getString(PARENT_KEY).equals(parentId)) {
+//                        jsonObjects.add(replyData);
+//                    }
                 }
             }
         } catch (Exception e){

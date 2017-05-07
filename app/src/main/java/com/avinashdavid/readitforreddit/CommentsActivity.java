@@ -406,6 +406,9 @@ public class CommentsActivity extends AppCompatActivity
 //            }
 //            default:
 //                return super.onOptionsItemSelected(item);
+            case R.id.refresh_comments:
+                refreshComments();
+                return true;
             case R.id.share_activity_comments:
                 return true;
             case R.id.share_link:
@@ -427,15 +430,22 @@ public class CommentsActivity extends AppCompatActivity
             case R.id.sort_by:
                 return true;
             default:
-                mCommentRecords.clear();
-                mCommentsRecyclerViewAdapter.notifyItemRangeRemoved(0, mItemCount);
+//                mCommentRecords.clear();
+//                mCommentsRecyclerViewAdapter.notifyItemRangeRemoved(0, mItemCount);
                 mItemCount=0;
                 if (item.isChecked()) item.setChecked(false);
                 else item.setChecked(true);
                 mSortString = item.getTitle().toString();
-                GetCommentsService.loadCommentsForArticle(CommentsActivity.this, null, mPostId, mSortString);
+                refreshComments();
                 return true;
         }
+    }
+
+    void refreshComments(){
+        saveCommentScroll(0,0);
+        mCommentsRecyclerview.setAdapter(null);
+        findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+        GetCommentsService.loadCommentsForArticle(CommentsActivity.this, null, mPostId, mSortString);
     }
 
     void initializePostInfo(String postId){
@@ -576,8 +586,7 @@ public class CommentsActivity extends AppCompatActivity
     private class CommentsRefreshListener implements View.OnClickListener{
         @Override
         public void onClick(View v) {
-            findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
-            GetCommentsService.loadCommentsForArticle(CommentsActivity.this, null, mPostId, mSortString);
+            refreshComments();
         }
     }
 

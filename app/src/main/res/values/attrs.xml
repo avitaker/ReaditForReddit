@@ -9,4 +9,5 @@
     <attr name="post_text_color" format="reference"/>
     <attr name="more_background" format="reference"/>
     <attr name="more_close" format="reference"/>
+    <attr name="refresh_icon" format="reference"/>
 </resources>

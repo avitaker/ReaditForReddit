@@ -17,6 +17,7 @@
         <item name="post_text_color">@color/milk</item>
         <item name="more_background">@android:color/background_light</item>
         <item name="more_close">@drawable/ic_close_black_24dp</item>
+        <item name="refresh_icon">@drawable/ic_refresh_white_24dp</item>
     </style>
 
     <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">
@@ -29,6 +30,7 @@
         <item name="post_text_color">@color/milk</item>
         <item name="more_background">@android:color/background_dark</item>
         <item name="more_close">@drawable/ic_close_white_24dp</item>
+        <item name="refresh_icon">@drawable/ic_refresh_white_24dp</item>
     </style>
 
     <style name="AppTheme.Light" parent="AppTheme">
@@ -42,6 +44,7 @@
         <item name="post_text_color">@android:color/background_dark</item>
         <item name="more_background">@android:color/background_light</item>
         <item name="more_close">@drawable/ic_close_black_24dp</item>
+        <item name="refresh_icon">@drawable/ic_refresh_black_24dp</item>
     </style>
 
     <style name="ThemeRedditSaturated" parent="AppTheme">
