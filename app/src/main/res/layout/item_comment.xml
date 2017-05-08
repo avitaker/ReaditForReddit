@@ -4,7 +4,7 @@
                 android:layout_height="wrap_content"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:padding="@dimen/padding_comment_item"
-    android:background="?android:attr/colorBackground">
+    android:background="?attr/more_background">
 
     <com.google.android.flexbox.FlexboxLayout
     android:id="@+id/info_linear_layout"

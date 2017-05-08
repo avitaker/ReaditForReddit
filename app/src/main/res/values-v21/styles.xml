@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/reddit_blue</item>
         <item name="colorPrimaryDark">@color/reddit_dark_blue</item>
         <item name="colorAccent">@color/reddit_orange</item>
-        <item name="android:colorBackground">@android:color/white</item>
+        <item name="android:colorBackground">@color/grey_300</item>
         <item name="android:fontFamily">serif</item>
 
         <item name="android:windowEnterTransition">@android:transition/slide_right</item>
@@ -28,6 +28,7 @@
     <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowEnterTransition">@android:transition/slide_right</item>
         <item name="android:windowExitTransition">@android:transition/slide_left</item>
+        <item name="android:colorBackground">@color/grey_300</item>
 
         <item name="sort_icon">@drawable/ic_sort_white_24dp</item>
         <item name="menu_icon">@drawable/ic_menu_white_24dp</item>
@@ -54,5 +55,6 @@
         <item name="more_close">@drawable/ic_close_black_24dp</item>
         <item name="refresh_icon">@drawable/ic_refresh_black_24dp</item>
     </style>
+
 
 </resources>

@@ -36,6 +36,7 @@ public class PreferenceUtils {
     public static final int THEME_DESERT = 8;
     public static final int THEME_SATURATED = 9;
     public static final int THEME_WHITE = 10;
+    public static final int THEME_SOLARIZED_LIGHT = 11;
     /**
      * Set the theme of the Activity, and restart it by creating a new Activity of the same type.
      */
@@ -55,18 +56,6 @@ public class PreferenceUtils {
             case THEME_DEFAULT:
                 activity.setTheme(R.style.AppTheme);
                 break;
-            case THEME_OCEAN:
-                activity.setTheme(R.style.ThemeOcean);
-                break;
-            case THEME_COFFEE:
-                activity.setTheme(R.style.ThemeCoffee);
-                break;
-            case THEME_APPLES:
-                activity.setTheme(R.style.ThemeApples);
-                break;
-            case THEME_BLUEBERRIES:
-                activity.setTheme(R.style.ThemeBlueberry);
-                break;
             case THEME_STRAWBERRIES:
                 activity.setTheme(R.style.ThemeStrawberriesAndCream);
                 break;
@@ -76,14 +65,14 @@ public class PreferenceUtils {
             case THEME_DARK_1:
                 activity.setTheme(R.style.DarkTheme);
                 break;
-            case THEME_DESERT:
-                activity.setTheme(R.style.ThemeDesert);
-                break;
             case THEME_SATURATED:
                 activity.setTheme(R.style.ThemeRedditSaturated);
                 break;
             case THEME_WHITE:
                 activity.setTheme(R.style.ThemeWhite);
+                break;
+            case THEME_SOLARIZED_LIGHT:
+                activity.setTheme(R.style.ThemeSolarizedLight);
                 break;
             default:
                 activity.setTheme(R.style.AppTheme);
@@ -96,6 +85,9 @@ public class PreferenceUtils {
         if (sTheme==THEME_WHITE){
             View view = snackbar.getView();
             view.setBackgroundColor(ContextCompat.getColor(activity, android.R.color.white));
+        } else if (sTheme == THEME_SOLARIZED_LIGHT){
+            View view = snackbar.getView();
+            view.setBackgroundColor(ContextCompat.getColor(activity, R.color.solarized_bg));
         }
         return snackbar;
     }

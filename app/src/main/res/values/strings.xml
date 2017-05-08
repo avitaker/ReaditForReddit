@@ -110,6 +110,7 @@
     <string name="theme.strawberries">Red</string>
     <string name="theme.coastal">Solarized Reddit</string>
     <string name="theme.dark">Dark (Red)</string>
+    <string name="theme.solarized.light">Solarized (Light)</string>
 
     <string-array name="sort_listing_options">
         <item>hot</item>

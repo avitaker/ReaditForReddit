@@ -225,9 +225,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mListingRecyclerview.setLayoutManager(mListingsLinearLayoutManager);
         mListingRecyclerview.setNestedScrollingEnabled(true);
 
-        RecyclerView.ItemDecoration mDividerItemDecoration = new DividerItemDecoration(this, mListingsLinearLayoutManager.getOrientation());
-
-        mListingRecyclerview.addItemDecoration(mDividerItemDecoration);
+//        RecyclerView.ItemDecoration mDividerItemDecoration = new DividerItemDecoration(this, mListingsLinearLayoutManager.getOrientation());
+//
+//        mListingRecyclerview.addItemDecoration(mDividerItemDecoration);
 
         mPostsBroadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -613,32 +613,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_WHITE);
                 return true;
             }
-//            case R.id.theme_desert:{
-//                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_DESERT);
-//                return true;
-//            }
-//            case R.id.theme_ocean:{
-//                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_OCEAN);
-//                return true;
-//            }
-//            case R.id.theme_apples:{
-//                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_APPLES);
-//                return true;
-//            }
-//            case R.id.theme_coffee:{
-//                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_COFFEE);
-//                return true;
-//            }
-//            case R.id.theme_blueberry:{
-//                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_BLUEBERRIES);
-//                return true;
-//            }
             case R.id.theme_strawberries:{
                 PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_STRAWBERRIES);
                 return true;
             }
             case R.id.theme_coastal:{
                 PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_COASTAL);
+                return true;
+            }
+            case R.id.theme_solarized_light:{
+                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_SOLARIZED_LIGHT);
                 return true;
             }
             case R.id.theme_dark:{

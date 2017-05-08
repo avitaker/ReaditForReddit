@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.avinashdavid.readitforreddit.CommentsActivity;
@@ -77,15 +76,15 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
         View view;
         boolean withImage = false;
         if (viewType==VIEW_TYPE_NORMAL) {
-            view = mLayoutInflater.inflate(R.layout.item_listing, parent, false);
+            view = mLayoutInflater.inflate(R.layout.item_listing_card, parent, false);
             withImage = true;
         }
         else if (viewType == VIEW_TYPE_IMAGE_LINK){
-            view = mLayoutInflater.inflate(R.layout.item_listing_clickable_thumbnail, parent, false);
+            view = mLayoutInflater.inflate(R.layout.item_listing_card_clickable_thumbnail, parent, false);
             withImage = true;
         }
         else if (viewType== VIEW_TYPE_NO_THUMBNAIL){
-            view = mLayoutInflater.inflate(R.layout.item_listing_no_image, parent, false);
+            view = mLayoutInflater.inflate(R.layout.item_listing_card_no_image, parent, false);
         } else {
             view = mLayoutInflater.inflate(R.layout.widget_empty_view, parent, false);
         }
@@ -194,7 +193,7 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
         TextView domain_textview;
         TextView timecreated_textview;
         LinearLayout mRelativeLayout;
-        RelativeLayout mCardRelativeLayout;
+        View mCardRelativeLayout;
         ImageView thumbnail_imageview;
 
         TextView emptyTextView;
@@ -222,7 +221,7 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
                     thumbnail_imageview = (ImageView) itemView.findViewById(R.id.post_thumbnail);
                 }
                 mRelativeLayout = (LinearLayout) itemView.findViewById(R.id.post_info_container);
-                mCardRelativeLayout = (RelativeLayout) itemView.findViewById(R.id.card_view);
+                mCardRelativeLayout = itemView.findViewById(R.id.card_view);
                 ogColor = listTitle_textview.getTextColors();
                 mContext = itemView.getContext();
             } else {

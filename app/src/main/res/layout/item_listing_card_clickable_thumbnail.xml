@@ -23,7 +23,7 @@
             android:padding="@dimen/padding_listing_cardview"
             style="@style/PostDisplayCard">
 
-            <include layout="@layout/post_info"/>
+            <include layout="@layout/post_info_clickable_thumbnail"/>
 
         </RelativeLayout>
 

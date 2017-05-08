@@ -79,12 +79,18 @@
     <color name="grecian.blue">#2988bc</color>
     <color name="sea">#2f496e</color>
     <color name="coral">#ed8c72</color>
-    <color name="plaster">#f4eade</color>
+    <color name="plaster">#FDF6E2</color>
+
+    <color name="solarized_accent">#1C89D5</color>
+    <color name="solarized_bg">#EEE8D4</color>
+    <color name="solarized_primary">#EEE8D4</color>
+    <color name="solarized_dark">#d6d0be</color>
     
     <!--Dark theme 1-->
     <color name="wine">#500805</color>
     <color name="dark">#1E0000</color>
     <color name="grey_800">#424242</color>
+    <color name="grey_300">#E0E0E0</color>
     <color name="currant">#8c0004</color>
     <color name="tan">#c09f80</color>
 

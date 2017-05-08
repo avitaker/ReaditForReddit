@@ -10,6 +10,8 @@
         <item name="menu_icon">@drawable/ic_menu_white_24dp</item>
         <item name="appbar_theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
 
+        <item name="android:colorBackground">@color/grey_300</item>
+
         <item name="toolbar_popup_theme">@style/AppTheme.PopupOverlay</item>
 
         <item name="delete_icon">@drawable/ic_delete_black_24dp</item>
@@ -25,6 +27,7 @@
         <item name="menu_icon">@drawable/ic_menu_white_24dp</item>
         <item name="appbar_theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="toolbar_popup_theme">@style/AppThemeDark.PopupOverlay</item>
+        <item name="android:colorBackground">@color/grey_300</item>
         <item name="delete_icon">@drawable/ic_delete_white_24dp</item>
         <item name="post_accent_color">@color/granola</item>
         <item name="post_text_color">@color/milk</item>
@@ -38,6 +41,7 @@
         <item name="sort_icon">@drawable/ic_sort_black_24dp</item>
         <item name="menu_icon">@drawable/ic_menu_black_24dp</item>
         <item name="appbar_theme">@style/ThemeOverlay.AppCompat.ActionBar</item>
+        <item name="android:colorBackground">@color/grey_300</item>
         <item name="toolbar_popup_theme">@style/AppTheme.PopupOverlay</item>
         <item name="delete_icon">@drawable/ic_delete_black_24dp</item>
         <item name="android:textColor">@android:color/background_dark</item>
@@ -71,60 +75,27 @@
         <item name="android:textColorSecondary">@color/abc_secondary_text_material_light</item>
     </style>
 
-    <style name="ThemeDesert" parent="AppTheme">
-        <item name="colorPrimary">@color/cloud_shadow</item>
-        <item name="colorPrimaryDark">@color/crevice</item>
-        <item name="colorAccent">@color/desert</item>
-        <item name="android:colorBackground">@color/blue_grey_50</item>
-    </style>
-
-    <style name="ThemeOcean" parent="AppTheme">
-        <item name="colorPrimary">@color/wave</item>
-        <item name="colorPrimaryDark">@color/ocean</item>
-        <item name="colorAccent">@color/deep_aqua</item>
-        <item name="android:colorBackground">@color/seafoam</item>
-    </style>
-
-    <style name="ThemeBrightAndTopical" parent="AppTheme">
-        <item name="colorPrimary">@color/bubblegum</item>
-        <item name="colorPrimaryDark">@color/hot_pink</item>
-        <item name="colorAccent">@color/pollen</item>
-    </style>
-
-    <style name="ThemeCoffee" parent="AppTheme">
-        <item name="colorPrimary">@color/latte</item>
-        <item name="colorPrimaryDark">@color/coffee</item>
-        <item name="colorAccent">@color/slate</item>
-        <item name="android:colorBackground">@color/ceramic</item>
-    </style>
-
-    <style name="ThemeApples" parent="AppTheme">
-        <item name="colorPrimary">@color/ripe_apple</item>
-        <item name="colorPrimaryDark">@color/red_delicious</item>
-        <item name="colorAccent">@color/granny_smith</item>
-        <item name="android:colorBackground">@color/red_50</item>
-    </style>
-
-    <style name="ThemeBlueberry" parent="AppTheme">
-        <item name="colorPrimary">@color/indigo_ink</item>
-        <item name="colorPrimaryDark">@color/midnight_blue</item>
-        <item name="colorAccent">@color/blueberry</item>
-        <item name="android:colorBackground">@color/periwinkie</item>
-    </style>
-
     <style name="ThemeStrawberriesAndCream" parent="AppTheme">
         <item name="colorPrimary">@color/papaya</item>
         <item name="colorPrimaryDark">@color/strawberry</item>
         <item name="colorAccent">@color/granola</item>
-        <item name="android:colorBackground">@color/milk</item>
     </style>
 
     <style name="ThemeGrecianHoliday" parent="AppTheme">
         <item name="colorPrimary">@color/grecian.blue</item>
         <item name="colorPrimaryDark">@color/sea</item>
         <item name="colorAccent">@color/coral</item>
-        <item name="android:colorBackground">@color/plaster</item>
         <item name="more_background">@color/plaster</item>
+        <item name="android:colorBackground">@color/solarized_bg</item>
+    </style>
+
+    <style name="ThemeSolarizedLight" parent="AppTheme.Light">
+        <item name="colorPrimary">@color/solarized_primary</item>
+        <item name="colorPrimaryDark">@color/solarized_dark</item>
+        <item name="colorAccent">@color/solarized_accent</item>
+        <item name="more_background">@color/plaster</item>
+        <item name="android:colorBackground">@color/solarized_bg</item>
+        <item name="post_accent_color">@color/solarized_accent</item>
     </style>
 
     <style name="DarkTheme" parent="AppThemeDark">
@@ -138,8 +109,11 @@
     </style>
 
     <style name="PostDisplayCard">
+        <item name="android:background">?attr/more_background</item>
+    </style>
+
+    <style name="ItemListing">
         <item name="android:background">?android:attr/selectableItemBackground</item>
-        <item name="android:tint">@android:color/white</item>
     </style>
 
     <style name="PostTitle">
