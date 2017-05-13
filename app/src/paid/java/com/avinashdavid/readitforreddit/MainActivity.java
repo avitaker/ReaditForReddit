@@ -62,6 +62,11 @@ import timber.log.Timber;
 import static com.orm.SugarRecord.deleteAll;
 import static com.orm.SugarRecord.listAll;
 
+/**
+ * Created by avinashdavid on 3/01/17.
+ * Main Activity to display Reddit listings, with a navigation drawer, a right drawer to display subreddit information, and a menu to subscribe to a subreddit and change application theme
+ */
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         SwipeRefreshLayout.OnRefreshListener,
         GoToDialogFragment.GoToDialogListener,
@@ -161,9 +166,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         PreferenceUtils.onActivityCreateSetTheme(this);
         setContentView(R.layout.drawer_main_activity);
         GPSUtils.setScreenName(this, "MainActivityPaid");
-        if (android.os.Build.VERSION.SDK_INT >= 21) {
-            postponeEnterTransition();
-        }
+//        if (android.os.Build.VERSION.SDK_INT >= 21) {
+//            postponeEnterTransition();
+//        }
 
         mApplicationSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
@@ -468,9 +473,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mListingRecyclerview.scrollToPosition(mFirstChildPosition);
         mListingRecyclerview.scrollBy(0, -mOffset);
 
-        if (android.os.Build.VERSION.SDK_INT >= 21) {
-            startPostponedEnterTransition();
-        }
+//        if (android.os.Build.VERSION.SDK_INT >= 21) {
+//            startPostponedEnterTransition();
+//        }
 
         if (searchString==null) {
             mCollapsingToolbarLayout.setTitle(mSubredditString == null ? getString(R.string.frontpage) : mSubredditString);

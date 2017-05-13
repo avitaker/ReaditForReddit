@@ -20,7 +20,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/padding_listing_cardview"
             style="@style/PostDisplayCard">
 
             <include layout="@layout/post_info_no_image"/>

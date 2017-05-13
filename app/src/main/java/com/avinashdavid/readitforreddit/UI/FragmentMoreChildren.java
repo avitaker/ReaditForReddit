@@ -28,6 +28,8 @@ import java.util.List;
 
 /**
  * Created by avinashdavid on 5/4/17.
+ * DialogFragment that opens when user clicks to load more comments, and displays MoreChildrenCommentRecord in a recyclerview
+ * Modeled after YouTube app's "View Replies" fragment
  */
 
 public class FragmentMoreChildren extends DialogFragment {

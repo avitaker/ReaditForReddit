@@ -35,6 +35,7 @@ import timber.log.Timber;
 
 /**
  * Created by avinashdavid on 3/17/17.
+ * Adapter to display listings (posts) in a recyclerview
  */
 
 public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRecyclerAdapter.ListingHolder> {
@@ -46,7 +47,8 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
     private RedditPostRecyclerAdapter.ScrollListener mScrollListener;
 
     public static final String[] imageMarkers = new String[]{
-            ".jpg"
+            ".jpg",
+            ".png"
     };
 
     private int VIEW_TYPE_EMPTY = 0;

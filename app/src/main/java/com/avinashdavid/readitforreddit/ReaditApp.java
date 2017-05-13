@@ -9,6 +9,7 @@ import timber.log.Timber;
 
 /**
  * Created by avinashdavid on 3/6/17.
+ * Application object extends SugarApp for SugarORM use, and sets up Timber tree and Google analytics tracker
  */
 
 public class ReaditApp extends SugarApp {

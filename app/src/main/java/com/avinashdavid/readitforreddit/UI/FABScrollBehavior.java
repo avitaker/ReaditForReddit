@@ -9,6 +9,8 @@ import android.view.View;
 
 /**
  * Created by avinashdavid on 3/19/17.
+ * Incomplete FAB behavior class to disappear at a specific scroll level.
+ * Current logic is much simpler and implemented in the CommentsActivity code
  */
 
 public class FABScrollBehavior extends FloatingActionButton.Behavior {

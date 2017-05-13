@@ -18,6 +18,7 @@ import com.avinashdavid.readitforreddit.R;
 
 /**
  * Created by avinashdavid on 4/13/17.
+ * Dialog fragment that displays actions that can be taken on a listing (like sharing and open link)
  */
 
 public class PostOptionsDialogFragment extends DialogFragment {

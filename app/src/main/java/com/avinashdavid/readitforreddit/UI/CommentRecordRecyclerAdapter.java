@@ -39,6 +39,7 @@ import timber.log.Timber;
 
 /**
  * Created by avinashdavid on 3/18/17.
+ * Adapter to display comments in a recyclerview, with ability to be used in MainActivity for tablet layout
  */
 
 public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

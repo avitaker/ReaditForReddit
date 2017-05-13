@@ -6,6 +6,8 @@ import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by avinashdavid on 3/7/17.
+ * This class was previously used to store comments before changing storage solutions.
+ * It will be removed from the project soon.
  */
 
 public class CommentObject extends RealmObject {

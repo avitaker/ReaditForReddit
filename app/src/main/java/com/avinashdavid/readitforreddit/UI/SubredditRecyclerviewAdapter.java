@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 /**
  * Created by avinashdavid on 4/23/17.
+ * This adapter is used in the "Delete Subscription" activity to display current subreddit subscriptions and allow the user to delete them, one at a time
  */
 
 public class SubredditRecyclerviewAdapter extends RecyclerView.Adapter {

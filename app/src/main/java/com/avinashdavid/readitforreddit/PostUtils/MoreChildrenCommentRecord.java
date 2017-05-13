@@ -4,6 +4,8 @@ import com.orm.SugarRecord;
 
 /**
  * Created by avinashdavid on 5/4/17.
+ * This class extends ORM storage object, and contains all the relevant information for a comment in a "more" endpoint
+ * It is modeled after CommentRecord, and allows for easier distinction of main thread comments and those from hidden threads
  */
 
 public class MoreChildrenCommentRecord extends SugarRecord{

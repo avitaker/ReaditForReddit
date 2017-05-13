@@ -8,6 +8,7 @@ import timber.log.Timber;
 
 /**
  * Created by avinashdavid on 3/6/17.
+ * This class generates all the HTTP urls that are called in the app
  */
 
 public class UriGenerator {
@@ -124,8 +125,40 @@ public class UriGenerator {
         if (query!=null) {
             builder.appendPath("search");
             builder.appendQueryParameter("q", query);
-            if (null!=sort){
-                builder.appendQueryParameter(KEY_SORT, sort);
+            if (null!=sorting){
+                sort = sorting.toLowerCase();
+
+                if (sort.contains("top")){
+                    if (sorting.length()>3) {
+                        String timeString;
+                        int codeInt = Integer.parseInt(sorting.substring(sorting.length() - 1));
+                        switch (codeInt){
+                            case GetListingsService.SORT_TOP_ALLTIME:
+                                timeString = "all";
+                                break;
+                            case GetListingsService.SORT_TOP_DAY:
+                                timeString = "day";
+                                break;
+                            case GetListingsService.SORT_TOP_MONTH:
+                                timeString = "month";
+                                break;
+                            case GetListingsService.SORT_TOP_WEEK:
+                                timeString = "week";
+                                break;
+                            case GetListingsService.SORT_TOP_YEAR:
+                                timeString = "year";
+                                break;
+                            default:
+                                timeString = "all";
+                                break;
+                        }
+                        builder.appendQueryParameter("sort","top").appendQueryParameter("t",timeString);
+                    }
+
+                }
+                else {
+                    builder.appendQueryParameter(KEY_SORT, sort);
+                }
             }
         }
         if (null!=after){
@@ -135,7 +168,10 @@ public class UriGenerator {
             builder.appendQueryParameter(KEY_RESTRICT_SR, "on");
         }
         builder.appendQueryParameter(KEY_LIMIT, Integer.toString(20));
-        return builder.build();
+
+        Uri url =  builder.build();
+        Timber.d(url.toString());
+        return url;
     }
 
     public static Uri getUriSubredditList(@Nullable String where, @Nullable String mineWhere){

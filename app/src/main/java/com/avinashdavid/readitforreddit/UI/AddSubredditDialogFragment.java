@@ -17,6 +17,8 @@ import com.avinashdavid.readitforreddit.R;
 
 /**
  * Created by avinashdavid on 3/20/17.
+ * Dialog fragment that allows users to add a typed-in subreddit to their subscriptions.
+ * Currently not in use in the app.
  */
 
 public class AddSubredditDialogFragment extends DialogFragment {

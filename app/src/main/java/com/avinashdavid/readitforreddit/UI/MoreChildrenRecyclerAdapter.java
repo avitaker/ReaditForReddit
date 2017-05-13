@@ -34,6 +34,8 @@ import timber.log.Timber;
 
 /**
  * Created by avinashdavid on 3/18/17.
+ * Adapter to display "more children" comments in a recyclerview
+ * Modeled after CommentRecordRecyclerAdapter, only with adjusted depth
  */
 
 public class MoreChildrenRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

@@ -22,6 +22,8 @@ import timber.log.Timber;
 
 /**
  * Created by avinashdavid on 3/20/17.
+ * This service checks whether a subreddit exists, and adds it to user subscriptions if it does, or notifies if an error occurs via broadcast intent.
+ * It is called whenever a user is trying to add a subreddit subscription
  */
 
 public class CheckNewSubredditService extends IntentService {

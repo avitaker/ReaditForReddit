@@ -26,6 +26,7 @@ import java.util.ArrayList;
 
 /**
  * Created by avinashdavid on 3/16/17.
+ * AppWidgetProvider implementation to do basic setup and set initial pending intent template of the homescreen widget
  */
 
 public class SubredditWidgetProvider extends AppWidgetProvider {
@@ -44,7 +45,6 @@ public class SubredditWidgetProvider extends AppWidgetProvider {
             int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, getClass()));
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_listview);
         }
-//        GetListingsService.loadListingsSubreddit(context, null, null, 0, null, true);
     }
 
     @Override

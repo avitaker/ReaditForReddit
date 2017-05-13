@@ -20,6 +20,11 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
+/**
+ * Created by avinashdavid on 4/16/17.
+ * Activity to display all current subreddit subscriptions and delete as desired
+ **/
+
 public class ManageSubredditsActivity extends AppCompatActivity {
     Realm mRealm;
     final ArrayList<String> mSubredditStringArrayList = new ArrayList<>();

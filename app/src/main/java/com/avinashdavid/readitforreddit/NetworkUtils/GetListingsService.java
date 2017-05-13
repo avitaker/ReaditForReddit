@@ -25,6 +25,7 @@ import static com.avinashdavid.readitforreddit.MiscUtils.Constants.BROADCAST_SUB
 
 /**
  * Created by avinashdavid on 3/6/17.
+ * This service gets posts according to given parameters like subreddit, sort and search.
  */
 
 public class GetListingsService extends IntentService {

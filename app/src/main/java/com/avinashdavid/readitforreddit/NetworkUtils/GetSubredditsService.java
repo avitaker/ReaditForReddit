@@ -24,6 +24,8 @@ import timber.log.Timber;
 
 /**
  * Created by avinashdavid on 3/8/17.
+ * This class gets default subreddits and stores them as SubredditObject (Realm) objects.
+ * It is only called on initial setup, or in the case that the user reaches zero subreddit subscriptions
  */
 
 public class GetSubredditsService extends IntentService {

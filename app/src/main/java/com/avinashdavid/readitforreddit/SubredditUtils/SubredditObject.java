@@ -5,6 +5,7 @@ import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by avinashdavid on 3/8/17.
+ * This class extends Realm object, and contains all the relevant information about a subreddit
  */
 
 public class SubredditObject extends RealmObject {

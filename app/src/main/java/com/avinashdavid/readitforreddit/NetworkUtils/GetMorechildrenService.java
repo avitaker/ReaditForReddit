@@ -41,6 +41,7 @@ import static com.avinashdavid.readitforreddit.NetworkUtils.GetCommentsService.D
 
 /**
  * Created by avinashdavid on 4/25/17.
+ * This service gets the comments from "more" endpoints and saves them as MoreChildrenCommentRecord objects, or notifies if an error occurs via broadcast intent
  */
 
 public class GetMorechildrenService extends IntentService {

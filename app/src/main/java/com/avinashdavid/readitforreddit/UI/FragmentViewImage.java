@@ -22,6 +22,7 @@ import com.bumptech.glide.request.target.Target;
 
 /**
  * Created by avinashdavid on 4/27/17.
+ * Fullscreen DialogFragment that displays an image from a valid URL
  */
 
 public class FragmentViewImage extends DialogFragment {

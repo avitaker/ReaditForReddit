@@ -44,6 +44,7 @@ import static com.avinashdavid.readitforreddit.MiscUtils.Constants.TIME_CREATED_
 
 /**
  * Created by avinashdavid on 3/8/17.
+ * This service gets and stores comments for an article as CommentRecord objects, or notifies if an error occurs via broadcast intent
  */
 
 public class GetCommentsService extends IntentService {

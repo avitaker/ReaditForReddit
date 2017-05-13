@@ -23,8 +23,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -49,6 +52,11 @@ import timber.log.Timber;
 
 import static com.avinashdavid.readitforreddit.UI.RedditPostRecyclerAdapter.imageMarkers;
 
+/**
+ * Created by avinashdavid on 3/05/17.
+ * Activity to display comments for a listing in a recyclerview, along with post information on top and a floating action button to open the listing's link
+ */
+
 public class CommentsActivity extends AppCompatActivity
 //        implements LoaderManager.LoaderCallbacks<Cursor>
 {
@@ -57,6 +65,7 @@ public class CommentsActivity extends AppCompatActivity
 //    Toolbar mToolbar;
     //    @BindView(R.id.listing_recyclerview)RecyclerView mCommentsRecyclerview;
 //    @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbarLayout;
+
 
     Toolbar mToolbar;
 
@@ -118,6 +127,8 @@ public class CommentsActivity extends AppCompatActivity
 
     int versionNum;
 
+    private GestureDetector gestureDetector;
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -128,10 +139,14 @@ public class CommentsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         PreferenceUtils.onActivityCreateSetTheme(this);
         versionNum = Build.VERSION.SDK_INT;
+//        SwipeBack.attach(this, Position.LEFT)
+//                .setContentView(R.layout.activity_comments)
+//                .setSwipeBackView(R.layout.swipeback);
         setContentView(R.layout.activity_comments);
         if (versionNum >=21) {
             supportPostponeEnterTransition();
         }
+        gestureDetector = new GestureDetector(new SwipeGestureDetector());
 
         GPSUtils.setScreenName(this, "CommentsActivity");
         Timber.d("oncreate");
@@ -172,9 +187,9 @@ public class CommentsActivity extends AppCompatActivity
                     mCommentsRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener(){
                         @Override
                         public void onScrolled(RecyclerView recyclerView, int dx, int dy){
-                            if (dy > 0)
+                            if (dy > 10)
                                 fab.hide();
-                            else if (dy < 0)
+                            else if (dy < -10)
                                 fab.show();
                         }
                     });
@@ -239,6 +254,25 @@ public class CommentsActivity extends AppCompatActivity
                         fab.show();
                 }
             });
+//            mCommentsRecyclerview.setOnTouchListener(new View.OnTouchListener() {
+//                @Override
+//                public boolean onTouch(View v, MotionEvent event) {
+//                    switch(event.getAction()) {
+//                        case MotionEvent.ACTION_DOWN:
+//                            _downX = event.getX();
+//                            _downY = event.getY();
+//
+//                        case MotionEvent.ACTION_UP:
+//                            float deltaX = event.getX() - _downX;
+//                            float deltaY = event.getY() - _downY;
+//
+//                            if(Math.abs(deltaX) > SWIPE_THRESHOLD && deltaX < 0 && Math.abs(deltaY) < SWIPE_THRESHOLD_VERTICAL)
+//                                onBackPressed();
+//                    }
+//
+//                    return true;
+//                }
+//            });
         }
 //        setTransitionNamePost(findViewById(R.id.post_info_container), null);
 //        setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), null);
@@ -590,13 +624,53 @@ public class CommentsActivity extends AppCompatActivity
         }
     }
 
-//    private void restartLoader(){
-//        LoaderManager mLoaderManager = getSupportLoaderManager();
-//        Loader<Cursor> loader = mLoaderManager.getLoader(0);
-//        if (loader != null)
-//        {
-//            mLoaderManager.destroyLoader(0);
-//        }
-//        mLoaderManager.restartLoader(1, null, (LoaderManager.LoaderCallbacks<Cursor>)CommentsActivity.this);
-//    }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (gestureDetector.onTouchEvent(event)) {
+            return true;
+        }
+        return super.onTouchEvent(event);
+    }
+
+    private void onLeftSwipe() {
+        onBackPressed();
+    }
+
+    private void onRightSwipe() {
+        // Do something
+    }
+
+    // Private class for gestures
+    private class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListener {
+        // Swipe properties, you can change it to make the swipe
+        // longer or shorter and speed
+        private static final int SWIPE_MIN_DISTANCE = 120;
+        private static final int SWIPE_MAX_OFF_PATH = 200;
+        private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            try {
+                float diffAbs = Math.abs(e1.getY() - e2.getY());
+                float diff = e1.getX() - e2.getX();
+
+                if (diffAbs > SWIPE_MAX_OFF_PATH) {
+                    return false;
+                }
+
+                // Left swipe
+                if (diff > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                    CommentsActivity.this.onLeftSwipe();
+
+                    // Right swipe
+                } else if (-diff > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                    CommentsActivity.this.onRightSwipe();
+                }
+            } catch (Exception e) {
+                Log.e("YourActivity", "Error on gestures");
+            }
+            return false;
+        }
+    }
 }
+

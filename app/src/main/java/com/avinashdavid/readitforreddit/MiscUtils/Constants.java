@@ -2,6 +2,7 @@ package com.avinashdavid.readitforreddit.MiscUtils;
 
 /**
  * Created by avinashdavid on 3/17/17.
+ * This class contains constants for network-call result broadcast intents, JSON parsing and more
  */
 
 public class Constants {
@@ -47,12 +48,6 @@ public class Constants {
     public static final String KEY_AUTHOR_FLAIR = "author_flair_text";
     public static final String GILDED = "gilded";
     public static final String EDITED = "edited";
-
-    public static final String VALUE_YEAR = "year";
-    public static final String VALUE_DAY = "day";
-    public static final String VALUE_MONTH = "month";
-    public static final String VALUE_WEEK = "week";
-    public static final String VALUE_ALL_TIME = "all";
 
     public static final String MORE_KIND = "more";
     public static final String COUNT_KEY = "count";

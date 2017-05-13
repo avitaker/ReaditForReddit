@@ -16,6 +16,7 @@ import java.util.List;
 
 /**
  * Created by avinashdavid on 3/16/17.
+ * RemoteViews "adapter" to populate the listview in the homescreen widget with Reddit posts and fill in the pending intent template
  */
 
 public class SubredditWidgetRemoteViewsService extends RemoteViewsService {

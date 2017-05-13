@@ -69,6 +69,7 @@ dependencies {
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.github.bumptech.glide:volley-integration:1.4.0@aar'
     compile 'com.android.support:percent:25.3.1'
+    compile 'com.hannesdorfmann:swipeback:1.0.4'
     testCompile 'junit:junit:4.12'
 }
 

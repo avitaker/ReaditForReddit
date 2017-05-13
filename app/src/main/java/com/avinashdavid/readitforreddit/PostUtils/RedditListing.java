@@ -8,6 +8,7 @@ import com.orm.SugarRecord;
 
 /**
  * Created by avinashdavid on 3/17/17.
+ * This class extends ORM storage object, and contains all the relevant information for a Reddit listing (post)
  */
 
 public class RedditListing extends SugarRecord {

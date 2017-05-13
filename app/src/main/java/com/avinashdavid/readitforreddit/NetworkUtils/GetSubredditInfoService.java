@@ -22,6 +22,7 @@ import timber.log.Timber;
 
 /**
  * Created by avinashdavid on 4/9/17.
+ * This service gets sidebar information for any subreddit that the user visits, and stores it in sharedpreferences
  */
 
 public class GetSubredditInfoService extends IntentService {

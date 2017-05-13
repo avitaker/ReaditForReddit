@@ -9,8 +9,8 @@
     <dimen name="collapsingtoolbar_marginend">64dp</dimen>
 
     <!--Listing margins and padding-->
-    <dimen name="margin_listing">2dp</dimen>
-    <dimen name="margin_listing_bottom">-2dp</dimen>
+    <dimen name="margin_listing">6dp</dimen>
+    <dimen name="margin_listing_bottom">-4dp</dimen>
     <dimen name="padding_listing_cardview">8dp</dimen>
     <dimen name="padding_listing_captions">4dp</dimen>
 

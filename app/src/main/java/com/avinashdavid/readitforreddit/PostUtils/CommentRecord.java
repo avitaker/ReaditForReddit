@@ -9,6 +9,7 @@ import com.orm.SugarRecord;
 
 /**
  * Created by avinashdavid on 3/18/17.
+ * This class extends ORM storage object, and contains all the relevant information for a comment
  */
 
 public class CommentRecord extends SugarRecord {

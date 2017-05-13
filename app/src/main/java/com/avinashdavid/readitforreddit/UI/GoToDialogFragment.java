@@ -17,6 +17,7 @@ import com.avinashdavid.readitforreddit.R;
 
 /**
  * Created by avinashdavid on 3/12/17.
+ * DialogFragment that collects user input for subreddit name, and starts CheckNewSubredditService when the positive button is clicked
  */
 
 public class GoToDialogFragment extends DialogFragment {

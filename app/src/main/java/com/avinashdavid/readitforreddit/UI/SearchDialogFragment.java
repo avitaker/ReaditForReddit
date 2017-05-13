@@ -21,6 +21,7 @@ import com.avinashdavid.readitforreddit.R;
 
 /**
  * Created by avinashdavid on 3/12/17.
+ * Dialog fragment that takes user input and allows search
  */
 
 public class SearchDialogFragment extends DialogFragment {

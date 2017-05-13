@@ -8,6 +8,7 @@ import com.android.volley.toolbox.Volley;
 
 /**
  * Created by avinashdavid on 3/6/17.
+ * This class maintains the request queue for HTTP requests that will be made by HTTP Volley
  */
 
 public class NetworkSingleton {
