@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         usingTabletLayout = (findViewById(R.id.comment_recyclerview)!=null);
         mApplicationSharedPreferences.edit().putBoolean(getString(R.string.pref_boolean_use_tablet_layout), usingTabletLayout).apply();
 
+
         if (savedInstanceState!=null) {
             mSubredditString = savedInstanceState.getString(KEY_SUBREDDIT_NAME);
             mSortString = savedInstanceState.getString(KEY_SORT);
@@ -220,6 +221,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSidebarText((TextView)findViewById(R.id.sidebar_text));
 
         mNavigationView.setNavigationItemSelectedListener(this);
+
+        setCheckedNavigationItem(getSavedNavigationItemId());
 
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -721,12 +724,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Menu menu = mNavigationView.getMenu();
-        for (int i = 0; i< menu.size(); i++){
-            menu.getItem(i).setChecked(false);
-        }
-        item.setChecked(true);
         int itemId = item.getItemId();
         if (itemId == R.id.goToFrontpage){
+            saveCheckedItem(itemId);
             mSubredditString = null;
             setDefaultSubreddit(null);
 
@@ -750,8 +750,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             GetListingsService.loadListingsRandom(this);
             mListingRecyclerview.setAdapter(null);
             mSwipeRefreshLayout.setRefreshing(true);
+            saveCheckedItem(itemId);
         }
         else {
+            saveCheckedItem(itemId);
             mAfter = null;
             mSearchQueryString = null;
             mRestrictSearchBoolean = false;
@@ -771,6 +773,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mApplicationSharedPreferences.edit().putString(getString(R.string.pref_search_string), null).apply();
         setDefaultSubreddit(mSubredditString);
         mDrawerLayout.closeDrawer(Gravity.START);
+        for (int i = 0; i< menu.size(); i++){
+            menu.getItem(i).setChecked(false);
+        }
+        item.setChecked(true);
         return true;
     }
 
@@ -808,6 +814,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void OnGoToDialogPositiveClick(DialogFragment dialogFragment, String query) {
         if (query.length()>0) {
+            saveCheckedItem();
             mSubredditString = query;
             mSearchQueryString = null;
             setDefaultSubreddit(mSubredditString);
@@ -820,7 +827,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void OnGoToDialogNegativeClick(DialogFragment dialogFragment) {
-
+        setCheckedNavigationItem(getSavedNavigationItemId());
     }
 
     void openGoToDialog(){
@@ -828,6 +835,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         dialogFragment.show(getSupportFragmentManager(), TAG_GO_TO_SUBREDDIT);
         mRestrictSearchBoolean = false;
         mSearchQueryString = null;
+    }
+
+    void saveCheckedItem(){
+        mApplicationSharedPreferences.edit().putInt(getString(R.string.pref_last_valid_nav_item), getCheckedItemIndex(mNavigationView)).apply();
+    }
+
+    void saveCheckedItem(int id){
+        mApplicationSharedPreferences.edit().putInt(getString(R.string.pref_last_valid_nav_item), id).apply();
     }
 
     void setDefaultSubreddit(String name){
@@ -844,8 +859,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         dialogFragment.show(getSupportFragmentManager(), TAG_ADD_SUBREDDIT);
     }
 
+    private int getCheckedItemIndex(NavigationView navigationView) {
+        Menu menu = navigationView.getMenu();
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem item = menu.getItem(i);
+            if (item.isChecked()) {
+                return item.getItemId();
+            }
+        }
+
+        return -1;
+    }
+
+    private int getSavedNavigationItemId(){
+       return mApplicationSharedPreferences.getInt(getString(R.string.pref_last_valid_nav_item),R.id.goToFrontpage);
+    }
+
+    public void setCheckedNavigationItem(int index){
+        Menu menu = mNavigationView.getMenu();
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem item = menu.getItem(i);
+            if (item.getItemId()==index){
+                item.setChecked(true);
+            } else
+                item.setChecked(false);
+        }
+        mNavigationView.setCheckedItem(index);
+    }
+
     @Override
     public void OnSearchDialogPositiveClick(DialogFragment dialogFragment, String query) {
+        saveCheckedItem();
         mSwipeRefreshLayout.setRefreshing(true);
 
         mSearchQueryString = query;
@@ -858,6 +902,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void OnSearchDialogNegativeClick(DialogFragment dialogFragment) {
         mSearchQueryString = null;
         mRestrictSearchBoolean = false;
+        setCheckedNavigationItem(getSavedNavigationItemId());
     }
 
     public void limitSearchToSubreddit(View view){

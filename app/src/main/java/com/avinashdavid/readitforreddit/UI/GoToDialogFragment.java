@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
@@ -12,6 +13,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.avinashdavid.readitforreddit.MainActivity;
 import com.avinashdavid.readitforreddit.MiscUtils.GPSUtils;
 import com.avinashdavid.readitforreddit.R;
 
@@ -71,5 +73,13 @@ public class GoToDialogFragment extends DialogFragment {
 
         GPSUtils.setScreenName(activity, GoToDialogFragment.class.getSimpleName());
         return builder.create();
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        super.onCancel(dialog);
+        MainActivity activity = (MainActivity)getActivity();
+        int toCheck = PreferenceManager.getDefaultSharedPreferences(activity).getInt(getString(R.string.pref_last_valid_nav_item),0);
+        activity.setCheckedNavigationItem(toCheck);
     }
 }

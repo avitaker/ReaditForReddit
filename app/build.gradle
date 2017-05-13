@@ -10,8 +10,8 @@ android {
         applicationId "com.avinashdavid.readitforreddit"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 8
-        versionName "1.07"
+        versionCode 9
+        versionName "1.08"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

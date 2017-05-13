@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
@@ -12,6 +13,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.avinashdavid.readitforreddit.MainActivity;
 import com.avinashdavid.readitforreddit.MiscUtils.GPSUtils;
 import com.avinashdavid.readitforreddit.R;
 
@@ -61,6 +63,9 @@ public class AddSubredditDialogFragment extends DialogFragment {
                 }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                MainActivity activity = (MainActivity)getActivity();
+                int toCheck = PreferenceManager.getDefaultSharedPreferences(activity).getInt(getString(R.string.pref_last_valid_nav_item),0);
+                activity.setCheckedNavigationItem(toCheck);
                 getDialog().cancel();
             }
         });

@@ -83,4 +83,12 @@ public class SearchDialogFragment extends DialogFragment {
         GPSUtils.setScreenName(activity, SearchDialogFragment.class.getSimpleName());
         return builder.create();
     }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        super.onCancel(dialog);
+        MainActivity activity = (MainActivity)getActivity();
+        int toCheck = PreferenceManager.getDefaultSharedPreferences(activity).getInt(getString(R.string.pref_last_valid_nav_item),0);
+        activity.setCheckedNavigationItem(toCheck);
+    }
 }
