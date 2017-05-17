@@ -4,8 +4,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import timber.log.Timber;
-
 /**
  * Created by avinashdavid on 3/6/17.
  * This class generates all the HTTP urls that are called in the app
@@ -82,7 +80,6 @@ public class UriGenerator {
     }
 
     public static Uri getUriSearch(@Nullable String subreddit, @Nullable String query, @Nullable String after, @Nullable String sorting, boolean restrictSr){
-        Timber.d("calling search");
         Uri.Builder builder = baseListingUri.buildUpon();
         if (null!=subreddit){
             builder.appendPath(subredditMarkerString).appendPath(subreddit);
@@ -169,9 +166,7 @@ public class UriGenerator {
         }
         builder.appendQueryParameter(KEY_LIMIT, Integer.toString(20));
 
-        Uri url =  builder.build();
-        Timber.d(url.toString());
-        return url;
+        return builder.build();
     }
 
     public static Uri getUriSubredditList(@Nullable String where, @Nullable String mineWhere){

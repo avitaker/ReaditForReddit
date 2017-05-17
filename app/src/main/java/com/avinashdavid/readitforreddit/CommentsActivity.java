@@ -166,8 +166,10 @@ public class CommentsActivity extends AppCompatActivity
         sp = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 
         setSupportActionBar(mToolbar);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
         fab = (FloatingActionButton)findViewById(R.id.comments_fab);
 
         if (mPostId != null) {
@@ -284,6 +286,7 @@ public class CommentsActivity extends AppCompatActivity
         mIntentFilter.addAction(Constants.BROADCAST_COMMENTS_LOADED);
         mIntentFilter.addAction(Constants.BROADCAST_ERROR_WHILE_LOADING_COMMENTS);
         registerReceiver(mReceiver, mIntentFilter);
+//        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
     }
 
     @Override
@@ -301,6 +304,7 @@ public class CommentsActivity extends AppCompatActivity
                 throw e;
             }
         }
+//        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
         super.onPause();
     }
 
@@ -409,6 +413,8 @@ public class CommentsActivity extends AppCompatActivity
                 if (versionNum>=21) {
                     setTransitionNamePost(findViewById(R.id.post_info_container), null);
                     setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), null);
+                    finishAfterTransition();
+                } else {
                     supportFinishAfterTransition();
                 }
                 return true;

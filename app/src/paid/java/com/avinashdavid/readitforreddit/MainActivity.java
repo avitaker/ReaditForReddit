@@ -385,6 +385,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onResume() {
         super.onResume();
         startAllReceivers();
+//        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
     }
 
     @Override
@@ -412,6 +413,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 saveCommentScroll(firstVisiblePosition, offset);
             }
         }
+//        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
         super.onPause();
     }
 
