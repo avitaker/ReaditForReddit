@@ -86,6 +86,13 @@ public class FragmentMoreChildren extends DialogFragment {
 //        mParentRecord = CommentRecord.find(CommentRecord.class, "comment_id = ?", mParentId).get(0);
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getDialog().getWindow()
+                .getAttributes().windowAnimations = R.style.DialogAnimation;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
