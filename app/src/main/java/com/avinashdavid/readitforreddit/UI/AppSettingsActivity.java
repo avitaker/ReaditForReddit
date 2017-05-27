@@ -21,10 +21,13 @@ import timber.log.Timber;
 
 public class AppSettingsActivity extends AppCompatActivity {
     public static final int RESULT_CODE_FONT_CHANGED = 101;
+    public static final int RESULT_CODE_THEME_CHANGED = 102;
 
     SharedPreferences sp;
     String currentFont;
     boolean usingCustomFont;
+
+    String currentTheme;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,6 +49,7 @@ public class AppSettingsActivity extends AppCompatActivity {
         } else {
             currentFont = "NONE";
         }
+        currentTheme = sp.getString(getString(R.string.pref_key_select_theme), getString(R.string.theme_reddit));
 
         getFragmentManager().beginTransaction().replace(R.id.content, new AppSettingsFragment()).commit();
     }
@@ -57,14 +61,19 @@ public class AppSettingsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         if (sp.getBoolean(getString(R.string.pref_key_use_custom_font), false)!=usingCustomFont || !sp.getString(getString(R.string.pref_key_select_font), "NONE").equals(currentFont)){
             Timber.d("DIFFERENT");
             GeneralUtils.setFont(this);
-            setResult(RESULT_CODE_FONT_CHANGED);
-        } else {
+            this.setResult(RESULT_CODE_FONT_CHANGED);
+        } else if (!currentTheme.equals(sp.getString(getString(R.string.pref_key_select_theme), getString(R.string.theme_reddit)))){
+            Timber.d("THEME DIFFERENT");
+            PreferenceUtils.changeToTheme(this, sp.getString(getString(R.string.pref_key_select_theme), getString(R.string.theme_reddit)));
+            this.setResult(RESULT_CODE_THEME_CHANGED);
+        }
+        else {
             setResult(RESULT_CANCELED);
         }
+        super.onBackPressed();
     }
 
     @Override

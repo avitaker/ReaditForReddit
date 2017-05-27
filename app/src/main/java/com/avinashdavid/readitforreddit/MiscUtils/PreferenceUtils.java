@@ -40,17 +40,15 @@ public class PreferenceUtils {
     /**
      * Set the theme of the Activity, and restart it by creating a new Activity of the same type.
      */
-    public static void changeToTheme(Activity activity, int theme)
+    public static void changeToTheme(Activity activity, String theme)
     {
-        PreferenceManager.getDefaultSharedPreferences(activity).edit().putInt(activity.getString(R.string.pref_theme), theme).apply();
-        sTheme = theme;
-        activity.finish();
-        activity.startActivity(new Intent(activity, activity.getClass()));
+//        PreferenceManager.getDefaultSharedPreferences(activity).edit().putInt(activity.getString(R.string.pref_theme), theme).apply();
+        sTheme = Integer.parseInt(theme);
     }
 
     public static void onActivityCreateSetTheme(Activity activity)
     {
-        sTheme = PreferenceManager.getDefaultSharedPreferences(activity).getInt(activity.getString(R.string.pref_theme), THEME_WHITE);
+        sTheme = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(activity).getString(activity.getString(R.string.pref_key_select_theme), "10"));
         switch (sTheme)
         {
             case THEME_DEFAULT:

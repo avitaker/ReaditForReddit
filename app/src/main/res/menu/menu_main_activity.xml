@@ -43,34 +43,34 @@
 
     <item android:id="@+id/add.this.subreddit"
           android:title="@string/addThisSubreddit"
-          android:icon="@drawable/ic_add_white_24dp"
-          app:showAsAction="never"/>
+          android:icon="?attr/add_icon"
+          app:showAsAction="ifRoom"/>
 
-    <item android:id="@+id/change.theme"
-          android:title="@string/change.theme"
-          android:icon="@drawable/ic_theme_white_24dp"
-          app:showAsAction="never">
-        <menu>
-            <item android:id="@+id/theme.white"
-                  android:title="@string/theme.white"/>
-            <item android:id="@+id/theme.default"
-                  android:title="@string/theme.reddit"/>
-            <item android:id="@+id/theme.saturated"
-                  android:title="@string/theme.saturated"/>
-            <item
-                android:id="@+id/theme.strawberries"
-                android:title="@string/theme.strawberries"/>
-            <item
-                android:id="@+id/theme.solarized.light"
-                android:title="@string/theme.solarized.light"/>
-            <item
-                android:id="@+id/theme.coastal"
-                android:title="@string/theme.coastal"/>
-            <item
-                android:id="@+id/theme.dark"
-                android:title="@string/theme.dark"/>
+    <!--<item android:id="@+id/change.theme"-->
+          <!--android:title="@string/change.theme"-->
+          <!--android:icon="@drawable/ic_theme_white_24dp"-->
+          <!--app:showAsAction="never">-->
+        <!--<menu>-->
+            <!--<item android:id="@+id/theme.white"-->
+                  <!--android:title="@string/theme.white"/>-->
+            <!--<item android:id="@+id/theme.default"-->
+                  <!--android:title="@string/theme.reddit"/>-->
+            <!--<item android:id="@+id/theme.saturated"-->
+                  <!--android:title="@string/theme.saturated"/>-->
+            <!--<item-->
+                <!--android:id="@+id/theme.strawberries"-->
+                <!--android:title="@string/theme.strawberries"/>-->
+            <!--<item-->
+                <!--android:id="@+id/theme.solarized.light"-->
+                <!--android:title="@string/theme.solarized.light"/>-->
+            <!--<item-->
+                <!--android:id="@+id/theme.coastal"-->
+                <!--android:title="@string/theme.coastal"/>-->
+            <!--<item-->
+                <!--android:id="@+id/theme.dark"-->
+                <!--android:title="@string/theme.dark"/>-->
 
-        </menu>
-    </item>
+        <!--</menu>-->
+    <!--</item>-->
 
 </menu>

@@ -10,4 +10,5 @@
     <attr name="more_background" format="reference"/>
     <attr name="more_close" format="reference"/>
     <attr name="refresh_icon" format="reference"/>
+    <attr name="add_icon" format="reference"/>
 </resources>

@@ -1,17 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <CheckBoxPreference
-        android:key="@string/pref_key_use_custom_font"
-        android:title="@string/pref_name_use_custom_font"
-        android:summary="@string/pref_summary_custom_font"
-        android:defaultValue="false"/>
-    <ListPreference
-        android:dependency="@string/pref_key_use_custom_font"
-        android:key="@string/pref_key_select_font"
-        android:title="@string/pref_name_select_font"
-        android:summary="%s"
-        android:dialogTitle="@string/pref_name_select_font"
-        android:entries="@array/font_array_names"
-        android:entryValues="@array/font_array_values"
-        android:defaultValue="@string/font_calibri"/>
+    <PreferenceCategory
+        android:title="@string/title_theme_settings">
+
+        <ListPreference
+            android:key="@string/pref_key_select_theme"
+            android:title="@string/pref_name_select_theme"
+            android:summary="%s"
+            android:dialogTitle="@string/pref_name_select_theme"
+            android:entries="@array/theme_array_names"
+            android:entryValues="@array/theme_array_values"
+            android:defaultValue="@string/theme.reddit"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/title_font_settings">
+        <CheckBoxPreference
+            android:key="@string/pref_key_use_custom_font"
+            android:title="@string/pref_name_use_custom_font"
+            android:summary="@string/pref_summary_custom_font"
+            android:defaultValue="false"/>
+        <ListPreference
+            android:dependency="@string/pref_key_use_custom_font"
+            android:key="@string/pref_key_select_font"
+            android:title="@string/pref_name_select_font"
+            android:summary="%s"
+            android:dialogTitle="@string/pref_name_select_font"
+            android:entries="@array/font_array_names"
+            android:entryValues="@array/font_array_values"
+            android:defaultValue="@string/font_calibri"/>
+
+    </PreferenceCategory>
 </PreferenceScreen>

@@ -9,6 +9,7 @@
         <item name="sort_icon">@drawable/ic_sort_white_24dp</item>
         <item name="menu_icon">@drawable/ic_menu_white_24dp</item>
         <item name="appbar_theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="add_icon">@drawable/ic_add_white_24dp</item>
 
         <item name="android:colorBackground">@color/grey_300</item>
 
@@ -49,6 +50,7 @@
         <item name="more_background">@android:color/background_light</item>
         <item name="more_close">@drawable/ic_close_black_24dp</item>
         <item name="refresh_icon">@drawable/ic_refresh_black_24dp</item>
+        <item name="add_icon">@drawable/ic_add_black_24dp</item>
     </style>
 
     <style name="ThemeRedditSaturated" parent="AppTheme">

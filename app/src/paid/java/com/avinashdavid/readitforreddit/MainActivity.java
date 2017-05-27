@@ -31,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
 import com.avinashdavid.readitforreddit.MiscUtils.GPSUtils;
@@ -531,7 +532,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 setSubredditsInNavigationView("");
             }
         } else if (requestCode == CODE_APP_SETTINGS){
-            if (resultCode == AppSettingsActivity.RESULT_CODE_FONT_CHANGED){
+//            Toast.makeText(MainActivity.this, getString(R.string.message_restart_to_see_changes), Toast.LENGTH_LONG).show();
+            setCheckedNavigationItem(getSavedNavigationItemId());
+            if (resultCode == AppSettingsActivity.RESULT_CODE_FONT_CHANGED || resultCode == AppSettingsActivity.RESULT_CODE_THEME_CHANGED){
                 AppCompatActivity activity = MainActivity.this;
                 stopAllReceivers();
                 activity.finish();
@@ -631,34 +634,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 return true;
             }
-            case R.id.theme_default:{
-                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_DEFAULT);
-                return true;
-            }
-            case R.id.theme_saturated:{
-                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_SATURATED);
-                return true;
-            }
-            case R.id.theme_white:{
-                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_WHITE);
-                return true;
-            }
-            case R.id.theme_strawberries:{
-                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_STRAWBERRIES);
-                return true;
-            }
-            case R.id.theme_coastal:{
-                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_COASTAL);
-                return true;
-            }
-            case R.id.theme_solarized_light:{
-                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_SOLARIZED_LIGHT);
-                return true;
-            }
-            case R.id.theme_dark:{
-                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_DARK_1);
-                return true;
-            }
+//            case R.id.theme_default:{
+////                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_DEFAULT);
+//                return true;
+//            }
+//            case R.id.theme_saturated:{
+////                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_SATURATED);
+//                return true;
+//            }
+//            case R.id.theme_white:{
+////                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_WHITE);
+//                return true;
+//            }
+//            case R.id.theme_strawberries:{
+////                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_STRAWBERRIES);
+//                return true;
+//            }
+//            case R.id.theme_coastal:{
+////                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_COASTAL);
+//                return true;
+//            }
+//            case R.id.theme_solarized_light:{
+////                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_SOLARIZED_LIGHT);
+//                return true;
+//            }
+//            case R.id.theme_dark:{
+////                PreferenceUtils.changeToTheme(this, PreferenceUtils.THEME_DARK_1);
+//                return true;
+//            }
             default:
                 return super.onOptionsItemSelected(item);
         }

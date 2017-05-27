@@ -23,6 +23,7 @@
         <item name="more_background">@android:color/background_light</item>
         <item name="more_close">@drawable/ic_close_black_24dp</item>
         <item name="refresh_icon">@drawable/ic_refresh_white_24dp</item>
+        <item name="add_icon">@drawable/ic_add_white_24dp</item>
     </style>
 
     <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">
@@ -54,6 +55,7 @@
         <item name="more_background">@android:color/background_light</item>
         <item name="more_close">@drawable/ic_close_black_24dp</item>
         <item name="refresh_icon">@drawable/ic_refresh_black_24dp</item>
+        <item name="add_icon">@drawable/ic_add_black_24dp</item>
     </style>
 
 

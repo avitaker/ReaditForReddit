@@ -104,13 +104,6 @@
     <string name="error_loading_sidebar">Error occurred while loading sidebar content</string>
     <string name="pref_sidebar_default_value">@string/loading_sidebar</string>
 
-    <string name="theme.reddit">Reddit</string>
-    <string name="theme.saturated">Reddit Saturated</string>
-    <string name="theme.white">Light</string>
-    <string name="theme.strawberries">Red</string>
-    <string name="theme.coastal">Solarized Reddit</string>
-    <string name="theme.dark">Dark (Red)</string>
-    <string name="theme.solarized.light">Solarized (Light)</string>
 
     <string-array name="sort_listing_options">
         <item>hot</item>
@@ -159,6 +152,10 @@
 
     <!--FOR SETTINGS FRAGMENT-->
     <string name="title_app_settings">Settings</string>
+
+    <string name="title_theme_settings">Theme</string>
+
+    <string name="title_font_settings">Font</string>
     <string name="pref_key_use_custom_font">useCustomFont</string>
     <string name="pref_name_use_custom_font">Use custom font</string>
     <string name="pref_summary_custom_font">6 available custom fonts</string>
@@ -182,5 +179,39 @@
         <item>@string/fontName_metrophobic</item>
         <item>@string/fontName_BPreplay</item>
         <item>@string/fontName_glacial_indifference_regular</item>
+    </string-array>
+
+    <string name="pref_key_select_theme">theme_pref</string>
+    <string name="pref_name_select_theme">Select theme</string>
+    <string name="pref_summary_select_theme">7 available themes</string>
+
+    <string name="message_restart_to_see_changes">Please restart the app for changes</string>
+
+    <string name="theme.reddit">Reddit</string>
+    <string name="theme.saturated">Reddit Saturated</string>
+    <string name="theme.white">Light</string>
+    <string name="theme.strawberries">Red</string>
+    <string name="theme.coastal">Solarized Reddit</string>
+    <string name="theme.dark">Dark (Red)</string>
+    <string name="theme.solarized.light">Solarized (Light)</string>
+
+    <string-array name="theme_array_names">
+        <item>@string/theme.reddit</item>
+        <item>@string/theme.saturated</item>
+        <item>@string/theme.white</item>
+        <item>@string/theme.strawberries</item>
+        <item>@string/theme.coastal</item>
+        <item>@string/theme.solarized.light</item>
+        <item>@string/theme.dark</item>
+    </string-array>
+
+    <string-array name="theme_array_values">
+        <item>0</item>
+        <item>9</item>
+        <item>10</item>
+        <item>5</item>
+        <item>6</item>
+        <item>11</item>
+        <item>7</item>
     </string-array>
 </resources>
