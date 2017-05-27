@@ -15,6 +15,7 @@ import android.widget.ImageView;
 
 import com.avinashdavid.readitforreddit.R;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
@@ -97,7 +98,7 @@ public class FragmentViewImage extends DialogFragment {
                 progressBar.setVisibility(View.GONE);
                 return false;
             }
-        }).fitCenter().into(imageViewTarget);
+        }).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(imageViewTarget);
 //        mImageView.setImageURI(Uri.parse(mLinkUrl));
     }
 

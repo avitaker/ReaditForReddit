@@ -27,7 +27,7 @@ import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils;
 import com.avinashdavid.readitforreddit.NetworkUtils.GetCommentsService;
 import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 import com.avinashdavid.readitforreddit.R;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -250,10 +250,9 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
             domain_textview.setText(listing.domain);
             timecreated_textview.setText(GeneralUtils.returnFormattedTime(mContext, System.currentTimeMillis(), listing.timeCreated));
             if (thumbnail_imageview!=null) {
-                Picasso picasso = Picasso.with(mContext);
+//                Picasso picasso = Picasso.with(mContext);
                 if (imageLink){
                     final String linkUrl = mRedditPost.url;
-//                    picasso.setIndicatorsEnabled(true);
                     thumbnail_imageview.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -273,7 +272,7 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
                 } else {
 
                 }
-                picasso.load(listing.thumbnailUrl).into(thumbnail_imageview);
+                Glide.with(mContext).load(listing.thumbnailUrl).into(thumbnail_imageview);
             }
 
             if (listing.isGilded){

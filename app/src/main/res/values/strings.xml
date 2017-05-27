@@ -138,4 +138,49 @@
     <string name="title_activity_manage_subreddits">Delete Subscriptions</string>
     <string name="delete_subreddit">Delete subreddit</string>
 
+    <!--FONT NAMES AND PATHS-->
+    <string name="fontName_clear_sans_regular">Clear Sans (Regular)</string>
+    <string name="font_clear_sans_regular">fonts/ClearSans-Regular.ttf</string>
+
+    <string name="fontName_rosario_regular">Rosario</string>
+    <string name="font_rosario_regular">fonts/Rosario-Regular.ttf</string>
+
+    <string name="fontName_glacial_indifference_regular">Glacial Indifference</string>
+    <string name="font_glacial_indifference_regular">fonts/GlacialIndifference-Regular.otf</string>
+
+    <string name="fontName_metrophobic">Metrophobic</string>
+    <string name="font_metrophobic">fonts/Metrophobic.otf</string>
+
+    <string name="fontName_BPreplay">BPreplay</string>
+    <string name="font_BPreplay">fonts/BPreplay.otf</string>
+
+    <string name="fontName_calibri">Calibri</string>
+    <string name="font_calibri">fonts/calibri.ttf</string>
+
+    <!--FOR SETTINGS FRAGMENT-->
+    <string name="title_app_settings">Settings</string>
+    <string name="pref_key_use_custom_font">useCustomFont</string>
+    <string name="pref_name_use_custom_font">Use custom font</string>
+    <string name="pref_summary_custom_font">6 available custom fonts</string>
+
+    <string name="pref_key_select_font">whichFont</string>
+    <string name="pref_name_select_font">Select font</string>
+
+    <string-array name="font_array_values">
+        <item>@string/font_calibri</item>
+        <item>@string/font_clear_sans_regular</item>
+        <item>@string/font_rosario_regular</item>
+        <item>@string/font_metrophobic</item>
+        <item>@string/font_BPreplay</item>
+        <item>@string/font_glacial_indifference_regular</item>
+    </string-array>
+
+    <string-array name="font_array_names">
+        <item>@string/fontName_calibri</item>
+        <item>@string/fontName_clear_sans_regular</item>
+        <item>@string/fontName_rosario_regular</item>
+        <item>@string/fontName_metrophobic</item>
+        <item>@string/fontName_BPreplay</item>
+        <item>@string/fontName_glacial_indifference_regular</item>
+    </string-array>
 </resources>

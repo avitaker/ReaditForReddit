@@ -44,11 +44,12 @@ import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 import com.avinashdavid.readitforreddit.UI.CommentRecordRecyclerAdapter;
 import com.avinashdavid.readitforreddit.UI.FragmentViewImage;
 import com.avinashdavid.readitforreddit.UI.GetCommentsAsyncTask;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
 import timber.log.Timber;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.avinashdavid.readitforreddit.UI.RedditPostRecyclerAdapter.imageMarkers;
 
@@ -128,6 +129,11 @@ public class CommentsActivity extends AppCompatActivity
     int versionNum;
 
     private GestureDetector gestureDetector;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -548,7 +554,7 @@ public class CommentsActivity extends AppCompatActivity
         if (thumbnailUrl.length()==0 || thumbnailUrl.equals("self") || thumbnailUrl.equals("default") || thumbnailUrl.equals("nsfw")) {
             findViewById(R.id.imageContainer).setVisibility(View.GONE);
         } else {
-            Picasso.with(this).load(listing.thumbnailUrl).into(thumbnailImgView);
+            Glide.with(this).load(listing.thumbnailUrl).into(thumbnailImgView);
             boolean clickable = false;
             for (int i=0; i<imageMarkers.length; i++){
                 if (listing.url.contains(imageMarkers[i])){

@@ -46,6 +46,7 @@ import com.avinashdavid.readitforreddit.PostUtils.CommentRecord;
 import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 import com.avinashdavid.readitforreddit.SubredditUtils.SubredditObject;
 import com.avinashdavid.readitforreddit.UI.AddSubredditDialogFragment;
+import com.avinashdavid.readitforreddit.UI.AppSettingsActivity;
 import com.avinashdavid.readitforreddit.UI.CommentRecordRecyclerAdapter;
 import com.avinashdavid.readitforreddit.UI.GetCommentsAsyncTask;
 import com.avinashdavid.readitforreddit.UI.GoToDialogFragment;
@@ -58,6 +59,7 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import timber.log.Timber;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.orm.SugarRecord.deleteAll;
 import static com.orm.SugarRecord.listAll;
@@ -94,6 +96,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     public static final int CODE_MANAGE_SUBREDDITS = 7;
+
+    private static final int CODE_APP_SETTINGS = 8;
+
 
     Toolbar mToolbar;
     RecyclerView mListingRecyclerview;
@@ -159,6 +164,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     RedditListing mCommentsRedditListing;
     BroadcastReceiver mCommentsLoadedBroadcastReceiver;
     IntentFilter mCommentsIntentFilter;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -520,7 +530,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (resultCode == Activity.RESULT_OK){
                 setSubredditsInNavigationView("");
             }
-        } else {
+        } else if (requestCode == CODE_APP_SETTINGS){
+            if (resultCode == AppSettingsActivity.RESULT_CODE_FONT_CHANGED){
+                AppCompatActivity activity = MainActivity.this;
+                stopAllReceivers();
+                activity.finish();
+                Intent intent1 = new Intent(activity, activity.getClass());
+                intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                activity.startActivity(intent1);
+            }
+        }
+        else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -753,6 +773,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mListingRecyclerview.setAdapter(null);
             mSwipeRefreshLayout.setRefreshing(true);
             saveCheckedItem(itemId);
+        } else if (itemId == R.id.app_settings){
+            Intent intent = new Intent(this, AppSettingsActivity.class);
+            startActivityForResult(intent, CODE_APP_SETTINGS);
         }
         else {
             saveCheckedItem(itemId);

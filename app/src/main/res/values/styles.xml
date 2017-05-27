@@ -116,7 +116,7 @@
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
-    <style name="PostTitle">
+    <style name="PostTitle" parent="TextAppearance.AppCompat">
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -124,7 +124,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="CommentText">
+    <style name="CommentText" parent="TextAppearance.AppCompat">
         <!--<item name="android:textColor">@android:color/background_dark</item>-->
     </style>
 

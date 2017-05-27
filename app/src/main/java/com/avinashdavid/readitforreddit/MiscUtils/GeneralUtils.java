@@ -1,14 +1,19 @@
 package com.avinashdavid.readitforreddit.MiscUtils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.TypedValue;
 import android.view.View;
 
 import com.avinashdavid.readitforreddit.R;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
  * Created by avinashdavid on 3/8/17.
@@ -105,4 +110,18 @@ public class GeneralUtils {
         }
     }
 
+    public static void setFont(boolean makeCustom, @Nullable String fontPath){
+        if (makeCustom){
+            CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                    .setDefaultFontPath(fontPath)
+                    .setFontAttrId(R.attr.fontPath)
+                    .build());
+        }
+    }
+
+    public static void setFont(Context activityContext){
+        Context context = activityContext.getApplicationContext();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        setFont(sp.getBoolean(context.getString(R.string.pref_key_use_custom_font), false), sp.getString(context.getString(R.string.pref_key_select_font), context.getString(R.string.font_calibri)));
+    }
 }

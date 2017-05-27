@@ -46,7 +46,6 @@
                   android:title="@string/share_link"/>
             <item android:id="@+id/share.comments"
                   android:title="@string/share_comments"/>
-            android:icon="@drawable/ic_theme_white_24dp"
         </menu>
     </item>
 </menu>

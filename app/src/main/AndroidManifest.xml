@@ -13,7 +13,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppThemeDark">
-
+        <meta-data android:name="net.dean.jraw.REDDIT_USERNAME" android:value="avitaker" />
         <meta-data android:name="android.max_aspect"
                    android:value="2.1"/>
         <meta-data
@@ -70,6 +70,14 @@
         <activity
             android:name=".ManageSubredditsActivity"
             android:label="@string/title_activity_manage_subreddits"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.avinashdavid.readitforreddit.MainActivity"/>
+        </activity>
+
+        <activity android:name=".UI.AppSettingsActivity"
+            android:label="@string/title_app_settings"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
