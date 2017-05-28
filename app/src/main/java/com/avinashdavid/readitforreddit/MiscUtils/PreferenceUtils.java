@@ -1,13 +1,25 @@
 package com.avinashdavid.readitforreddit.MiscUtils;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.avinashdavid.readitforreddit.R;
+
+import java.util.ArrayList;
 
 /**
  * Created by avinashdavid on 3/10/17.
@@ -37,6 +49,9 @@ public class PreferenceUtils {
     public static final int THEME_SATURATED = 9;
     public static final int THEME_WHITE = 10;
     public static final int THEME_SOLARIZED_LIGHT = 11;
+
+    private static String sToolbarColor;
+    private static String sBackgroundColor;
     /**
      * Set the theme of the Activity, and restart it by creating a new Activity of the same type.
      */
@@ -90,4 +105,48 @@ public class PreferenceUtils {
         return snackbar;
     }
 
+    public static void changeToolbarColor(AppCompatActivity activity, @Nullable ArrayList<View> otherViews){
+        sToolbarColor = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext()).getString(activity.getString(R.string.pref_key_toolbar_color), activity.getString(R.string.pref_toolbar_default_color));
+        Drawable colorDrawable;
+        if (!sToolbarColor.equals(activity.getString(R.string.pref_toolbar_default_color))){
+            colorDrawable = new ColorDrawable(Color.parseColor(sToolbarColor));
+            activity.getSupportActionBar().setBackgroundDrawable(colorDrawable);
+            if (otherViews!=null){
+                for (View v : otherViews){
+                    if (sToolbarColor.equals(activity.getString(R.string.color_red))){
+                        v.setBackgroundColor(activity.getResources().getColor(R.color.color_red));
+                    } else if (sToolbarColor.equals(activity.getString(R.string.color_blue))){
+                        v.setBackgroundColor(activity.getResources().getColor(R.color.color_blue));
+                    }
+                    else if (sToolbarColor.equals(activity.getString(R.string.color_green))){
+                        v.setBackgroundColor(activity.getResources().getColor(R.color.color_green));
+                    }
+                    else if (sToolbarColor.equals(activity.getString(R.string.color_yellow))){
+                        v.setBackgroundColor(activity.getResources().getColor(R.color.color_yellow));
+                    }
+                }
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                int color = 0;
+                if (sToolbarColor.equals(activity.getString(R.string.color_red))){
+                    activity.getWindow().setStatusBarColor(ContextCompat.getColor(activity, R.color.red_dark));
+                } else if (sToolbarColor.equals(activity.getString(R.string.color_blue))){
+                    activity.getWindow().setStatusBarColor(ContextCompat.getColor(activity, R.color.blue_dark));
+                }
+                else if (sToolbarColor.equals(activity.getString(R.string.color_green))){
+                    activity.getWindow().setStatusBarColor(ContextCompat.getColor(activity, R.color.green_dark));
+                }
+                else if (sToolbarColor.equals(activity.getString(R.string.color_yellow))){
+                    activity.getWindow().setStatusBarColor(ContextCompat.getColor(activity, R.color.yellow_dark));
+                }
+            }
+        }
+    }
+
+    public static void changeBackgroundColor(Activity activity, Window window){
+        sBackgroundColor = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext()).getString(activity.getString(R.string.pref_key_background_color), activity.getString(R.string.pref_toolbar_default_color));
+        if (!sBackgroundColor.equals(activity.getString(R.string.pref_toolbar_default_color))){
+            window.setBackgroundDrawable(new ColorDrawable(Color.parseColor(sBackgroundColor)));
+        }
+    }
 }

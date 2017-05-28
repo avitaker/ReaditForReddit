@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -16,6 +17,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -51,9 +53,12 @@ import com.avinashdavid.readitforreddit.UI.AppSettingsActivity;
 import com.avinashdavid.readitforreddit.UI.CommentRecordRecyclerAdapter;
 import com.avinashdavid.readitforreddit.UI.GetCommentsAsyncTask;
 import com.avinashdavid.readitforreddit.UI.GoToDialogFragment;
+import com.avinashdavid.readitforreddit.UI.QuitDialog;
 import com.avinashdavid.readitforreddit.UI.RedditPostRecyclerAdapter;
 import com.avinashdavid.readitforreddit.UI.SearchDialogFragment;
+import com.orm.SugarRecord;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
@@ -217,11 +222,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mCollapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapsing_toolbar);
         setSupportActionBar(mToolbar);
 
+
         mDrawerLayout = (DrawerLayout)findViewById(R.id.my_drawer_layout);
         mNavigationView = (NavigationView)findViewById(R.id.main_navigationview);
+        View sidebarDrawer = findViewById(R.id.sidebar_header);
 
         mListingRecyclerview = (RecyclerView)findViewById(R.id.listing_recyclerview);
         mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipeRefreshLayout);
+
+        ArrayList<View> viewsToChange = new ArrayList<>();
+        viewsToChange.add(findViewById(R.id.main_appbar));
+        viewsToChange.add(findViewById(R.id.collapsing_toolbar));
+        viewsToChange.add(mNavigationView.getHeaderView(0).findViewById(R.id.navdrawer_header));
+        viewsToChange.add(sidebarDrawer);
+
+        PreferenceUtils.changeToolbarColor(this, viewsToChange);
 
         startRealm();
 
@@ -441,6 +456,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             outState.putString(KEY_COMMENTS_POSTID, mPostId);
         }
         outState.putInt(KEY_SELECTED_SORT_ID, selectedSortID);
+    }
+
+    @Override
+    public void onBackPressed() {
+        openQuitDialog();
     }
 
     private void setMainScroll(int firstChildPosition, int offset){
@@ -743,7 +763,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 GetListingsService.loadListingsSubreddit(this, subredditString, sort, 0, after, true);
             }
         }
-        return listAll(RedditListing.class);
+        return SugarRecord.listAll(RedditListing.class);
     }
 
     @Override
@@ -880,6 +900,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     void openSearchDialog(){
         DialogFragment dialogFragment = new SearchDialogFragment();
         dialogFragment.show(getSupportFragmentManager(), TAG_SEARCH_POSTS);
+    }
+
+    void openQuitDialog(){
+        DialogFragment quitDialog = new QuitDialog();
+        quitDialog.show(getSupportFragmentManager(), "dontgo");
     }
 
     void openAddSubDialog(){

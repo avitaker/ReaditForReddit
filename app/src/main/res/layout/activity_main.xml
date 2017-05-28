@@ -20,7 +20,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginEnd="@dimen/collapsingtoolbar_marginend"
             app:expandedTitleMarginStart="@dimen/collapsingtoolbar_marginstart"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">

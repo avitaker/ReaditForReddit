@@ -46,6 +46,7 @@ import com.avinashdavid.readitforreddit.UI.FragmentViewImage;
 import com.avinashdavid.readitforreddit.UI.GetCommentsAsyncTask;
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
@@ -176,6 +177,12 @@ public class CommentsActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        ArrayList<View> viewsToChange = new ArrayList<>();
+        viewsToChange.add(findViewById(R.id.main_appbar));
+        viewsToChange.add(findViewById(R.id.collapsing_toolbar));
+        viewsToChange.add(findViewById(R.id.post_info_toolbar));
+        PreferenceUtils.changeToolbarColor(this, viewsToChange);
+
         fab = (FloatingActionButton)findViewById(R.id.comments_fab);
 
         if (mPostId != null) {
@@ -217,6 +224,7 @@ public class CommentsActivity extends AppCompatActivity
         mCommentsRecyclerview.setLayoutManager(mLinearLayoutManager);
 
         mCommentsRecyclerview.setNestedScrollingEnabled(true);
+
     }
 
     @TargetApi(21)

@@ -10,7 +10,16 @@
             android:dialogTitle="@string/pref_name_select_theme"
             android:entries="@array/theme_array_names"
             android:entryValues="@array/theme_array_values"
-            android:defaultValue="@string/theme.reddit"/>
+            android:defaultValue="0"/>
+
+        <ListPreference
+            android:key="@string/pref_key_toolbar_color"
+            android:title="@string/pref_name_toolbar_color"
+            android:summary="%s"
+            android:dialogTitle="@string/pref_name_toolbar_color"
+            android:entries="@array/toolbar_color_names"
+            android:entryValues="@array/toolbar_color_values"
+            android:defaultValue="@string/pref_toolbar_default_color"/>
 
     </PreferenceCategory>
 
@@ -30,6 +39,5 @@
             android:entries="@array/font_array_names"
             android:entryValues="@array/font_array_values"
             android:defaultValue="@string/font_calibri"/>
-
     </PreferenceCategory>
 </PreferenceScreen>

@@ -61,29 +61,29 @@
                                 app:alignContent="stretch"
                                 app:flexDirection="row">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/voteCount_textview"
-                                style="@style/VoteCount"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/voteCount_textview"
+                                    style="@style/VoteCount"/>
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/author_textview"
-                                style="@style/NormalWeightColorAccent"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/author_textview"
+                                    style="@style/NormalWeightColorAccent"/>
 
-                            <TextView
-                                android:text="@string/in"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                style="@style/BoldCaptions"/>
+                                <TextView
+                                    android:text="@string/in"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    style="@style/BoldCaptions"/>
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/subreddit_textview"
-                                style="@style/NormalWeightColorAccent"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/subreddit_textview"
+                                    style="@style/NormalWeightColorAccent"/>
 
                             </com.google.android.flexbox.FlexboxLayout>
 
