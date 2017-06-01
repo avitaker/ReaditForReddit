@@ -67,7 +67,7 @@ public class PreferenceUtils {
         switch (sTheme)
         {
             case THEME_DEFAULT:
-                activity.setTheme(R.style.AppTheme);
+                activity.setTheme(R.style.RedditTheme);
                 break;
             case THEME_STRAWBERRIES:
                 activity.setTheme(R.style.ThemeStrawberriesAndCream);

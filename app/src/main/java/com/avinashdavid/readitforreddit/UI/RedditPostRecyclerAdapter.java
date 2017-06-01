@@ -94,7 +94,7 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
     }
 
     @Override
-    public void onBindViewHolder(final ListingHolder holder, int position) {
+    public void onBindViewHolder(final ListingHolder holder, final int position) {
         int viewtype = getItemViewType(position);
         if (viewtype==VIEW_TYPE_NORMAL || viewtype == VIEW_TYPE_NO_THUMBNAIL || viewtype == VIEW_TYPE_IMAGE_LINK) {
             final RedditListing redditPost = mRedditListings.get(position);
@@ -111,11 +111,13 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
                         mMainActivity.refreshComments();
                         startCommentsService(mMainActivity, redditPost.mPostId);
                     } else {
-                        if (android.os.Build.VERSION.SDK_INT >= 21) {
-                            startIntentV21(mMainActivity, redditPost.mPostId, holder.itemView);
-                        } else {
-                            startIntentRegular(mMainActivity, redditPost.mPostId);
-                        }
+                        mMainActivity.CLICKED_ITEM_POSITION = position;
+//                        if (android.os.Build.VERSION.SDK_INT >= 21) {
+//                            startIntentV21(mMainActivity, redditPost.mPostId, holder.itemView);
+//                        } else {
+//                            startIntentRegular(mMainActivity, redditPost.mPostId);
+//                        }
+                        startIntentRegular(mMainActivity, redditPost.mPostId);
                     }
                 }
             });
@@ -136,8 +138,6 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
                     return true;
                 }
             });
-
-
 
         }
     }
@@ -180,7 +180,7 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
     @Override
     public void onViewAttachedToWindow(ListingHolder holder) {
         super.onViewAttachedToWindow(holder);
-        if (holder.getAdapterPosition() > mRedditListings.size() - 3){
+        if (holder.getAdapterPosition() > mRedditListings.size() - 2){
             String after = mRedditListings.get(mRedditListings.size()-1).after;
             mScrollListener.OnReachedLast(after);
         }
@@ -194,8 +194,8 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
         TextView commentCount_textview;
         TextView domain_textview;
         TextView timecreated_textview;
-        LinearLayout mRelativeLayout;
-        View mCardRelativeLayout;
+        public LinearLayout mRelativeLayout;
+        public View mCardRelativeLayout;
         ImageView thumbnail_imageview;
 
         TextView emptyTextView;
@@ -238,10 +238,10 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
         public void bindListing(RedditListing listing, boolean imageLink){
             mRedditPost = listing;
             mPostId = listing.mPostId;
-            if (!MainActivity.usingTabletLayout) {
-                setTransitionNamePost(mContext, mRelativeLayout, mPostId);
-                setTransitionNamePostBg(mContext, mCardRelativeLayout, mPostId);
-            }
+//            if (!MainActivity.usingTabletLayout) {
+//                setTransitionNamePost(mContext, mRelativeLayout, mPostId);
+//                setTransitionNamePostBg(mContext, mCardRelativeLayout, mPostId);
+//            }
             voteCount_textview.setText(Integer.toString(listing.voteCount));
             author_textview.setText(listing.author);
             subreddit_textview.setText(mContext.getString(R.string.format_subreddit, listing.subreddit));
@@ -301,17 +301,24 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
     void startIntentV21(Activity c, String postId, View v){
         Intent intent = new Intent(c, CommentsActivity.class);
         intent.putExtra(CommentsActivity.EXTRA_POST_ID, postId);
-        Pair<View, String> p0 = Pair.create(v.findViewById(R.id.card_view), c.getString(R.string.transitionName_PostBg) + postId);
-        Pair<View, String> p1 = Pair.create(v.findViewById(R.id.post_info_container), c.getString(R.string.transitionName_Post) + postId);
-        ActivityOptionsCompat options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation(c, p0, p1);
-        c.startActivity(intent, options.toBundle());
+//        Pair<View, String> p0 = Pair.create(v.findViewById(R.id.card_view), c.getString(R.string.transitionName_PostBg) + postId);
+//        Pair<View, String> p1 = Pair.create(v.findViewById(R.id.post_info_container), c.getString(R.string.transitionName_Post) + postId);
+//        ActivityOptionsCompat options = ActivityOptionsCompat.
+//                makeSceneTransitionAnimation(c, p0, p1);
+
+        Pair<View, String> p0 = Pair.create(v.findViewById(R.id.card_view), v.findViewById(R.id.card_view).getTransitionName());
+        Pair<View, String> p1 = Pair.create(v.findViewById(R.id.post_info_container), v.findViewById(R.id.post_info_container).getTransitionName());
+        v.setTransitionName(c.getString(R.string.transitionName_Post));
+        Pair<View, String> p3 = Pair.create(v, v.getTransitionName());
+        ActivityOptionsCompat options1 = ActivityOptionsCompat.makeSceneTransitionAnimation(c, p3);
+        c.startActivity(intent, options1.toBundle());
     }
 
     void startIntentRegular(Context c, String postId){
         Intent intent = new Intent(c, CommentsActivity.class);
         intent.putExtra(CommentsActivity.EXTRA_POST_ID, postId);
         c.startActivity(intent);
+        ((AppCompatActivity)c).overridePendingTransition(R.anim.enter_right, R.anim.slide_to_left);
     }
 
     void startCommentsService(Context c, String postId){

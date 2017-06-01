@@ -116,6 +116,11 @@ public class GeneralUtils {
                     .setDefaultFontPath(fontPath)
                     .setFontAttrId(R.attr.fontPath)
                     .build());
+        } else {
+            CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                    .setDefaultFontPath("")
+                    .setFontAttrId(R.attr.fontPath)
+                    .build());
         }
     }
 

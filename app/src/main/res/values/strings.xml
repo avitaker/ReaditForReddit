@@ -150,6 +150,15 @@
     <string name="fontName_calibri">Calibri</string>
     <string name="font_calibri">fonts/calibri.ttf</string>
 
+    <string name="fontName_expressway">Expressway</string>
+    <string name="font_expressway">fonts/expressway.ttf</string>
+
+    <string name="fontName_cmu">Computer Modern</string>
+    <string name="font_cmu">fonts/cmu_sans.ttf</string>
+
+    <string name="fontName_cmu_serif">Computer Modern (Serif)</string>
+    <string name="font_cmu_serif">fonts/cmu_conc.ttf</string>
+
     <!--Quit Dialog-->
     <string name="quit_dialog_title">Quit</string>
     <string name="quit_dialog_message">Are you sure you want to quit?</string>
@@ -172,19 +181,23 @@
     <string-array name="font_array_values">
         <item>@string/font_calibri</item>
         <item>@string/font_clear_sans_regular</item>
-        <item>@string/font_rosario_regular</item>
+        <item>@string/font_cmu</item>
+        <item>@string/font_cmu_serif</item>
         <item>@string/font_metrophobic</item>
         <item>@string/font_BPreplay</item>
         <item>@string/font_glacial_indifference_regular</item>
+        <item>@string/font_expressway</item>
     </string-array>
 
     <string-array name="font_array_names">
         <item>@string/fontName_calibri</item>
         <item>@string/fontName_clear_sans_regular</item>
-        <item>@string/fontName_rosario_regular</item>
+        <item>@string/fontName_cmu</item>
+        <item>@string/fontName_cmu_serif</item>
         <item>@string/fontName_metrophobic</item>
         <item>@string/fontName_BPreplay</item>
         <item>@string/fontName_glacial_indifference_regular</item>
+        <item>@string/fontName_expressway</item>
     </string-array>
 
     <string name="pref_key_select_theme">theme_pref</string>

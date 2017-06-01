@@ -1,6 +1,7 @@
 package com.avinashdavid.readitforreddit;
 
 import android.app.Activity;
+import android.app.SharedElementCallback;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
@@ -31,6 +33,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +63,7 @@ import com.orm.SugarRecord;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -105,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private static final int CODE_APP_SETTINGS = 8;
 
+    public static int CLICKED_ITEM_POSITION = -1;
 
     Toolbar mToolbar;
     RecyclerView mListingRecyclerview;
@@ -182,9 +187,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         PreferenceUtils.onActivityCreateSetTheme(this);
         setContentView(R.layout.drawer_main_activity);
         GPSUtils.setScreenName(this, "MainActivityPaid");
-//        if (android.os.Build.VERSION.SDK_INT >= 21) {
-//            postponeEnterTransition();
-//        }
 
         mApplicationSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
@@ -204,6 +206,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 mPostId = savedInstanceState.getString(KEY_COMMENTS_POSTID);
             }
             selectedSortID = savedInstanceState.getInt(KEY_SELECTED_SORT_ID);
+            CLICKED_ITEM_POSITION = savedInstanceState.getInt("TEST");
         } else {
             mSubredditString = mApplicationSharedPreferences.getString(getString(R.string.pref_current_subreddit), null);
             mSearchQueryString = mApplicationSharedPreferences.getString(getString(R.string.pref_search_string), null);
@@ -253,11 +256,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        mListingsLinearLayoutManager = new LinearLayoutManager(this);
-        mListingsLinearLayoutManager.setAutoMeasureEnabled(true);
-
-        mListingRecyclerview.setLayoutManager(mListingsLinearLayoutManager);
-        mListingRecyclerview.setNestedScrollingEnabled(true);
 
 //        RecyclerView.ItemDecoration mDividerItemDecoration = new DividerItemDecoration(this, mListingsLinearLayoutManager.getOrientation());
 //
@@ -274,8 +272,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (mAfter == null) {
                         refreshUI(false);
                     } else {
-                        mRedditListings.clear();
-                        mRedditListings.addAll(RedditListing.listAll(RedditListing.class));
+                        mListingRecyclerAdapter.mRedditListings.clear();
+                        mListingRecyclerAdapter.mRedditListings.addAll(RedditListing.listAll(RedditListing.class));
 //                    findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                         mListingRecyclerAdapter.notifyItemRangeInserted(itemCount, 20);
                         itemCount = mRedditListings.size();
@@ -365,12 +363,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-//    @Override
-//    public void onActivityReenter(int resultCode, Intent data) {
-//        onCreate(null);
-//        super.onActivityReenter(resultCode, data);
-//    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -380,14 +372,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mFirstChildPosition = mApplicationSharedPreferences.getInt(Constants.KEY_POSTS_SCROLL_POSITION, 0);
             mOffset = mApplicationSharedPreferences.getInt(Constants.KEY_POSTS_OFFSET, 0);
             setMainScroll(mFirstChildPosition, mOffset);
-//            mListingRecyclerview.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    if (android.os.Build.VERSION.SDK_INT >= 21) {
-//                        startPostponedEnterTransition();
-//                    }
-//                }
-//            });
         }
         if (usingTabletLayout){
             if (mPostId==null){
@@ -404,8 +388,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     }
-
-//
 
     @Override
     protected void onResume() {
@@ -439,7 +421,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 saveCommentScroll(firstVisiblePosition, offset);
             }
         }
-//        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
+
         super.onPause();
     }
 
@@ -451,6 +433,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         outState.putString(KEY_SEARCH_STRING, mSearchQueryString);
         outState.putString(KEY_AFTER, mAfter);
         outState.putBoolean(KEY_RESTRICT_SEARCH, mRestrictSearchBoolean);
+        outState.putInt("TEST", CLICKED_ITEM_POSITION);
         outState.putParcelable(KEY_LAYOUTMANAGER_STATE, mListingsLinearLayoutManager.onSaveInstanceState());
         if (usingTabletLayout){
             outState.putString(KEY_COMMENTS_POSTID, mPostId);
@@ -495,8 +478,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void initUi(@Nullable String subredditString, @Nullable String searchString, @Nullable String sortString, boolean restrictSr, boolean forceRefresh){
 
+        if (searchString==null) {
+            mCollapsingToolbarLayout.setTitle(mSubredditString == null ? getString(R.string.frontpage) : mSubredditString);
+        } else {
+            mCollapsingToolbarLayout.setTitle(getString(R.string.format_search_results, searchString));
+        }
+
         mAfter = null;
 
+        Timber.e(Integer.toString(CLICKED_ITEM_POSITION));
         mRedditListings = getPosts(subredditString, searchString, null, sortString, restrictSr, forceRefresh);
 
         mListingRecyclerAdapter = new RedditPostRecyclerAdapter(this, mRedditListings);
@@ -504,22 +494,52 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mListingRecyclerAdapter.setHasStableIds(true);
         mListingRecyclerview.setAdapter(mListingRecyclerAdapter);
 
+        mListingsLinearLayoutManager = new LinearLayoutManager(this);
+        mListingsLinearLayoutManager.setAutoMeasureEnabled(true);
+
+        mListingRecyclerview.setLayoutManager(mListingsLinearLayoutManager);
+        mListingRecyclerview.setNestedScrollingEnabled(true);
+
         mFirstChildPosition = mApplicationSharedPreferences.getInt(Constants.KEY_POSTS_SCROLL_POSITION, 0);
         mOffset = mApplicationSharedPreferences.getInt(Constants.KEY_POSTS_OFFSET, 0);
         mListingRecyclerview.scrollToPosition(mFirstChildPosition);
         mListingRecyclerview.scrollBy(0, -mOffset);
-
+//        supportPostponeEnterTransition();
+//
+//        try {
+//        mRedditListings = getPosts(subredditString, searchString, null, sortString, restrictSr, forceRefresh);
+//
+//        mListingRecyclerAdapter = new RedditPostRecyclerAdapter(this, mRedditListings);
+//
+//        mListingRecyclerAdapter.setHasStableIds(true);
+//        mListingRecyclerview.setAdapter(mListingRecyclerAdapter);
+//
+//        mListingsLinearLayoutManager = new LinearLayoutManager(this);
+//        mListingsLinearLayoutManager.setAutoMeasureEnabled(true);
+//
+//        mListingRecyclerview.setLayoutManager(mListingsLinearLayoutManager);
+//        mListingRecyclerview.setNestedScrollingEnabled(true);
+//
+//        mFirstChildPosition = mApplicationSharedPreferences.getInt(Constants.KEY_POSTS_SCROLL_POSITION, 0);
+//        mOffset = mApplicationSharedPreferences.getInt(Constants.KEY_POSTS_OFFSET, 0);
+//        mListingRecyclerview.scrollToPosition(mFirstChildPosition);
+//        mListingRecyclerview.scrollBy(0, -mOffset);
+//    } finally {
 //        if (android.os.Build.VERSION.SDK_INT >= 21) {
-//            startPostponedEnterTransition();
+//            Timber.e("OKAY");
+//            if (mListingRecyclerview.getAdapter().getItemCount()>CLICKED_ITEM_POSITION && CLICKED_ITEM_POSITION>-1){
+//                Timber.e("FUCKING WORK YOU PIECE OF GODDAMN SHIT");
+//                mListingRecyclerAdapter.notifyDataSetChanged();
+//                RecyclerView.ViewHolder holder = mListingRecyclerview.findViewHolderForItemId(mListingRecyclerAdapter.getItemId(CLICKED_ITEM_POSITION));
+//                if (holder!=null)
+//                    holder.itemView.setTransitionName(getString(R.string.transitionName_Post));
+//                else
+//                    Timber.e("FUCK MY GODDAMN SHITTY ASSS FUCKING LIFE");
+////                mListingsLinearLayoutManager.findViewByPosition(CLICKED_ITEM_POSITION).setTransitionName(getString(R.string.transitionName_Post));
+//            }
 //        }
-
-        if (searchString==null) {
-            mCollapsingToolbarLayout.setTitle(mSubredditString == null ? getString(R.string.frontpage) : mSubredditString);
-        } else {
-            mCollapsingToolbarLayout.setTitle(getString(R.string.format_search_results, searchString));
-        }
-
-    }
+//    }
+}
 
     private void initCommentsUi(){
 

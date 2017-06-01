@@ -186,10 +186,10 @@ public class CommentsActivity extends AppCompatActivity
         fab = (FloatingActionButton)findViewById(R.id.comments_fab);
 
         if (mPostId != null) {
-            if (versionNum>=21) {
-                setTransitionNamePost(findViewById(R.id.post_info_container), mPostId);
-                setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), mPostId);
-            }
+//            if (versionNum>=21) {
+//                setTransitionNamePost(findViewById(R.id.post_info_container), "");
+////                setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), "");
+//            }
             initializePostInfo(mPostId);
         }
         mReceiver = new BroadcastReceiver() {
@@ -324,11 +324,13 @@ public class CommentsActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (versionNum>=21) {
-            setTransitionNamePost(findViewById(R.id.post_info_container), null);
-            setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), null);
-        }
+//        if (versionNum>=21) {
+//            setTransitionNamePost(findViewById(R.id.post_info_container), null);
+//            setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), null);
+//        }
         super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
+//        super.onBackPressed();
     }
 
     private void setCommentScroll(int firstChildPosition, int offset){
@@ -424,42 +426,15 @@ public class CommentsActivity extends AppCompatActivity
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                if (versionNum>=21) {
-                    setTransitionNamePost(findViewById(R.id.post_info_container), null);
-                    setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), null);
-                    finishAfterTransition();
-                } else {
-                    supportFinishAfterTransition();
-                }
+//                if (versionNum>=21) {
+//                    setTransitionNamePost(findViewById(R.id.post_info_container), null);
+//                    setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), null);
+//                    finishAfterTransition();
+//                } else {
+//                    supportFinishAfterTransition();
+//                }
+                onBackPressed();
                 return true;
-//            case R.id.sort_top: {
-//                if (item.isChecked()) item.setChecked(false);
-//                else item.setChecked(true);
-//                mSortString = item.getTitle().toString();
-//                GetCommentsService.loadCommentsForArticle(CommentsActivity.this, null, mPostId, mSortString);
-//                return true;
-//            }
-//            case R.id.sort_new: {
-//                if (item.isChecked()) item.setChecked(false);
-//                else item.setChecked(true);
-//                mSortString = item.getTitle().toString();
-//                GetCommentsService.loadCommentsForArticle(CommentsActivity.this, null, mPostId, mSortString);
-//                return true;
-//            }
-//            case R.id.sort_confidence: {
-//                if (item.isChecked()) item.setChecked(false);
-//                else item.setChecked(true);
-//                mSortString = item.getTitle().toString();GetCommentsService.loadCommentsForArticle(CommentsActivity.this, null, mPostId, mSortString);
-//                return true;
-//            }
-//            case R.id.sort_controversial: {
-//                if (item.isChecked()) item.setChecked(false);
-//                else item.setChecked(true);
-//                mSortString = item.getTitle().toString();GetCommentsService.loadCommentsForArticle(CommentsActivity.this, null, mPostId, mSortString);
-//                return true;
-//            }
-//            default:
-//                return super.onOptionsItemSelected(item);
             case R.id.refresh_comments:
                 refreshComments();
                 return true;

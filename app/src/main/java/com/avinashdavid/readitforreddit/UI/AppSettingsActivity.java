@@ -22,7 +22,6 @@ import timber.log.Timber;
 public class AppSettingsActivity extends AppCompatActivity {
     public static final int RESULT_CODE_FONT_CHANGED = 101;
     public static final int RESULT_CODE_THEME_CHANGED = 102;
-    public static final int RESULT_CODE_TOOLBAR_COLOR_CHANGED = 103;
 
     SharedPreferences sp;
     String currentFont;
@@ -73,8 +72,8 @@ public class AppSettingsActivity extends AppCompatActivity {
             Timber.d("THEME DIFFERENT");
             PreferenceUtils.changeToTheme(this, sp.getString(getString(R.string.pref_key_select_theme), "0"));
             this.setResult(RESULT_CODE_THEME_CHANGED);
-        } else if (!currentTheme.equals(sp.getString(getString(R.string.pref_key_select_theme), getString(R.string.pref_toolbar_default_color)))){
-            this.setResult(RESULT_CODE_TOOLBAR_COLOR_CHANGED);
+        } else if (!currentToolbarColor.equals(sp.getString(getString(R.string.pref_key_toolbar_color), getString(R.string.pref_toolbar_default_color)))){
+            this.setResult(RESULT_CODE_THEME_CHANGED);
         }
         else {
             setResult(RESULT_CANCELED);

@@ -3,9 +3,9 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/reddit_blue</item>
-        <item name="colorPrimaryDark">@color/reddit_dark_blue</item>
-        <item name="colorAccent">@color/reddit_orange</item>
+        <item name="colorPrimary">@color/white_primary</item>
+        <item name="colorPrimaryDark">@color/white_primaryDark</item>
+        <item name="colorAccent">@color/white_accent</item>
         <item name="sort_icon">@drawable/ic_sort_white_24dp</item>
         <item name="menu_icon">@drawable/ic_menu_white_24dp</item>
         <item name="appbar_theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
@@ -21,6 +21,12 @@
         <item name="more_background">@android:color/background_light</item>
         <item name="more_close">@drawable/ic_close_black_24dp</item>
         <item name="refresh_icon">@drawable/ic_refresh_white_24dp</item>
+    </style>
+
+    <style name="RedditTheme" parent="AppTheme">
+        <item name="colorPrimary">@color/reddit_blue</item>
+        <item name="colorPrimaryDark">@color/reddit_dark_blue</item>
+        <item name="colorAccent">@color/reddit_orange</item>
     </style>
 
     <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">
