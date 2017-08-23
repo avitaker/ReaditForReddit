@@ -20,6 +20,10 @@ public class Constants {
     public static final String BROADCAST_SIDEBAR_ERROR = "com.avinashdavid.readitforreddit.SIDEBAR_ERROR";
     public static final String BROADCAST_SIDEBAR = "com.avinashdavid.readitforreddit.SIDEBAR_LOADED";
 
+
+    public static final String BROADCAST_USER_COMMENTS_LOADED = "com.avinashdavid.readitforreddit.BROADCAST_USERCOMMENTS";
+    public static final String BROADCAST_USER_COMMENTS_ERROR = "com.avinashdavid.readitforreddit.BROADCAST_USERCOMMENTS_ERROR";
+
     public static final String KEY_NETWORK_REQUEST_ERROR = "netErr";
 
     public static final String BROADCAST_MORE_COMMENTS_LOADED = "com.avinashdavid.readitforreddit.BROADCAST_MORE_COMMENTS";
@@ -41,7 +45,7 @@ public class Constants {
     public static final String ID_KEY = "id";
     public static final String SCORE_HIDDEN_KEY = "score_hidden";
     public static final String SCORE_KEY = "score";
-    public static final String BODY_HTML = "body_html";
+    public static final String BODY_HTML = "bodyHtml";
     public static final String AUTHOR_KEY = "author";
     public static final String REPLIES_KEY = "replies";
     public static final String TIME_CREATED_KEY = "created_utc";

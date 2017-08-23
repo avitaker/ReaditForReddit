@@ -35,7 +35,7 @@ import java.util.List;
 public class FragmentMoreChildren extends DialogFragment {
     public static final String TAG_MORECHILDREN_FRAGMENT = "morechildFragment";
     private static final String KEY_PARENT_ID = "parentId";
-    private static final String KEY_LINK_ID = "linkId";
+    private static final String KEY_LINK_ID = "link_id";
     private static final String KEY_MORE_CHILDREN = "moreChildren";
     private static final String KEY_PARENT_DEPTH = "parentDepth";
 

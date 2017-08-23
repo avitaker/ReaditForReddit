@@ -133,7 +133,7 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
                     }
                     ft.addToBackStack(null);
 
-                    PostOptionsDialogFragment newFragment = PostOptionsDialogFragment.newInstance(redditPost.mTitle, GeneralUtils.returnFormattedStringFromHtml(redditPost.url).toString(), redditPost.subreddit);
+                    PostOptionsDialogFragment newFragment = PostOptionsDialogFragment.newInstance(redditPost);
                     newFragment.show(ft, PostOptionsDialogFragment.TAG_POST_OPTIONS);
                     return true;
                 }

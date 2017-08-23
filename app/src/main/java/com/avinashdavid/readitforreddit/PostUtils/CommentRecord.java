@@ -78,7 +78,7 @@ public class CommentRecord extends SugarRecord {
 
 //    public static CommentRecord makeCommentRecord(@NonNull ContentValues cv){
 //        String id = cv.getAsString(ReaditContract.CommentEntry.COLUMN_COMMENT_ID);
-//        long timestamp = cv.getAsLong(ReaditContract.CommentEntry.COLUMN_TIMESTAMP);
+//        long created_utc = cv.getAsLong(ReaditContract.CommentEntry.COLUMN_TIMESTAMP);
 //        String postId = cv.getAsString(ReaditContract.CommentEntry.COLUMN_POST_ID);
 //        boolean scoreHidden = cv.getAsBoolean(ReaditContract.CommentEntry.COLUMN_SCORE_HIDDEN);
 //        int score = cv.getAsInteger(ReaditContract.CommentEntry.COLUMN_SCORE);
@@ -89,12 +89,12 @@ public class CommentRecord extends SugarRecord {
 //        int depth = cv.getAsInteger(ReaditContract.CommentEntry.COLUMN_DEPTH);
 //        boolean hasReplies = cv.getAsBoolean(ReaditContract.CommentEntry.COLUMN_HAS_REPLIES);
 //        String flairText = cv.getAsString(ReaditContract.CommentEntry.COLUMN_AUTHOR_FLAIR_TEXT);
-//        return new CommentRecord(timestamp, id, postId, scoreHidden, score, author, bodyHtml, parent, timeCreated, depth, hasReplies, flairText);
+//        return new CommentRecord(created_utc, id, postId, scoreHidden, score, author, bodyHtml, parent, timeCreated, depth, hasReplies, flairText);
 //    }
 //
 //    public static CommentRecord makeCommentRecord(@NonNull Cursor c){
 //        String id = c.getString(ReaditProvider.COLUMN_COMMENT_ID);
-//        long timestamp = c.getLong(ReaditProvider.COLUMN_TIMESTAMP);
+//        long created_utc = c.getLong(ReaditProvider.COLUMN_TIMESTAMP);
 //        String postId = c.getString(ReaditProvider.COLUMN_POST_ID);
 //        int scoreHiddenInt = c.getInt(ReaditProvider.COLUMN_SCORE_HIDDEN);
 //        boolean scoreHidden = scoreHiddenInt!=0;
@@ -107,6 +107,6 @@ public class CommentRecord extends SugarRecord {
 //        int hasRepliesInt = c.getInt(ReaditProvider.COLUMN_HAS_REPLIES);
 //        boolean hasReplies = hasRepliesInt!=0;
 //        String flairText = c.getString(ReaditProvider.COLUMN_AUTHOR_FLAIR_TEXT);
-//        return new CommentRecord(timestamp, id, postId, scoreHidden, score, author, bodyHtml, parent, timeCreated, depth, hasReplies, flairText);
+//        return new CommentRecord(created_utc, id, postId, scoreHidden, score, author, bodyHtml, parent, timeCreated, depth, hasReplies, flairText);
 //    }
 }

@@ -292,7 +292,7 @@ public class MoreChildrenRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
                 @Override
                 public void onClick(View v) {
                     Timber.d("load more comments for LINK: " + linkId + " and PARENT: " + parentId);
-//                    GetMorechildrenService.loadMoreComments(mContext, linkId, parentId, position);
+//                    GetMorechildrenService.loadMoreComments(mContext, link_id, parentId, position);
                 }
             });
         }

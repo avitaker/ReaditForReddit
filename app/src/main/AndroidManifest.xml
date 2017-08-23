@@ -66,6 +66,7 @@
         <service android:name=".NetworkUtils.CheckNewSubredditService"/>
         <service android:name=".NetworkUtils.GetSubredditInfoService"/>
         <service android:name=".NetworkUtils.GetMorechildrenService"/>
+        <service android:name=".NetworkUtils.GetUserCommentsService"/>
 
         <activity
             android:name=".ManageSubredditsActivity"
@@ -75,6 +76,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.avinashdavid.readitforreddit.MainActivity"/>
         </activity>
+
+        <activity android:name=".UserHistoryDisplay.UserHistoryActivity"/>
 
         <activity android:name=".UI.AppSettingsActivity"
             android:label="@string/title_app_settings"

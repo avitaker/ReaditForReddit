@@ -1,5 +1,6 @@
 package com.avinashdavid.readitforreddit;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
@@ -21,6 +22,12 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class ReaditApp extends SugarApp {
     private Tracker mTracker;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();

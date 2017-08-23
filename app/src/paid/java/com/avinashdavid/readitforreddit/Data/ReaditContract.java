@@ -22,7 +22,7 @@ public class ReaditContract {
     public static class RedditListingEntry implements BaseColumns {
         public static final String TABLE_NAME = "redditListingTable";
         public static final String COLUMN_POST_ID = "postId";
-        public static final String COLUMN_TIMESTAMP = "timestamp";
+        public static final String COLUMN_TIMESTAMP = "created_utc";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_VOTE_COUNT = "voteCount";
         public static final String COLUMN_COMMENTS_COUNT = "commentsCount";
@@ -61,8 +61,8 @@ public class ReaditContract {
     public static class CommentEntry implements BaseColumns {
         public static final String TABLE_NAME = "commentTable";
         public static final String COLUMN_COMMENT_ID = "commentId";
-        public static final String COLUMN_TIMESTAMP = "timestamp";
-        public static final String COLUMN_POST_ID = "linkId";
+        public static final String COLUMN_TIMESTAMP = "created_utc";
+        public static final String COLUMN_POST_ID = "link_id";
         public static final String COLUMN_SCORE_HIDDEN = "scoreHidden";
         public static final String COLUMN_SCORE = "score";
         public static final String COLUMN_COMMENT_AUTHOR = "author";

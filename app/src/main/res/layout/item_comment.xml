@@ -7,15 +7,15 @@
     android:background="?attr/more_background">
 
     <com.google.android.flexbox.FlexboxLayout
-    android:id="@+id/info_linear_layout"
-    android:layout_alignParentTop="true"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:flexWrap="wrap"
-    app:alignItems="stretch"
-    app:alignContent="stretch"
-    app:flexDirection="row">
+        android:id="@+id/info_linear_layout"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:flexWrap="wrap"
+        app:alignItems="stretch"
+        app:alignContent="stretch"
+        app:flexDirection="row">
         <!--android:paddingTop="@dimen/padding_comment_item"-->
         <!--android:paddingLeft="@dimen/padding_comment_item"-->
         <!--android:paddingRight="@dimen/padding_comment_item">-->
@@ -27,8 +27,8 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:id="@+id/author"
-            android:layout_marginRight="4dp"
-            android:layout_marginEnd="4dp"
+            android:layout_marginRight="@dimen/comment_info_margin"
+            android:layout_marginEnd="@dimen/comment_info_margin"
             style="@style/BoldCaptionsAccent"/>
 
         <TextView

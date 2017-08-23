@@ -64,6 +64,7 @@
     <string name="open_in_browser">Open link</string>
     <string name="view_subreddit">Go to %s</string>
     <string name="share">Share</string>
+    <string name="view_user">%s\'s profile</string>
 
     <string name="share_link">Link</string>
     <string name="share_comments">Comments</string>

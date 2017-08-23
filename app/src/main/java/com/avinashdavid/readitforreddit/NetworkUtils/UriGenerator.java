@@ -13,6 +13,7 @@ public class UriGenerator {
     private static final String KEY_LIMIT = "limit";
     private static final String KEY_AFTER = "after";
     private static final String PATH_SEGMENT_COMMENTS = "comments";
+    private static final String PATH_SEGMENT_USER = "user";
     private static final String KEY_SORT = "sort";
     private static final String subredditMarkerString = "r";
     private static final String KEY_SUBREDDITS = "subreddits";
@@ -213,5 +214,11 @@ public class UriGenerator {
 
     public static Uri getShareableUriComments(@NonNull String postId){
         return Uri.parse("https://www.reddit.com/").buildUpon().appendPath(PATH_SEGMENT_COMMENTS).appendPath(postId).build();
+    }
+
+    public static Uri getUriUserComments(@NonNull String userId) {
+        Uri.Builder builder = baseListingUri.buildUpon();
+        builder.appendPath(PATH_SEGMENT_USER).appendPath(userId).appendPath(PATH_SEGMENT_COMMENTS);
+        return builder.build();
     }
 }

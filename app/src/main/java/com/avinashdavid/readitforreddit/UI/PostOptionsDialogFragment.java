@@ -13,8 +13,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.avinashdavid.readitforreddit.MainActivity;
+import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils;
 import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 import com.avinashdavid.readitforreddit.R;
+import com.avinashdavid.readitforreddit.UserHistoryDisplay.UserHistoryActivity;
 
 /**
  * Created by avinashdavid on 4/13/17.
@@ -25,6 +27,7 @@ public class PostOptionsDialogFragment extends DialogFragment {
     String subredditName;
     String linkUrl;
     String mTitle;
+    String mAuthor;
     SharedPreferences sp;
 
     public static final String TAG_POST_OPTIONS = "tagPostOptionsFrag";
@@ -32,13 +35,15 @@ public class PostOptionsDialogFragment extends DialogFragment {
     private static final String KEY_SUB = "keysub";
     private static final String KEY_LINK = "keylink";
     private static final String KEY_TITLE = "keyTitle";
+    private static final String KEY_AUTHOR = "KEY_AUTHOR";
 
-    static PostOptionsDialogFragment newInstance(String postTitle, String linkUrl, String subredditName){
+    static PostOptionsDialogFragment newInstance(RedditListing redditPost){
         PostOptionsDialogFragment fragment = new PostOptionsDialogFragment();
         Bundle args = new Bundle();
-        args.putString(KEY_SUB, subredditName);
-        args.putString(KEY_LINK, linkUrl);
-        args.putString(KEY_TITLE, postTitle);
+        args.putString(KEY_SUB, redditPost.subreddit);
+        args.putString(KEY_LINK, GeneralUtils.returnFormattedStringFromHtml(redditPost.url).toString());
+        args.putString(KEY_TITLE, redditPost.mTitle);
+        args.putString(KEY_AUTHOR, redditPost.author);
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,6 +58,7 @@ public class PostOptionsDialogFragment extends DialogFragment {
         subredditName = args.getString(KEY_SUB);
         linkUrl = args.getString(KEY_LINK);
         mTitle = args.getString(KEY_TITLE);
+        mAuthor = args.getString(KEY_AUTHOR);
     }
 
     @Override
@@ -65,6 +71,15 @@ public class PostOptionsDialogFragment extends DialogFragment {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(linkUrl));
                 startActivity(browserIntent);
                 dismiss();
+            }
+        });
+
+        TextView viewAuthor = (TextView)v.findViewById(R.id.view_author);
+        viewAuthor.setText(getString(R.string.view_user, mAuthor));
+        viewAuthor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserHistoryActivity.Companion.startUserHistorActivity(getActivity(), mAuthor);
             }
         });
 

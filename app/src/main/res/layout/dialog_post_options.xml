@@ -32,5 +32,12 @@
         android:text="@string/view_subreddit"
         style="@style/PostOptionsItem"/>
 
+    <TextView
+        android:id="@+id/view_author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/view_subreddit"
+        style="@style/PostOptionsItem"/>
+
 
 </LinearLayout>

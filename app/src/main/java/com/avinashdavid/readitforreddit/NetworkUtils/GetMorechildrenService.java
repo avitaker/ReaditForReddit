@@ -48,7 +48,7 @@ public class GetMorechildrenService extends IntentService {
     private static final String EXTRA_LINK = "extraLink";
 
     public static final String KEY_PARENT_ID = "extraParentId";
-    public static final String KEY_LINK_ID = "linkId";
+    public static final String KEY_LINK_ID = "link_id";
     public static final String KEY_INSERT_START_POSITION  = "insertStart";
     public static final String KEY_ITEMS_INSERTED = "itemsInserted";
 
@@ -211,7 +211,7 @@ public class GetMorechildrenService extends IntentService {
 //            boolean isGilded = replyData.getInt(GILDED) > 0;
 //            boolean isEdited = !replyData.getString(EDITED).equals("false");
 //
-//            commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, scoreHidden, score, author, body, parent, timecreated, depth, hasReplies, authorflair, isGilded, isEdited);
+//            commentObject = new CommentRecord(System.currentTimeMillis(), id, link_id, scoreHidden, score, author, body, parent, timecreated, depth, hasReplies, authorflair, isGilded, isEdited);
 //            return commentObject;
         } catch (Exception e){
             Timber.e(e, "error in getMoreChildrenCommentObjectsFromJsonDataObject");

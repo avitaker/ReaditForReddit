@@ -240,7 +240,7 @@ public class GetCommentsService extends IntentService {
 //            boolean isGilded = replyData.getInt(GILDED) > 0;
 //            boolean isEdited = !replyData.getString(EDITED).equals("false");
 //
-//            commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, scoreHidden, score, author, body, parent, timecreated, depth, hasReplies, authorflair, isGilded, isEdited);
+//            commentObject = new CommentRecord(System.currentTimeMillis(), id, link_id, scoreHidden, score, author, body, parent, timecreated, depth, hasReplies, authorflair, isGilded, isEdited);
 //            return commentObject;
         } catch (Exception e){
             Timber.e(e, "error in getMoreChildrenCommentObjectsFromJsonDataObject");

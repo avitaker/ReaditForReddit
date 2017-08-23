@@ -1,11 +1,16 @@
 package com.avinashdavid.readitforreddit.MiscUtils;
 
+import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.TypedValue;
@@ -128,5 +133,12 @@ public class GeneralUtils {
         Context context = activityContext.getApplicationContext();
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         setFont(sp.getBoolean(context.getString(R.string.pref_key_use_custom_font), false), sp.getString(context.getString(R.string.pref_key_select_font), context.getString(R.string.font_calibri)));
+    }
+
+    public static void replaceFragment(AppCompatActivity activity, int containerId, Fragment fragment, String tag) {
+        FragmentManager fm = activity.getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(containerId, fragment, tag);
+        ft.commit();
     }
 }

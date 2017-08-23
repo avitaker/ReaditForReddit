@@ -44,6 +44,7 @@ import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 import com.avinashdavid.readitforreddit.UI.CommentRecordRecyclerAdapter;
 import com.avinashdavid.readitforreddit.UI.FragmentViewImage;
 import com.avinashdavid.readitforreddit.UI.GetCommentsAsyncTask;
+import com.avinashdavid.readitforreddit.UserHistoryDisplay.UserOverviewFragment;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
@@ -164,6 +165,7 @@ public class CommentsActivity extends AppCompatActivity
         } else if (mIntent != null) {
             mPostId = mIntent.getStringExtra(EXTRA_POST_ID);
         }
+
         if (savedInstanceState!=null && savedInstanceState.getString(EXTRA_POST_ID)!= null){
             mPostId = savedInstanceState.getString(EXTRA_POST_ID);
         }
