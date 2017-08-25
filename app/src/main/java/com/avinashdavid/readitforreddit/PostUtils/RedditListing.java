@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.support.annotation.NonNull;
 
 import com.avinashdavid.readitforreddit.Data.ReaditContract;
+import com.google.gson.annotations.SerializedName;
 import com.orm.SugarRecord;
 
 /**
@@ -35,6 +36,7 @@ public class RedditListing extends SugarRecord {
 
     public boolean isGilded;
 
+    @SerializedName("over_18")
     public boolean isNSFW;
 
     public RedditListing() {

@@ -24,7 +24,7 @@ class GetUserCommentsService : IntentService("GetUserCommentsService") {
         const val EXTRA_USER_ID = "userId"
 
         fun loadUserComments(context: Context, userId: String) {
-            val intent: Intent = Intent(context, GetUserCommentsService::class.java)
+            val intent = Intent(context, GetUserCommentsService::class.java)
             intent.putExtra(EXTRA_USER_ID, userId)
             context.startService(intent)
         }
@@ -48,7 +48,7 @@ class GetUserCommentsService : IntentService("GetUserCommentsService") {
                 val data = children.getJSONObject(i).getJSONObject("data")
                 data.remove("id")
                 val dataString = data.toString()
-                var userHistoryComment: UserHistoryComment;
+                var userHistoryComment: UserHistoryComment
                 try {
                     userHistoryComment = gson.fromJson(dataString, UserHistoryComment::class.java)
                     userHistoryComment.save()
@@ -56,12 +56,12 @@ class GetUserCommentsService : IntentService("GetUserCommentsService") {
 
                 }
             }
-            val broadcast:Intent = Intent()
+            val broadcast = Intent()
             broadcast.action = Constants.BROADCAST_USER_COMMENTS_LOADED
             this.sendBroadcast(broadcast)},
-                Response.ErrorListener() { error ->
+                Response.ErrorListener { error ->
                     val message = error.message
-                    val errorIntent : Intent = Intent()
+                    val errorIntent = Intent()
                     errorIntent.action = Constants.BROADCAST_USER_COMMENTS_ERROR
                     errorIntent.putExtra(Constants.KEY_NETWORK_REQUEST_ERROR, message)
                     this.sendBroadcast(errorIntent)

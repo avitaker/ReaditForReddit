@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils
+import com.avinashdavid.readitforreddit.MiscUtils.PreferenceUtils
 import com.avinashdavid.readitforreddit.R
 
 /**
@@ -26,6 +27,7 @@ class UserHistoryActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        PreferenceUtils.onActivityCreateSetTheme(this)
         setContentView(R.layout.activity_user_history)
         if (intent.getStringExtra(EXTRA_USER_ID)!=null) userId = intent.getStringExtra(EXTRA_USER_ID)
         if (savedInstanceState != null) userId = savedInstanceState.getString(EXTRA_USER_ID)
