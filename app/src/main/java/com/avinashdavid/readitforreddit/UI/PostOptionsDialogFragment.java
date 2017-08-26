@@ -16,7 +16,7 @@ import com.avinashdavid.readitforreddit.MainActivity;
 import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils;
 import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 import com.avinashdavid.readitforreddit.R;
-import com.avinashdavid.readitforreddit.UserHistoryDisplay.UserHistoryActivity;
+import com.avinashdavid.readitforreddit.User.UserHistoryActivity;
 
 /**
  * Created by avinashdavid on 4/13/17.

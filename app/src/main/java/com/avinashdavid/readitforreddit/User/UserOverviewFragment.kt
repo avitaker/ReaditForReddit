@@ -1,4 +1,4 @@
-package com.avinashdavid.readitforreddit.UserHistoryDisplay
+package com.avinashdavid.readitforreddit.User
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -7,6 +7,7 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -14,7 +15,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.avinashdavid.readitforreddit.MiscUtils.Constants
 import com.avinashdavid.readitforreddit.MiscUtils.PreferenceUtils
-import com.avinashdavid.readitforreddit.NetworkUtils.GetUserCommentsService
 import com.avinashdavid.readitforreddit.R
 import com.orm.SugarRecord
 import timber.log.Timber
@@ -57,7 +57,9 @@ class UserOverviewFragment : Fragment() {
         fragmentView = inflater?.inflate(R.layout.fragment_user_overview, container, false)
 
         rvUserOverview = fragmentView!!.findViewById(R.id.rvUserOverview) as RecyclerView
-        rvUserOverview!!.layoutManager = LinearLayoutManager(activity)
+        val layoutManager = LinearLayoutManager(activity)
+        rvUserOverview!!.layoutManager = layoutManager
+        rvUserOverview!!.addItemDecoration(DividerItemDecoration(activity, layoutManager.orientation))
 
         return fragmentView
     }

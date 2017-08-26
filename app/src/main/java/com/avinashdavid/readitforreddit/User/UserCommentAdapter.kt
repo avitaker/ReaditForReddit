@@ -1,4 +1,4 @@
-package com.avinashdavid.readitforreddit.UserHistoryDisplay
+package com.avinashdavid.readitforreddit.User
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -32,13 +32,16 @@ class UserCommentAdapter(context: Context, comments: List<UserHistoryComment>?):
     }
 
     class CommentViewholder(var view: View): RecyclerView.ViewHolder(view){
+        val mContext = view.context
         public val tvLinkTitle = view.findViewById(R.id.tvLinkTitle) as TextView
+        public val tvCommentScore = view.findViewById(R.id.tvCommentScore) as TextView
         public val tvCommentAge = view.findViewById(R.id.tvCommentAge) as TextView
         public val tvLinkSubreddit = view.findViewById(R.id.tvLinkSubreddit) as TextView
         public val tvCommentBody = view.findViewById(R.id.tvCommentBody) as TextView
 
         fun bindHolder(comment: UserHistoryComment) {
             tvLinkTitle.text = comment.link_title
+            tvCommentScore.text = mContext.getString(R.string.format_points, comment.score)
             tvCommentAge.text = GeneralUtils.returnFormattedTime(view.context, System.currentTimeMillis(), comment.created_utc)
             tvLinkSubreddit.text = comment.subreddit_name_prefixed
             tvCommentBody.text = GeneralUtils.returnFormattedStringFromHtml(comment.bodyHtml)

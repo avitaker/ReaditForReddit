@@ -44,7 +44,6 @@ import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 import com.avinashdavid.readitforreddit.UI.CommentRecordRecyclerAdapter;
 import com.avinashdavid.readitforreddit.UI.FragmentViewImage;
 import com.avinashdavid.readitforreddit.UI.GetCommentsAsyncTask;
-import com.avinashdavid.readitforreddit.UserHistoryDisplay.UserOverviewFragment;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;

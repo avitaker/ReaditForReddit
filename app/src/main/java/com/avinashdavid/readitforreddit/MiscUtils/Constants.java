@@ -45,7 +45,7 @@ public class Constants {
     public static final String ID_KEY = "id";
     public static final String SCORE_HIDDEN_KEY = "score_hidden";
     public static final String SCORE_KEY = "score";
-    public static final String BODY_HTML = "bodyHtml";
+    public static final String BODY_HTML = "body_html";
     public static final String AUTHOR_KEY = "author";
     public static final String REPLIES_KEY = "replies";
     public static final String TIME_CREATED_KEY = "created_utc";

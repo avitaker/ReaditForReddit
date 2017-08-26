@@ -1,19 +1,16 @@
-package com.avinashdavid.readitforreddit.NetworkUtils
+package com.avinashdavid.readitforreddit.User
 
 import android.app.IntentService
 import android.content.Context
 import android.content.Intent
 import com.android.volley.Request
 import com.android.volley.Response
-import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.avinashdavid.readitforreddit.MiscUtils.Constants
-import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils
-import com.avinashdavid.readitforreddit.UserHistoryDisplay.UserHistoryComment
+import com.avinashdavid.readitforreddit.NetworkUtils.NetworkSingleton
+import com.avinashdavid.readitforreddit.NetworkUtils.UriGenerator
 import com.google.gson.Gson
-import com.google.gson.JsonElement
 import com.orm.SugarRecord
-import org.json.JSONArray
 import org.json.JSONObject
 
 /**

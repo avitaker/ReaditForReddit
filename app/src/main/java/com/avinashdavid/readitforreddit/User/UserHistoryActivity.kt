@@ -1,6 +1,5 @@
-package com.avinashdavid.readitforreddit.UserHistoryDisplay
+package com.avinashdavid.readitforreddit.User
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle

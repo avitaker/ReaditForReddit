@@ -143,6 +143,7 @@ public class GetCommentsService extends IntentService {
         for (int i = 0; i < jsonObjects.size(); i++){
             JSONObject currentJsonObj = jsonObjects.get(i);
             CommentRecord commentObject = getChildrenCommentObjectsFromJsonDataObject(currentJsonObj, linkId);
+            if (commentObject == null) break;
             if (commentObject.depth!=DEPTH_MORE) {
                 commentObject.save();
             }
