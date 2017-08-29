@@ -15,15 +15,13 @@ import org.json.JSONObject
 import timber.log.Timber
 
 /**
- * Created by avinashdavid on 8/21/17.
+ * Created by avinashdavid on 8/28/17.
  */
-const val EXTRA_SERVICE_USER_ID = "userId"
 
-class GetUserCommentsService : IntentService("GetUserCommentsService") {
+class GetUserAboutService : IntentService("GetUserAboutService") {
     companion object {
-
-        fun loadUserComments(context: Context, userId: String) {
-            val intent = Intent(context, GetUserCommentsService::class.java)
+        fun loadUserAbout(context: Context, userId: String) {
+            val intent = Intent(context, GetUserAboutService::class.java)
             intent.putExtra(EXTRA_SERVICE_USER_ID, userId)
             context.startService(intent)
         }
@@ -32,37 +30,33 @@ class GetUserCommentsService : IntentService("GetUserCommentsService") {
     private var mUserId = ""
 
     override fun onHandleIntent(intent: Intent?) {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         mUserId = intent!!.getStringExtra(EXTRA_SERVICE_USER_ID)
 
-        val context : Context = this.applicationContext;
+        val context : Context = this.applicationContext
 
         val request = JsonObjectRequest(Request.Method.GET,
-                UriGenerator.getUriUserComments(mUserId).toString(),
+                UriGenerator.GetUriUserAbout(mUserId).toString(),
                 null, Response.Listener<JSONObject> { response ->
-            val children = response!!.getJSONObject("data")!!.getJSONArray("children")!!
+            val data = response!!.getJSONObject("data")!!
+            data.remove("id")
+            val dataString = data.toString();
             val gson: Gson = Gson()
-            SugarRecord.deleteAll(UserHistoryComment::class.java)
-            for (i in 0 until children.length()-1) {
-                val data = children.getJSONObject(i).getJSONObject("data")
-                data.remove("id")
-                val dataString = data.toString()
-                var userHistoryComment: UserHistoryComment
-                try {
-                    userHistoryComment = gson.fromJson(dataString, UserHistoryComment::class.java)
-                    userHistoryComment.save()
-                } catch (e : NumberFormatException) {
 
-                }
-            }
+            SugarRecord.deleteAll(UserAbout::class.java)
+
+            var userAbout : UserAbout
+            userAbout = gson.fromJson(dataString, UserAbout::class.java)
+            userAbout.save()
+
             val broadcast = Intent()
-            broadcast.action = Constants.BROADCAST_USER_COMMENTS_LOADED
+            broadcast.action = Constants.BROADCAST_USER_ABOUT_LOADED
             this.sendBroadcast(broadcast)},
                 Response.ErrorListener { error ->
-                    Timber.e(error, UriGenerator.getUriUserComments(mUserId).toString())
+                    Timber.e(error, UriGenerator.GetUriUserAbout(mUserId).toString())
+                    Timber.e(error)
                     val message = error.message
                     val errorIntent = Intent()
-                    errorIntent.action = Constants.BROADCAST_USER_COMMENTS_ERROR
+                    errorIntent.action = Constants.BROADCAST_USER_ABOUT_ERROR
                     errorIntent.putExtra(Constants.KEY_NETWORK_REQUEST_ERROR, message)
                     this.sendBroadcast(errorIntent)
                 })

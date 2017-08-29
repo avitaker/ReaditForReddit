@@ -7,15 +7,17 @@ import android.support.v7.app.AppCompatActivity
 import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils
 import com.avinashdavid.readitforreddit.MiscUtils.PreferenceUtils
 import com.avinashdavid.readitforreddit.R
+import kotlinx.android.synthetic.main.activity_user_history.*
 
 /**
  * Created by avinashdavid on 8/21/17.
  */
+const val EXTRA_USER_ID = "EXTRA_USER_ID"
+
 class UserHistoryActivity : AppCompatActivity() {
     companion object {
-        const val EXTRA_USER_ID = "EXTRA_USER_ID"
 
-        fun startUserHistorActivity(context: Context, userId : String) {
+        fun startUserHistoryActivity(context: Context, userId : String) {
             val intent: Intent = Intent(context, UserHistoryActivity::class.java)
             intent.putExtra(EXTRA_USER_ID, userId)
             context.startActivity(intent)
@@ -28,6 +30,10 @@ class UserHistoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         PreferenceUtils.onActivityCreateSetTheme(this)
         setContentView(R.layout.activity_user_history)
+        setSupportActionBar(this.my_toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setHomeButtonEnabled(true)
+
         if (intent.getStringExtra(EXTRA_USER_ID)!=null) userId = intent.getStringExtra(EXTRA_USER_ID)
         if (savedInstanceState != null) userId = savedInstanceState.getString(EXTRA_USER_ID)
 

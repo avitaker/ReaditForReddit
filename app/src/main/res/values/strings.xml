@@ -105,6 +105,10 @@
     <string name="error_loading_sidebar">Error occurred while loading sidebar content</string>
     <string name="pref_sidebar_default_value">@string/loading_sidebar</string>
 
+    <!--About User -->
+    <string name="format_user_nameAndAge">%1$s - %2$s</string>
+    <string name="format_user_karma">KARMA: %1$s / %2$s</string>
+
 
     <string-array name="sort_listing_options">
         <item>hot</item>

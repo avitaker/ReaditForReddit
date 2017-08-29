@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils
 import com.avinashdavid.readitforreddit.R
+import java.util.*
 
 /**
  * Created by avinashdavid on 8/24/17.
@@ -42,7 +43,7 @@ class UserCommentAdapter(context: Context, comments: List<UserHistoryComment>?):
         fun bindHolder(comment: UserHistoryComment) {
             tvLinkTitle.text = comment.link_title
             tvCommentScore.text = mContext.getString(R.string.format_points, comment.score)
-            tvCommentAge.text = GeneralUtils.returnFormattedTime(view.context, System.currentTimeMillis(), comment.created_utc)
+            tvCommentAge.text = GeneralUtils.returnFormattedTime(view.context, Calendar.getInstance(TimeZone.getTimeZone("UTC")).timeInMillis, comment.created_utc)
             tvLinkSubreddit.text = comment.subreddit_name_prefixed
             tvCommentBody.text = GeneralUtils.returnFormattedStringFromHtml(comment.bodyHtml)
         }
