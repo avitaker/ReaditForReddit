@@ -31,42 +31,76 @@ public class GeneralUtils {
         return (int)((millisecondsDifference/1000)/60)/60;
     }
 
-    public static String returnFormattedTime(Context context, long timeNow, float timeThen){
+    public static String returnFormattedTime(Context context, long timeNow, long timeThen){
         long millisecondsDifference = timeNow - (long)(timeThen*1000);
-        int num = 0;
-        if (millisecondsDifference<60000){
-            return context.getString(R.string.just_now);
-        } else if (millisecondsDifference>=60000 && millisecondsDifference<3.6e6){
+        double num = 0;
+        if (millisecondsDifference > 3.1556952e10) {
+            num = (millisecondsDifference/3.1556952e10);
+            if (num>1) {
+                return context.getString(R.string.format_yearselapsed, (int)num);
+            } else {
+                return context.getString(R.string.format_year, 1);
+            }
+        } else if (millisecondsDifference > 2.62975e9) {
+            num = (millisecondsDifference/2.62975e9);
+            if (num>1) {
+                return context.getString(R.string.format_monthselapsed, (int)num);
+            } else {
+                return context.getString(R.string.format_month, 1);
+            }
+        } else if (millisecondsDifference > 8.64e7) {
+            num = (millisecondsDifference/8.64e7);
+            if (num>1) {
+                return context.getString(R.string.format_dayselapsed, (int)num);
+            } else {
+                return context.getString(R.string.format_day, 1);
+            }
+        } else if (millisecondsDifference > 3.6e6) {
+            num = (millisecondsDifference/3.6e6);
+            if (num>1) {
+                return context.getString(R.string.format_hourselapsed, (int)num);
+            } else {
+                return context.getString(R.string.format_hour, 1);
+            }
+        } else if (millisecondsDifference>60000){
             return context.getString(R.string.format_minuteselapsed, (int)(millisecondsDifference/60000));
-        } else if (millisecondsDifference>=3.6e6 && millisecondsDifference<8.64e7){
-            num = (int)(millisecondsDifference/3.6e6);
-            if (num>1) {
-                return context.getString(R.string.format_hourselapsed, num);
-            } else {
-                return context.getString(R.string.format_hour, num);
-            }
-        } else if (millisecondsDifference>=8.64e7 && millisecondsDifference<6.048e8){
-            num = (int)(millisecondsDifference/8.64e7);
-            if (num>1) {
-                return context.getString(R.string.format_dayselapsed, num);
-            } else {
-                return context.getString(R.string.format_day, num);
-            }
-        } else if (millisecondsDifference>=6.048e8 && millisecondsDifference<3.1556952e10){
-            num = (int)(millisecondsDifference/6.048e8);
-            if (num>1) {
-                return context.getString(R.string.format_monthselapsed, num);
-            } else {
-                return context.getString(R.string.format_month, num);
-            }
         } else {
-            num = (int)(millisecondsDifference/3.1556952e10);
-            if (num>1) {
-                return context.getString(R.string.format_yearselapsed, num);
-            } else {
-                return context.getString(R.string.format_year, num);
-            }
+            return context.getString(R.string.just_now);
         }
+
+//        if (millisecondsDifference<60000){
+//            return context.getString(R.string.just_now);
+//        } else if (millisecondsDifference>=60000 && millisecondsDifference<3.6e6){
+//            return context.getString(R.string.format_minuteselapsed, (int)(millisecondsDifference/60000));
+//        } else if (millisecondsDifference>=3.6e6 && millisecondsDifference<8.64e7){
+//            num = (int)(millisecondsDifference/3.6e6);
+//            if (num>1) {
+//                return context.getString(R.string.format_hourselapsed, num);
+//            } else {
+//                return context.getString(R.string.format_hour, num);
+//            }
+//        } else if (millisecondsDifference>=8.64e7 && millisecondsDifference<6.048e8){
+//            num = (int)(millisecondsDifference/8.64e7);
+//            if (num>1) {
+//                return context.getString(R.string.format_dayselapsed, num);
+//            } else {
+//                return context.getString(R.string.format_day, num);
+//            }
+//        } else if (millisecondsDifference>=6.048e8 && millisecondsDifference<3.1556952e10){
+//            num = (int)(millisecondsDifference/6.048e8);
+//            if (num>1) {
+//                return context.getString(R.string.format_monthselapsed, num);
+//            } else {
+//                return context.getString(R.string.format_month, num);
+//            }
+//        } else {
+//            num = (int)(millisecondsDifference/3.1556952e10);
+//            if (num>1) {
+//                return context.getString(R.string.format_yearselapsed, num);
+//            } else {
+//                return context.getString(R.string.format_year, num);
+//            }
+//        }
     }
 
     @SuppressWarnings("deprecation")

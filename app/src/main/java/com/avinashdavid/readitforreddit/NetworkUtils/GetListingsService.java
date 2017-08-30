@@ -113,7 +113,7 @@ public class GetListingsService extends IntentService {
                                         String title = linkObject.getString(TITLE_KEY);
                                         int voteCount = linkObject.getInt(VOTE_KEY);
                                         int commentCount = linkObject.getInt(NUMBER_OF_COMMENTS_KEY);
-                                        float timeCreated = (float)linkObject.getDouble(TIME_CREATED_KEY);
+                                        long timeCreated = linkObject.getLong(TIME_CREATED_KEY);
                                         String domain = linkObject.getString(DOMAIN_KEY);
                                         String author = linkObject.getString(AUTHOR_KEY);
                                         String subreddit = linkObject.getString(SUBREDDIT_KEY);

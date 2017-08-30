@@ -24,7 +24,7 @@ public class MoreChildrenCommentRecord extends SugarRecord{
 
     public String parent;
 
-    public float createdTime;
+    public long createdTime;
 
     public int depth;
 
@@ -37,7 +37,7 @@ public class MoreChildrenCommentRecord extends SugarRecord{
     public MoreChildrenCommentRecord() {
     }
 
-    public MoreChildrenCommentRecord(long timestamp, String commentId, String linkId, boolean scoreHidden, int score, String author, String bodyHtml, String parent, float createdTime, int depth, boolean hasReplies, String authorFlairText, boolean isGilded, boolean isEdited) {
+    public MoreChildrenCommentRecord(long timestamp, String commentId, String linkId, boolean scoreHidden, int score, String author, String bodyHtml, String parent, long createdTime, int depth, boolean hasReplies, String authorFlairText, boolean isGilded, boolean isEdited) {
         this.timestamp = timestamp;
         this.commentId = commentId;
         this.linkId = linkId;

@@ -10,7 +10,7 @@ class UserHistoryComment() : SugarRecord() {
     @SerializedName("body_html")
     var bodyHtml: String = ""
     var score : Int = 0
-    var created_utc: Float = 0f
+    var created_utc: Long = 0
     var link_title: String = ""
     var link_url:  String = ""
     var link_author: String = ""
@@ -19,7 +19,7 @@ class UserHistoryComment() : SugarRecord() {
     var over_18: Boolean = false
     var num_comments: Int = 0
 
-    constructor(bodyHtml : String, score: Int, timestamp: Float, linkId:String, linkTitle : String, linkUrl:String, linkAuthor:String, linkSubredditName:String, linkNumComments:Int, linkNSFW : Boolean) : this() {
+    constructor(bodyHtml : String, score: Int, timestamp: Long, linkId:String, linkTitle : String, linkUrl:String, linkAuthor:String, linkSubredditName:String, linkNumComments:Int, linkNSFW : Boolean) : this() {
         this.bodyHtml = bodyHtml
         this.score = score
         this.created_utc = timestamp

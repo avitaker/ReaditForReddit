@@ -121,7 +121,7 @@ class UserOverviewFragment : Fragment() {
                     }
                     Constants.BROADCAST_USER_ABOUT_LOADED -> {
                         val userAbout = SugarRecord.listAll(UserAbout::class.java).last()
-                        val userAge: String = GeneralUtils.returnFormattedTime(activity, Calendar.getInstance(TimeZone.getTimeZone("UTC")).timeInMillis, userAbout.created_utc.toFloat())
+                        val userAge: String = GeneralUtils.returnFormattedTime(activity, Calendar.getInstance(TimeZone.getTimeZone("UTC")).timeInMillis, userAbout.created_utc)
                         fragmentView!!.tvUserHandleAndAge.text = getString(R.string.format_user_nameAndAge, userAbout.name, userAge)
                         fragmentView!!.tvUserKarma.text = getString(R.string.format_user_karma, userAbout.link_karma.toString(), userAbout.comment_karma.toString())
                     }

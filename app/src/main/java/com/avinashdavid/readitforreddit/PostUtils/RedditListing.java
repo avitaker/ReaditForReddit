@@ -23,7 +23,7 @@ public class RedditListing extends SugarRecord {
     public int commentsCount;
     public String author;
     public String subreddit;
-    public float timeCreated;
+    public long timeCreated;
 
     public String selftext_html;
 
@@ -42,7 +42,7 @@ public class RedditListing extends SugarRecord {
     public RedditListing() {
     }
 
-    public RedditListing(String postId, long timestamp, String title, int voteCount, int commentsCount, String author, String subreddit, float timeCreated, String selftext_html, String domain, String after, String url, String thumbnailUrl, boolean isGilded, boolean isNSFW) {
+    public RedditListing(String postId, long timestamp, String title, int voteCount, int commentsCount, String author, String subreddit, long timeCreated, String selftext_html, String domain, String after, String url, String thumbnailUrl, boolean isGilded, boolean isNSFW) {
         mPostId = postId;
         this.timestamp = timestamp;
         mTitle = title;

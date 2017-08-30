@@ -44,9 +44,8 @@ class GetUserAboutService : IntentService("GetUserAboutService") {
 
             SugarRecord.deleteAll(UserAbout::class.java)
 
-            var userAbout : UserAbout
-            userAbout = gson.fromJson(dataString, UserAbout::class.java)
-            userAbout.save()
+            val userAbout : UserAbout = gson.fromJson(dataString, UserAbout::class.java)
+            val save = userAbout.save()
 
             val broadcast = Intent()
             broadcast.action = Constants.BROADCAST_USER_ABOUT_LOADED

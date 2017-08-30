@@ -204,7 +204,7 @@ public class GetCommentsService extends IntentService {
                 String author = "";
                 String bodyRaw = replyData.getJSONArray(CHILDREN_KEY).toString().substring(1);
                 String body = bodyRaw.substring(0, bodyRaw.length()-1).replace("\"","");
-                float timecreated = (float)replyData.getInt(DEPTH_KEY);
+                long timecreated = replyData.getInt(DEPTH_KEY);
                 String parent = replyData.getString(PARENT_KEY);
                 boolean hasReplies = false;
                 String authorflair = "";
@@ -217,7 +217,7 @@ public class GetCommentsService extends IntentService {
                 int score = replyData.getInt(SCORE_KEY);
                 String author = replyData.getString(AUTHOR_KEY);
                 String body = replyData.getString(BODY_HTML);
-                float timecreated = (float) replyData.getLong(TIME_CREATED_KEY);
+                long timecreated = replyData.getLong(TIME_CREATED_KEY);
                 String parent = replyData.getString(PARENT_KEY);
                 int depth = replyData.getInt(DEPTH_KEY);
                 boolean hasReplies = !replyData.get(REPLIES_KEY).toString().equals("");
