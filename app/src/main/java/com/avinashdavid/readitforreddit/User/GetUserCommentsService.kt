@@ -17,7 +17,7 @@ import timber.log.Timber
 /**
  * Created by avinashdavid on 8/21/17.
  */
-const val EXTRA_SERVICE_USER_ID = "userId"
+const val EXTRA_SERVICE_USER_ID = "mUserId"
 
 class GetUserCommentsService : IntentService("GetUserCommentsService") {
     companion object {

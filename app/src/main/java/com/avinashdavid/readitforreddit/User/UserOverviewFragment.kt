@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import com.avinashdavid.readitforreddit.MiscUtils.Constants
 import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils
 import com.avinashdavid.readitforreddit.MiscUtils.PreferenceUtils
+import com.avinashdavid.readitforreddit.MiscUtils.prepareLinear
 import com.avinashdavid.readitforreddit.R
 import com.orm.SugarRecord
 import kotlinx.android.synthetic.main.activity_user_history.*
@@ -27,13 +28,18 @@ import java.util.*
  * Created by avinashdavid on 8/21/17.
  */
 private const val KEY_USER_ID = "keyUserId"
+private const val KEY_FRAGMENT_TYPE = "keyFragmentType"
 
 class UserOverviewFragment : Fragment() {
     companion object {
+        const val TYPE_OVERVIEW = 0
+        const val TYPE_COMMENTS = 1
+        const val TYPE_SUBMITTED = 2
 
-        fun newInstance(userId : String): UserOverviewFragment {
+        fun newInstance(userId : String, fragmentType: Int = TYPE_COMMENTS): UserOverviewFragment {
             val args : Bundle = Bundle()
             args.putString(KEY_USER_ID, userId)
+            args.putInt(KEY_FRAGMENT_TYPE, fragmentType)
 
             val fragment = UserOverviewFragment()
             fragment.arguments = args
@@ -44,6 +50,7 @@ class UserOverviewFragment : Fragment() {
     var fragmentView : View? = null
 
     var userId : String? = null
+    var fragmentType = 0
 
     var rvUserOverview: RecyclerView? = null
     var userCommentAdapter: UserCommentAdapter? = null
@@ -55,6 +62,7 @@ class UserOverviewFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userId = arguments.getString(KEY_USER_ID)
+        fragmentType = arguments.getInt(KEY_FRAGMENT_TYPE)
         if (savedInstanceState!=null) userId = savedInstanceState.getString(KEY_USER_ID)
     }
 
@@ -62,9 +70,8 @@ class UserOverviewFragment : Fragment() {
         fragmentView = inflater?.inflate(R.layout.fragment_user_overview, container, false)
 
         rvUserOverview = fragmentView!!.findViewById(R.id.rvUserOverview) as RecyclerView
-        val layoutManager = LinearLayoutManager(activity)
-        rvUserOverview!!.layoutManager = layoutManager
-        rvUserOverview!!.addItemDecoration(DividerItemDecoration(activity, layoutManager.orientation))
+
+        rvUserOverview!!.prepareLinear(activity, true)
 
         return fragmentView
     }
@@ -72,17 +79,15 @@ class UserOverviewFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         setupBroadastReceiver()
-        loadUserAbout(userId!!)
-        loadComments(userId!!)
     }
 
     override fun onResume() {
         super.onResume()
         mIntentFilter.addAction(Constants.BROADCAST_USER_COMMENTS_LOADED)
         mIntentFilter.addAction(Constants.BROADCAST_USER_COMMENTS_ERROR)
-        mIntentFilter.addAction(Constants.BROADCAST_USER_ABOUT_LOADED)
-        mIntentFilter.addAction(Constants.BROADCAST_USER_ABOUT_ERROR)
         activity.registerReceiver(mBroadcastReceiver!!, mIntentFilter)
+
+        if (fragmentType == TYPE_COMMENTS) loadComments(userId!!)
     }
 
     override fun onPause() {
@@ -119,21 +124,6 @@ class UserOverviewFragment : Fragment() {
                         })
                         errorSnack.show()
                     }
-                    Constants.BROADCAST_USER_ABOUT_LOADED -> {
-                        val userAbout = SugarRecord.listAll(UserAbout::class.java).last()
-                        val userAge: String = GeneralUtils.returnFormattedTime(activity, Calendar.getInstance(TimeZone.getTimeZone("UTC")).timeInMillis, userAbout.created_utc)
-                        fragmentView!!.tvUserHandleAndAge.text = getString(R.string.format_user_nameAndAge, userAbout.name, userAge)
-                        fragmentView!!.tvUserKarma.text = getString(R.string.format_user_karma, userAbout.link_karma.toString(), userAbout.comment_karma.toString())
-                    }
-                    Constants.BROADCAST_USER_ABOUT_ERROR -> {
-                        val errorSnack: Snackbar = PreferenceUtils.getThemedSnackbar(activity, R.id.activity_user_history, "Error loading user information", Snackbar.LENGTH_INDEFINITE);
-                        errorSnack.setAction("Refresh", object: View.OnClickListener {
-                            override fun onClick(v: View?) {
-                                loadUserAbout(userId!!)
-                            }
-                        })
-                        errorSnack.show()
-                    }
                 }
             }
         }
@@ -141,9 +131,5 @@ class UserOverviewFragment : Fragment() {
 
     fun loadComments(userId: String) {
         GetUserCommentsService.loadUserComments(activity, userId)
-    }
-
-    fun loadUserAbout(userId: String) {
-        GetUserAboutService.loadUserAbout(activity, userId)
     }
 }
