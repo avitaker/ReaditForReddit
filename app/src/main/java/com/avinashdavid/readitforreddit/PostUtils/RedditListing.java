@@ -7,6 +7,12 @@ import com.avinashdavid.readitforreddit.Data.ReaditContract;
 import com.google.gson.annotations.SerializedName;
 import com.orm.SugarRecord;
 
+import org.json.JSONObject;
+
+import java.util.Timer;
+
+import timber.log.Timber;
+
 /**
  * Created by avinashdavid on 3/17/17.
  * This class extends ORM storage object, and contains all the relevant information for a Reddit listing (post)
@@ -69,6 +75,26 @@ public class RedditListing extends SugarRecord {
         this.thumbnailUrl = thumbnailUrl;
         this.isGilded = isGilded;
         this.isNSFW = isNSFW;
+    }
+
+    public RedditListing(JSONObject linkObject){
+        try {
+            this.isNSFW = Boolean.valueOf(linkObject.getString("over_18"));
+            this.mPostId = linkObject.getString("id");
+            this.mTitle = linkObject.getString("title");
+            this.voteCount = linkObject.getInt("score");
+            this.commentsCount = linkObject.getInt("num_comments");
+            this.timeCreated = linkObject.getLong("created_utc");
+            this.domain = linkObject.getString("domain");
+            this.author = linkObject.getString("author");
+            this.subreddit = linkObject.getString("subreddit");
+            this.url = linkObject.getString("url");
+            this.selftext_html = linkObject.getString("selftext_html");
+            this.thumbnailUrl = linkObject.getString("thumbnail");
+            this.isGilded = linkObject.getInt("gilded")>0;
+        } catch (Exception e) {
+            Timber.e(e);
+        }
     }
 
     public static ContentValues makeContentValues(@NonNull RedditListing redditListing){

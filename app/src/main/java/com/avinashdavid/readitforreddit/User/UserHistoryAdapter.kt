@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.avinashdavid.readitforreddit.CommentsActivity
 import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils
 import com.avinashdavid.readitforreddit.R
 import com.avinashdavid.readitforreddit.UI.RedditPostRecyclerAdapter
@@ -77,6 +78,11 @@ class UserHistoryAdapter(context: Context, things: MutableList<SugarRecord>): Re
             tvCommentAge.text = GeneralUtils.returnFormattedTime(view.context, Calendar.getInstance(TimeZone.getTimeZone("UTC")).timeInMillis, comment.created_utc)
             tvLinkSubreddit.text = comment.subreddit_name_prefixed
             tvCommentBody.text = GeneralUtils.returnFormattedStringFromHtml(comment.bodyHtml)
+            itemView.setOnClickListener (object : View.OnClickListener{
+                override fun onClick(v: View?) {
+                    CommentsActivity.startCommentActivity(mContext, comment.link_id);
+                }
+            })
         }
     }
 }

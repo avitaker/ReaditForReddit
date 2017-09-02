@@ -80,7 +80,10 @@ class UserOverviewFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val actions = listOf<String>(Constants.BROADCAST_USER_COMMENTS_LOADED, Constants.BROADCAST_USER_COMMENTS_ERROR, Constants.BROADCAST_USER_OVERVIEW_LOADED, Constants.BROADCAST_USER_OVERVIEW_ERROR)
+        val actions = listOf(Constants.BROADCAST_USER_COMMENTS_LOADED,
+                Constants.BROADCAST_USER_COMMENTS_ERROR,
+                Constants.BROADCAST_USER_OVERVIEW_LOADED,
+                Constants.BROADCAST_USER_OVERVIEW_ERROR)
         mIntentFilter.addActions(actions)
         activity.registerReceiver(mBroadcastReceiver!!, mIntentFilter)
 

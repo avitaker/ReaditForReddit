@@ -187,6 +187,7 @@ public class UriGenerator {
 
     public static Uri getUriCommentsForArticle(@Nullable String subreddit, String articleId, @Nullable String sortOrder){
         Uri.Builder builder = baseListingUri.buildUpon();
+        if (articleId.contains("t3_")) articleId = articleId.substring(3);
         if (null!=subreddit){
             builder.appendPath(subredditMarkerString).appendPath(subreddit);
         }

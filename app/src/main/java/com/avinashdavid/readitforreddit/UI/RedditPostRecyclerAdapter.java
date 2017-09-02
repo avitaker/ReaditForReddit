@@ -120,7 +120,7 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
 //                        } else {
 //                            startIntentRegular(mMainActivity, redditPost.mPostId);
 //                        }
-                        startIntentRegular(mMainActivity, redditPost.mPostId);
+                        CommentsActivity.startCommentActivity(mMainActivity, redditPost.mPostId);
                     }
                 }
             });
@@ -368,13 +368,6 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
         Pair<View, String> p3 = Pair.create(v, v.getTransitionName());
         ActivityOptionsCompat options1 = ActivityOptionsCompat.makeSceneTransitionAnimation(c, p3);
         c.startActivity(intent, options1.toBundle());
-    }
-
-    void startIntentRegular(Context c, String postId){
-        Intent intent = new Intent(c, CommentsActivity.class);
-        intent.putExtra(CommentsActivity.EXTRA_POST_ID, postId);
-        c.startActivity(intent);
-        ((AppCompatActivity)c).overridePendingTransition(R.anim.enter_right, R.anim.slide_to_left);
     }
 
     void startCommentsService(Context c, String postId){

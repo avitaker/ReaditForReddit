@@ -15,6 +15,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
 import com.avinashdavid.readitforreddit.PostUtils.CommentRecord;
+import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 import com.avinashdavid.readitforreddit.R;
 
 import org.json.JSONArray;
@@ -85,12 +86,16 @@ public class GetCommentsService extends IntentService {
                         CommentRecord.deleteAll(CommentRecord.class);
                         try {
                             final ArrayList<JSONObject> parentReplyJsonObjects = new ArrayList<>();
-                            final String linkId = response.getJSONObject(0).getJSONObject(DATA_KEY).getJSONArray(CHILDREN_KEY).getJSONObject(0).getJSONObject(DATA_KEY).getString(ID_KEY);
+                            final RedditListing listing = new RedditListing(response.getJSONObject(0).getJSONObject(DATA_KEY).getJSONArray(CHILDREN_KEY).getJSONObject(0).getJSONObject(DATA_KEY));
+                            final String linkId = listing.mPostId;
                             JSONArray childrenJsonArray = response.getJSONObject(1).getJSONObject(DATA_KEY).getJSONArray(CHILDREN_KEY);
                             parentReplyJsonObjects.addAll(getCommentDataJsonObjectsFromChildrenJsonArray(childrenJsonArray));
                             AsyncTask asyncTask = new AsyncTask() {
                                 @Override
                                 protected Object doInBackground(Object[] params) {
+                                    if(RedditListing.find(RedditListing.class, "m_post_id = ?", linkId).size()  < 1) {
+                                        listing.save();
+                                    }
                                     makeCommentObjectsFromJsonObjects(context, parentReplyJsonObjects, linkId);
                                     return true;
                                 }

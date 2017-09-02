@@ -203,7 +203,7 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
                 if (getItemViewType(position)<0){
                     ((MoreHolder) holder).bindMore(commentObject, position);
                 } else {
-                    ((CommentsHolder) holder).bindComment(commentObject, mRedditListing.author);
+                    ((CommentsHolder) holder).bindComment(commentObject, mRedditListing != null? mRedditListing.author : "");
                 }
             }
         } else {
@@ -212,7 +212,7 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
                 if (getItemViewType(position)<0){
                     ((MoreHolder) holder).bindMore(commentObject, position);
                 } else {
-                    ((CommentsHolder) holder).bindComment(commentObject, mRedditListing.author);
+                    ((CommentsHolder) holder).bindComment(commentObject, mRedditListing != null? mRedditListing.author : "");
                 }
             }
         }

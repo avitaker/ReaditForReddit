@@ -45,6 +45,7 @@ import com.avinashdavid.readitforreddit.UI.CommentRecordRecyclerAdapter;
 import com.avinashdavid.readitforreddit.UI.FragmentViewImage;
 import com.avinashdavid.readitforreddit.UI.GetCommentsAsyncTask;
 import com.bumptech.glide.Glide;
+import com.orm.SugarRecord;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,6 +132,13 @@ public class CommentsActivity extends AppCompatActivity
 
     private GestureDetector gestureDetector;
 
+    public static void startCommentActivity(Context c, String postId) {
+        Intent intent = new Intent(c, CommentsActivity.class);
+        intent.putExtra(CommentsActivity.EXTRA_POST_ID, postId);
+        c.startActivity(intent);
+        ((AppCompatActivity)c).overridePendingTransition(R.anim.enter_right, R.anim.slide_to_left);
+    }
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -192,6 +200,9 @@ public class CommentsActivity extends AppCompatActivity
 //                setTransitionNamePost(findViewById(R.id.post_info_container), "");
 ////                setTransitionNamePostBg(findViewById(R.id.post_info_toolbar), "");
 //            }
+            if  (mPostId.contains("t3_")) {
+                mPostId = mPostId.substring(3);
+            }
             initializePostInfo(mPostId);
         }
         mReceiver = new BroadcastReceiver() {
@@ -201,6 +212,9 @@ public class CommentsActivity extends AppCompatActivity
                 if (Constants.BROADCAST_COMMENTS_LOADED.equals(action)) {
                     UpdateCommentsAsyncTask updateCommentsAsyncTask = new UpdateCommentsAsyncTask();
                     updateCommentsAsyncTask.execute(mPostId);
+                    mListing = RedditListing.find(RedditListing.class, "m_post_id = ?", mPostId).get(0);
+
+                    setToolbarPostInfo(mListing);
                     mCommentsRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener(){
                         @Override
                         public void onScrolled(RecyclerView recyclerView, int dx, int dy){
@@ -490,11 +504,12 @@ public class CommentsActivity extends AppCompatActivity
         selftext_textview = (TextView)findViewById(R.id.selftext_container);
         thumbnailImgView = (ImageView)findViewById(R.id.post_thumbnail);
 
-        mListing = RedditListing.find(RedditListing.class, "m_post_id = ?", postId).get(0);
+        List<RedditListing> listings = RedditListing.find(RedditListing.class, "m_post_id = ?", postId);
+        if (listings.size() > 0) {
+            mListing = RedditListing.find(RedditListing.class, "m_post_id = ?", postId).get(0);
 
-
-        setToolbarPostInfo(mListing);
-
+            setToolbarPostInfo(mListing);
+        }
     }
 
     void setToolbarPostInfo(final RedditListing listing){
