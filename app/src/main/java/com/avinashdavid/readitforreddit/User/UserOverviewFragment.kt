@@ -13,10 +13,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.avinashdavid.readitforreddit.MiscUtils.Constants
-import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils
-import com.avinashdavid.readitforreddit.MiscUtils.PreferenceUtils
-import com.avinashdavid.readitforreddit.MiscUtils.prepareLinear
+import com.avinashdavid.readitforreddit.MiscUtils.*
 import com.avinashdavid.readitforreddit.R
 import com.orm.SugarRecord
 import kotlinx.android.synthetic.main.activity_user_history.*
@@ -83,11 +80,18 @@ class UserOverviewFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        mIntentFilter.addAction(Constants.BROADCAST_USER_COMMENTS_LOADED)
-        mIntentFilter.addAction(Constants.BROADCAST_USER_COMMENTS_ERROR)
+        val actions = listOf<String>(Constants.BROADCAST_USER_COMMENTS_LOADED, Constants.BROADCAST_USER_COMMENTS_ERROR, Constants.BROADCAST_USER_OVERVIEW_LOADED, Constants.BROADCAST_USER_OVERVIEW_ERROR)
+        mIntentFilter.addActions(actions)
         activity.registerReceiver(mBroadcastReceiver!!, mIntentFilter)
 
-        if (fragmentType == TYPE_COMMENTS) loadComments(userId!!)
+        when (fragmentType) {
+            TYPE_COMMENTS -> {
+                loadComments(userId!!)
+            }
+            TYPE_OVERVIEW -> {
+                loadOverview(userId!!)
+            }
+        }
     }
 
     override fun onPause() {
@@ -124,6 +128,20 @@ class UserOverviewFragment : Fragment() {
                         })
                         errorSnack.show()
                     }
+                    Constants.BROADCAST_USER_OVERVIEW_LOADED -> {
+                        val list = UserThingsSingleton.listOfThings
+                        val userOverviewAdapter = UserHistoryAdapter(activity, list)
+                        rvUserOverview!!.adapter = userOverviewAdapter
+                    }
+                    Constants.BROADCAST_USER_OVERVIEW_ERROR -> {
+                        val errorSnack: Snackbar = PreferenceUtils.getThemedSnackbar(activity, R.id.activity_user_history, "Error loading user history", Snackbar.LENGTH_INDEFINITE);
+                        errorSnack.setAction("Refresh", object: View.OnClickListener {
+                            override fun onClick(v: View?) {
+                                loadComments(userId!!)
+                            }
+                        })
+                        errorSnack.show()
+                    }
                 }
             }
         }
@@ -131,5 +149,9 @@ class UserOverviewFragment : Fragment() {
 
     fun loadComments(userId: String) {
         GetUserCommentsService.loadUserComments(activity, userId)
+    }
+
+    fun loadOverview(userId: String) {
+        GetUserOverviewService.loadUserOverview(activity, userId)
     }
 }

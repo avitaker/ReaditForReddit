@@ -1,6 +1,7 @@
 package com.avinashdavid.readitforreddit.MiscUtils
 
 import android.content.Context
+import android.content.IntentFilter
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -14,4 +15,8 @@ fun RecyclerView.prepareLinear(context: Context, showDividers: Boolean = false) 
         val lm = layoutManager as LinearLayoutManager
         addItemDecoration(DividerItemDecoration(context, lm.orientation))
     }
+}
+
+fun IntentFilter.addActions(actions: List<String>) {
+    actions.forEach { i -> addAction(i) }
 }

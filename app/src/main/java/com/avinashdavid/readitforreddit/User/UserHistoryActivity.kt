@@ -90,7 +90,7 @@ class UserHistoryActivity : AppCompatActivity() {
     }
 
     fun setUpFragments(userId: String):Unit {
-        val fragment : UserOverviewFragment = UserOverviewFragment.newInstance(userId)
+        val fragment : UserOverviewFragment = UserOverviewFragment.newInstance(userId, UserOverviewFragment.TYPE_OVERVIEW)
         GeneralUtils.replaceFragment(this, R.id.flContainer, fragment, "UserHistory")
     }
 

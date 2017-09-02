@@ -15,53 +15,75 @@ import org.json.JSONObject
 import timber.log.Timber
 
 /**
- * Created by avinashdavid on 8/21/17.
+ * Created by avinashdavid on 8/30/17.
  */
-const val EXTRA_SERVICE_USER_ID = "mUserId"
-
-class GetUserCommentsService : IntentService("GetUserCommentsService") {
+const val EXTRA_USER_OVERVIEW_MORE = "EXTRA_USER_OVERVIEW_MORE"
+class GetUserOverviewService : IntentService("GetUserOverviewService") {
     companion object {
-
-        fun loadUserComments(context: Context, userId: String) {
-            val intent = Intent(context, GetUserCommentsService::class.java)
+        fun loadUserOverview(context: Context, userId: String, loadMore: Boolean = false) {
+            val intent = Intent(context, GetUserOverviewService::class.java)
             intent.putExtra(EXTRA_SERVICE_USER_ID, userId)
+            intent.putExtra(EXTRA_USER_OVERVIEW_MORE, loadMore)
             context.startService(intent)
         }
     }
 
     private var mUserId = ""
+    private var mLoadMore = false
 
     override fun onHandleIntent(intent: Intent?) {
         mUserId = intent!!.getStringExtra(EXTRA_SERVICE_USER_ID)
+        mLoadMore = intent.getBooleanExtra(EXTRA_USER_OVERVIEW_MORE, false)
 
         val context : Context = this.applicationContext;
 
         val request = JsonObjectRequest(Request.Method.GET,
-                UriGenerator.getUriUserComments(mUserId).toString(),
+                UriGenerator.getUriUserOverview(mUserId).toString(),
                 null, Response.Listener<JSONObject> { response ->
             val children = response!!.getJSONObject("data")!!.getJSONArray("children")!!
             val gson: Gson = Gson()
             SugarRecord.deleteAll(UserHistoryComment::class.java)
+            SugarRecord.deleteAll(UserHistoryListing::class.java)
+
+            val things = mutableListOf<SugarRecord>()
+
             for (i in 0 until children.length()) {
-                val data = children.getJSONObject(i).getJSONObject("data")
+                val obj = children.getJSONObject(i)
+                val kind = obj.getString("kind")
+                val data = obj.getJSONObject("data")
                 data.remove("id")
                 val dataString = data.toString()
-                var userHistoryComment: UserHistoryComment
-                try {
-                    userHistoryComment = gson.fromJson(dataString, UserHistoryComment::class.java)
-                    userHistoryComment.save()
-                } catch (e : NumberFormatException) {
+                if (kind.equals("t1")) {
+                    var userHistoryComment: UserHistoryComment
+                    try {
+                        userHistoryComment = gson.fromJson(dataString, UserHistoryComment::class.java)
+                        userHistoryComment.save()
+                        things.add(userHistoryComment)
+                    } catch (e : NumberFormatException) {
 
+                    }
+                } else if (kind.equals("t3")){
+                    try {
+                        val userHistoryListing = gson.fromJson(dataString, UserHistoryListing::class.java)
+                        userHistoryListing.save()
+                        things.add(userHistoryListing)
+                    } catch (e: NumberFormatException) {
+
+                    }
                 }
             }
+
+            if (mLoadMore) UserThingsSingleton.addToThings(things)
+            else UserThingsSingleton.changeThings(things)
+
             val broadcast = Intent()
-            broadcast.action = Constants.BROADCAST_USER_COMMENTS_LOADED
+            broadcast.action = Constants.BROADCAST_USER_OVERVIEW_LOADED
             this.sendBroadcast(broadcast)},
                 Response.ErrorListener { error ->
                     Timber.e(error, UriGenerator.getUriUserComments(mUserId).toString())
                     val message = error.message
                     val errorIntent = Intent()
-                    errorIntent.action = Constants.BROADCAST_USER_COMMENTS_ERROR
+                    errorIntent.action = Constants.BROADCAST_USER_OVERVIEW_ERROR
                     errorIntent.putExtra(Constants.KEY_NETWORK_REQUEST_ERROR, message)
                     this.sendBroadcast(errorIntent)
                 })

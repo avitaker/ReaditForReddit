@@ -17,12 +17,21 @@ public class RedditListing extends SugarRecord {
 
     public long timestamp;
 
+    @SerializedName("title")
     public String mTitle;
+
+    @SerializedName("score")
     public int voteCount;
 
+    @SerializedName("num_comments")
     public int commentsCount;
+
     public String author;
+
+    @SerializedName("subreddit_name_prefixed")
     public String subreddit;
+
+    @SerializedName("created_utc")
     public long timeCreated;
 
     public String selftext_html;
@@ -30,8 +39,10 @@ public class RedditListing extends SugarRecord {
     public String domain;
 
     public String after;
+
     public String url;
 
+    @SerializedName("thumbnail")
     public String thumbnailUrl;
 
     public boolean isGilded;
@@ -43,9 +54,9 @@ public class RedditListing extends SugarRecord {
     }
 
     public RedditListing(String postId, long timestamp, String title, int voteCount, int commentsCount, String author, String subreddit, long timeCreated, String selftext_html, String domain, String after, String url, String thumbnailUrl, boolean isGilded, boolean isNSFW) {
-        mPostId = postId;
+        this.mPostId = postId;
         this.timestamp = timestamp;
-        mTitle = title;
+        this.mTitle = title;
         this.voteCount = voteCount;
         this.commentsCount = commentsCount;
         this.author = author;

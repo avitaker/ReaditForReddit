@@ -158,10 +158,11 @@ public class CommentsActivity extends AppCompatActivity
         GPSUtils.setScreenName(this, "CommentsActivity");
         Timber.d("oncreate");
         mIntent = getIntent();
-        if (mIntent==null && null == savedInstanceState.getString(EXTRA_POST_ID)){
+        if (mIntent.getStringExtra(EXTRA_POST_ID)==null && null == savedInstanceState.getString(EXTRA_POST_ID)){
             //TODO set empty view
             Timber.d("nothing here");
-        } else if (mIntent != null) {
+            finish();
+        } else if (mIntent.getStringExtra(EXTRA_POST_ID) != null) {
             mPostId = mIntent.getStringExtra(EXTRA_POST_ID);
         }
 

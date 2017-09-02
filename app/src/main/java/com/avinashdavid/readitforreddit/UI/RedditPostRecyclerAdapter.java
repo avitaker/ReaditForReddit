@@ -27,9 +27,12 @@ import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils;
 import com.avinashdavid.readitforreddit.NetworkUtils.GetCommentsService;
 import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 import com.avinashdavid.readitforreddit.R;
+import com.avinashdavid.readitforreddit.User.UserHistoryListing;
 import com.bumptech.glide.Glide;
 
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import timber.log.Timber;
 
@@ -208,6 +211,7 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
         ColorStateList ogColor;
 
         private RedditListing mRedditPost;
+        private UserHistoryListing mUserHistoryListing;
 
         public ListingHolder(View itemView, boolean withImage) {
             super(itemView);
@@ -234,6 +238,58 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
             redColor = GeneralUtils.getSDKSensitiveColor(mContext, android.R.color.holo_red_dark);
         }
 
+        public void bindUserHistoryListing(UserHistoryListing listing, boolean imageLink) {
+            mUserHistoryListing = listing;
+
+            voteCount_textview.setText(Integer.toString(listing.getScore()));
+            author_textview.setText(listing.getAuthor());
+            subreddit_textview.setText(listing.getSubreddit_name_prefixed());
+            listTitle_textview.setText(GeneralUtils.returnFormattedStringFromHtml(listing.getTitle()));
+            commentCount_textview.setText(mContext.getString(R.string.format_numberofcomments, listing.getNum_comments()));
+            domain_textview.setText(listing.getDomain());
+            timecreated_textview.setText(GeneralUtils.returnFormattedTime(mContext, Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis(), listing.getCreated_utc()));
+            if (thumbnail_imageview!=null) {
+//                Picasso picasso = Picasso.with(mContext);
+                if (imageLink){
+                    final String linkUrl = mRedditPost.url;
+                    thumbnail_imageview.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            FragmentViewImage fragmentViewImage = FragmentViewImage.getImageViewFragment(linkUrl);
+                            FragmentManager fragmentManager = ((AppCompatActivity)mContext).getSupportFragmentManager();
+                            FragmentTransaction ft = fragmentManager.beginTransaction();
+                            Fragment prev = fragmentManager.findFragmentByTag(FragmentViewImage.TAG_IMAGE_FRAGMENT);
+                            if (prev != null) {
+                                ft.remove(prev);
+                            }
+                            ft.addToBackStack(null);
+
+                            fragmentViewImage.show(ft, FragmentViewImage.TAG_IMAGE_FRAGMENT);
+                        }
+                    });
+                } else {
+
+                }
+                Glide.with(mContext).load(listing.getThumbnail()).into(thumbnail_imageview);
+            }
+
+//            if (listing.isGilded){
+//                author_textview.setTextColor(goldColor);
+//            } else {
+//                if (author_textview.getCurrentTextColor() == goldColor) {
+//                    author_textview.setTextColor(GeneralUtils.getThemeAccentColor(mContext));
+//                }
+//            }
+
+            if (listing.getOver_18()){
+                listTitle_textview.setTextColor(redColor);
+            } else {
+                if (listTitle_textview.getCurrentTextColor() == redColor){
+                    listTitle_textview.setTextColor(ogColor);
+                }
+            }
+        }
 
         public void bindListing(RedditListing listing, boolean imageLink){
             mRedditPost = listing;
