@@ -69,6 +69,7 @@
         <service android:name=".User.GetUserCommentsService"/>
         <service android:name=".User.GetUserAboutService"/>
         <service android:name=".User.GetUserOverviewService"/>
+        <service android:name=".User.GetUserSubmittedService"/>
 
         <activity
             android:name=".ManageSubredditsActivity"

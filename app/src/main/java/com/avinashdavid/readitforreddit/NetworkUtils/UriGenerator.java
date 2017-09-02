@@ -16,6 +16,7 @@ public class UriGenerator {
     private static final String PATH_SEGMENT_USER = "user";
     private static final String PATH_SEGMENT_ABOUT = "about";
     private static final String PATH_SEGMENT_OVERVIEW = "overview";
+    private static final String PATH_SEGMENT_SUBMITTED = "submitted";
     private static final String KEY_SORT = "sort";
     private static final String subredditMarkerString = "r";
     private static final String KEY_SUBREDDITS = "subreddits";
@@ -228,6 +229,12 @@ public class UriGenerator {
     public static String getUriUserOverview(@NonNull String userId) {
         Uri.Builder builder = baseListingUri.buildUpon();
         builder.appendPath(PATH_SEGMENT_USER).appendPath(userId).appendPath(PATH_SEGMENT_OVERVIEW);
+        return builder.build().toString() + ".json";
+    }
+
+    public static String getUriUserSubmitted(@NonNull String userId){
+        Uri.Builder builder = baseListingUri.buildUpon();
+        builder.appendPath(PATH_SEGMENT_USER).appendPath(userId).appendPath(PATH_SEGMENT_SUBMITTED);
         return builder.build().toString() + ".json";
     }
 

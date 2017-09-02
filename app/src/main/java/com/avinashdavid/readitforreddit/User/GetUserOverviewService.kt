@@ -80,7 +80,7 @@ class GetUserOverviewService : IntentService("GetUserOverviewService") {
             broadcast.action = Constants.BROADCAST_USER_OVERVIEW_LOADED
             this.sendBroadcast(broadcast)},
                 Response.ErrorListener { error ->
-                    Timber.e(error, UriGenerator.getUriUserComments(mUserId).toString())
+                    Timber.e(error, UriGenerator.getUriUserOverview(mUserId).toString())
                     val message = error.message
                     val errorIntent = Intent()
                     errorIntent.action = Constants.BROADCAST_USER_OVERVIEW_ERROR

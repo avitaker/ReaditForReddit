@@ -90,8 +90,17 @@ class UserHistoryActivity : AppCompatActivity() {
     }
 
     fun setUpFragments(userId: String):Unit {
-        val fragment : UserOverviewFragment = UserOverviewFragment.newInstance(userId, UserOverviewFragment.TYPE_OVERVIEW)
-        GeneralUtils.replaceFragment(this, R.id.flContainer, fragment, "UserHistory")
+        val submitted : UserOverviewFragment = UserOverviewFragment.newInstance(userId, UserOverviewFragment.TYPE_SUBMITTED)
+        val comments : UserOverviewFragment = UserOverviewFragment.newInstance(userId, UserOverviewFragment.TYPE_COMMENTS)
+        val overview : UserOverviewFragment = UserOverviewFragment.newInstance(userId, UserOverviewFragment.TYPE_OVERVIEW)
+
+        val fragments = listOf(overview, comments, submitted)
+        val pagerAdapter = UserPageFragmentPagerAdapter(supportFragmentManager, this, fragments)
+        vpUSerPages.offscreenPageLimit = 3
+        vpUSerPages.adapter = pagerAdapter
+        tlUserPages.setupWithViewPager(vpUSerPages)
+
+//        GeneralUtils.replaceFragment(this, R.id.flContainer, submitted, "UserHistory")
     }
 
     fun loadUserAbout(userId: String) {

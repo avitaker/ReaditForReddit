@@ -31,6 +31,9 @@ public class Constants {
     public static final String BROADCAST_USER_OVERVIEW_LOADED = "com.avinashdavid.readitforreddit.BROADCAST_USEROVERVIEW";
     public static final String BROADCAST_USER_OVERVIEW_ERROR = "com.avinashdavid.readitforreddit.BROADCAST_USEROVERVIEW_ERROR";
 
+    public static final String BROADCAST_USER_SUBMITTED_LOADED = "com.avinashdavid.readitforreddit.BROADCAST_USERSUBMITTED";
+    public static final String BROADCAST_USER_SUBMITTED_ERROR = "com.avinashdavid.readitforreddit.BROADCAST_USERSUBMITTED_ERROR";
+
     public static final String BROADCAST_USER_ABOUT_LOADED = "com.avinashdavid.readitforreddit.BROADCAST_USER_ABOUT_LOADED";
     public static final String BROADCAST_USER_ABOUT_ERROR = "com.avinashdavid.readitforreddit.BROADCAST_USER_ABOUT_ERROR";
 

@@ -80,6 +80,7 @@ public class PostOptionsDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 UserHistoryActivity.Companion.startUserHistoryActivity(getActivity(), mAuthor);
+                dismiss();
             }
         });
 
