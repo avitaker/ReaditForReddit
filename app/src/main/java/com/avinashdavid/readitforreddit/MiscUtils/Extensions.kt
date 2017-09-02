@@ -18,5 +18,5 @@ fun RecyclerView.prepareLinear(context: Context, showDividers: Boolean = false) 
 }
 
 fun IntentFilter.addActions(actions: List<String>) {
-    actions.forEach { i -> addAction(i) }
+    actions.forEach { action -> addAction(action) }
 }
