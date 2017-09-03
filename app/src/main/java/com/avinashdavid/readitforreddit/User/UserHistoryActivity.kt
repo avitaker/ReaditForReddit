@@ -24,9 +24,9 @@ const val EXTRA_USER_ID = "EXTRA_USER_ID"
 class UserHistoryActivity : AppCompatActivity() {
     companion object {
 
-        fun startUserHistoryActivity(context: Context, userId : String) {
+        fun startUserHistoryActivity(context: Context, userName: String) {
             val intent: Intent = Intent(context, UserHistoryActivity::class.java)
-            intent.putExtra(EXTRA_USER_ID, userId)
+            intent.putExtra(EXTRA_USER_ID, userName)
             context.startActivity(intent)
         }
     }

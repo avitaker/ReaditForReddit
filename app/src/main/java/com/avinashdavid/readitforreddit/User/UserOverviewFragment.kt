@@ -26,6 +26,9 @@ import java.util.*
  */
 private const val KEY_USER_ID = "keyUserId"
 private const val KEY_FRAGMENT_TYPE = "keyFragmentType"
+private const val KEY_LOADED = "KEY_LOADED"
+private const val KEY_FIRST_CHILD = "KEY_SCROLL_POSITION"
+private const val KEY_OFFSET = "KEY_OFFSET"
 
 class UserOverviewFragment : Fragment() {
     companion object {
@@ -52,11 +55,10 @@ class UserOverviewFragment : Fragment() {
     var fragmentType = 0
 
     var rvUserOverview: RecyclerView? = null
-    var userCommentAdapter: UserCommentAdapter? = null
+    var userHistoryAdapter: UserHistoryAdapter? = null
 
     var mBroadcastReceiver: BroadcastReceiver? = null
     var mIntentFilter = IntentFilter()
-    var userHistoryComments: List<UserHistoryComment>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,15 +77,32 @@ class UserOverviewFragment : Fragment() {
 
         setupBroadastReceiver()
 
-        when (fragmentType) {
-            TYPE_COMMENTS -> {
-                if (!thingsLoaded) loadComments(userId!!)
+        if (savedInstanceState == null) {
+            when (fragmentType) {
+                TYPE_COMMENTS -> {
+                    if (!thingsLoaded) loadComments(userId!!)
+                }
+                TYPE_OVERVIEW -> {
+                    if (!thingsLoaded) loadOverview(userId!!)
+                }
+                TYPE_SUBMITTED -> {
+                    if (!thingsLoaded) loadSubmitted(userId!!)
+                }
             }
-            TYPE_OVERVIEW -> {
-                if (!thingsLoaded) loadOverview(userId!!)
-            }
-            TYPE_SUBMITTED -> {
-                if (!thingsLoaded) loadSubmitted(userId!!)
+        } else {
+            when (fragmentType) {
+                TYPE_COMMENTS -> {
+                    displayComments()
+                    rvUserOverview!!.scrollToPosition(savedInstanceState.getInt(KEY_FIRST_CHILD))
+                }
+                TYPE_OVERVIEW -> {
+                    displayOverview()
+                    rvUserOverview!!.scrollToPosition(savedInstanceState.getInt(KEY_FIRST_CHILD))
+                }
+                TYPE_SUBMITTED -> {
+                    displaySubmitted()
+                    rvUserOverview!!.scrollToPosition(savedInstanceState.getInt(KEY_FIRST_CHILD))
+                }
             }
         }
 
@@ -115,6 +134,15 @@ class UserOverviewFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         outState!!.putString(KEY_USER_ID, userId)
+        outState.putBoolean(KEY_LOADED, thingsLoaded)
+
+        val firstChild = rvUserOverview!!.getChildAt(0)
+        if (firstChild != null) {
+            val firstVilibleChildPosition = rvUserOverview!!.getChildAdapterPosition(firstChild)
+            val offset = firstChild.top
+
+            outState.putInt(KEY_FIRST_CHILD, firstVilibleChildPosition)
+        }
     }
 
     fun setupBroadastReceiver() {
@@ -129,11 +157,7 @@ class UserOverviewFragment : Fragment() {
 //                        if (userCommentAdapter == null) userCommentAdapter = UserCommentAdapter(activity, userHistoryComments)
 //                        else userCommentAdapter!!.userHistoryComments = userHistoryComments
 //                        rvUserOverview!!.adapter = userCommentAdapter
-                            val comments = SugarRecord.listAll(UserHistoryComment::class.java)
-                            val aComments = mutableListOf<SugarRecord>()
-                            aComments.addAll(comments)
-                            val userSubmittedAdapter = UserHistoryAdapter(activity, aComments)
-                            rvUserOverview!!.adapter = userSubmittedAdapter
+                            displayComments()
                         }
                         Constants.BROADCAST_USER_COMMENTS_ERROR -> {
                             val errorSnack: Snackbar = PreferenceUtils.getThemedSnackbar(activity, R.id.activity_user_history, "Error loading user comments", Snackbar.LENGTH_INDEFINITE);
@@ -145,9 +169,7 @@ class UserOverviewFragment : Fragment() {
                             errorSnack.show()
                         }
                         Constants.BROADCAST_USER_OVERVIEW_LOADED -> {
-                            val list = UserThingsSingleton.listOfThings
-                            val userOverviewAdapter = UserHistoryAdapter(activity, list)
-                            rvUserOverview!!.adapter = userOverviewAdapter
+                            displayOverview()
                         }
                         Constants.BROADCAST_USER_OVERVIEW_ERROR -> {
                             val errorSnack: Snackbar = PreferenceUtils.getThemedSnackbar(activity, R.id.activity_user_history, "Error loading user history", Snackbar.LENGTH_INDEFINITE);
@@ -159,11 +181,7 @@ class UserOverviewFragment : Fragment() {
                             errorSnack.show()
                         }
                         Constants.BROADCAST_USER_SUBMITTED_LOADED -> {
-                            val submissions = SugarRecord.listAll(UserHistoryListing::class.java)
-                            val aSubmissions = mutableListOf<SugarRecord>()
-                            aSubmissions.addAll(submissions)
-                            val userSubmittedAdapter = UserHistoryAdapter(activity, aSubmissions)
-                            rvUserOverview!!.adapter = userSubmittedAdapter
+                            displaySubmitted()
                         }
                         Constants.BROADCAST_USER_SUBMITTED_ERROR -> {
                             val errorSnack: Snackbar = PreferenceUtils.getThemedSnackbar(activity, R.id.activity_user_history, "Error loading user submissions", Snackbar.LENGTH_INDEFINITE);
@@ -183,7 +201,7 @@ class UserOverviewFragment : Fragment() {
     fun loadComments(userId: String) {
         val actions = listOf(Constants.BROADCAST_USER_COMMENTS_LOADED,
                 Constants.BROADCAST_USER_COMMENTS_ERROR)
-        mIntentFilter.addActions(actions)
+        if (mIntentFilter.countActions() < 2) mIntentFilter.addActions(actions)
         activity.registerReceiver(mBroadcastReceiver!!, mIntentFilter)
         GetUserCommentsService.loadUserComments(activity, userId)
     }
@@ -191,7 +209,7 @@ class UserOverviewFragment : Fragment() {
     fun loadOverview(userId: String) {
         val actions = listOf(Constants.BROADCAST_USER_OVERVIEW_LOADED,
                 Constants.BROADCAST_USER_OVERVIEW_ERROR)
-        mIntentFilter.addActions(actions)
+        if (mIntentFilter.countActions() < 2) mIntentFilter.addActions(actions)
         activity.registerReceiver(mBroadcastReceiver!!, mIntentFilter)
         GetUserOverviewService.loadUserOverview(activity, userId)
     }
@@ -200,8 +218,30 @@ class UserOverviewFragment : Fragment() {
         val actions = listOf(
                 Constants.BROADCAST_USER_SUBMITTED_LOADED,
                 Constants.BROADCAST_USER_SUBMITTED_ERROR)
-        mIntentFilter.addActions(actions)
+        if (mIntentFilter.countActions() < 2) mIntentFilter.addActions(actions)
         activity.registerReceiver(mBroadcastReceiver!!, mIntentFilter)
         GetUserSubmittedService.loadUserSubmitted(activity, userId)
+    }
+
+    fun displayOverview(){
+        val list = UserThingsSingleton.listOfThings
+        userHistoryAdapter = UserHistoryAdapter(activity, list)
+        rvUserOverview!!.adapter = userHistoryAdapter
+    }
+
+    fun displayComments() {
+        val comments = SugarRecord.listAll(UserHistoryComment::class.java)
+        val aComments = mutableListOf<SugarRecord>()
+        aComments.addAll(comments)
+        userHistoryAdapter = UserHistoryAdapter(activity, aComments)
+        rvUserOverview!!.adapter = userHistoryAdapter
+    }
+
+    fun displaySubmitted() {
+        val submissions = SugarRecord.listAll(UserHistoryListing::class.java)
+        val aSubmissions = mutableListOf<SugarRecord>()
+        aSubmissions.addAll(submissions)
+        userHistoryAdapter = UserHistoryAdapter(activity, aSubmissions)
+        rvUserOverview!!.adapter = userHistoryAdapter
     }
 }

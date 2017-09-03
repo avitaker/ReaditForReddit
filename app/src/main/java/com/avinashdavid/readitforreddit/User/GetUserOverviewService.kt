@@ -51,6 +51,7 @@ class GetUserOverviewService : IntentService("GetUserOverviewService") {
                 val obj = children.getJSONObject(i)
                 val kind = obj.getString("kind")
                 val data = obj.getJSONObject("data")
+                val possibleId = data.getString("id")
                 data.remove("id")
                 val dataString = data.toString()
                 if (kind.equals("t1")) {
@@ -65,6 +66,7 @@ class GetUserOverviewService : IntentService("GetUserOverviewService") {
                 } else if (kind.equals("t3")){
                     try {
                         val userHistoryListing = gson.fromJson(dataString, UserHistoryListing::class.java)
+                        userHistoryListing.postId = possibleId
                         userHistoryListing.save()
                         things.add(userHistoryListing)
                     } catch (e: NumberFormatException) {

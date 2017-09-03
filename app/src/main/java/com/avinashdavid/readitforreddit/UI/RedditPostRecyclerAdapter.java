@@ -200,6 +200,7 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
         public LinearLayout mRelativeLayout;
         public View mCardRelativeLayout;
         ImageView thumbnail_imageview;
+        View containerView;
 
         TextView emptyTextView;
 
@@ -215,6 +216,7 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
 
         public ListingHolder(View itemView, boolean withImage) {
             super(itemView);
+            containerView = itemView;
             if (itemView.findViewById(R.id.post_info_container)!=null) {
                 voteCount_textview = (TextView) itemView.findViewById(R.id.voteCount_textview);
                 author_textview = (TextView) itemView.findViewById(R.id.author_textview);
@@ -238,7 +240,7 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
             redColor = GeneralUtils.getSDKSensitiveColor(mContext, android.R.color.holo_red_dark);
         }
 
-        public void bindUserHistoryListing(UserHistoryListing listing, boolean imageLink) {
+        public void bindUserHistoryListing(final UserHistoryListing listing, boolean imageLink) {
             mUserHistoryListing = listing;
 
             voteCount_textview.setText(Integer.toString(listing.getScore()));
@@ -289,6 +291,13 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
                     listTitle_textview.setTextColor(ogColor);
                 }
             }
+
+            containerView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CommentsActivity.startCommentActivity(mContext, listing.getPostId());
+                }
+            });
         }
 
         public void bindListing(RedditListing listing, boolean imageLink){

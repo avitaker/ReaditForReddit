@@ -32,6 +32,7 @@ import com.avinashdavid.readitforreddit.NetworkUtils.GetMorechildrenService;
 import com.avinashdavid.readitforreddit.PostUtils.CommentRecord;
 import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 import com.avinashdavid.readitforreddit.R;
+import com.avinashdavid.readitforreddit.User.UserHistoryActivity;
 
 import java.util.List;
 
@@ -337,6 +338,7 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
         TextView bodyText;
         View infoBox;
         TextView flairText;
+        View containerView;
 
         private CommentRecord mCommentObject;
         private Context mContext;
@@ -345,6 +347,7 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
         public CommentsHolder(View itemView) {
             super(itemView);
+            containerView = itemView;
             author = (TextView)itemView.findViewById(R.id.author);
             score = (TextView)itemView.findViewById(R.id.score);
             time_elapsed = (TextView)itemView.findViewById(R.id.time_elapsed);
@@ -403,6 +406,15 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
                     }
                 }
             }
+
+            containerView.setOnLongClickListener(new View.OnLongClickListener() {
+
+                @Override
+                public boolean onLongClick(View v) {
+                    UserHistoryActivity.Companion.startUserHistoryActivity(mContext, commentRecord.author);
+                    return true;
+                }
+            });
         }
 
 

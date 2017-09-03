@@ -39,11 +39,13 @@ class GetUserSubmittedService: IntentService("GetUserSubmittedService") {
             SugarRecord.deleteAll(UserHistoryListing::class.java)
             for (i in 0 until children.length()) {
                 val data = children.getJSONObject(i).getJSONObject("data")
+                val id = data.getString("id")
                 data.remove("id")
                 val dataString = data.toString()
                 var userHistoryListing: UserHistoryListing
                 try {
                     userHistoryListing = gson.fromJson(dataString, UserHistoryListing::class.java)
+                    userHistoryListing.postId = id
                     userHistoryListing.save()
                 } catch (e : NumberFormatException) {
 
