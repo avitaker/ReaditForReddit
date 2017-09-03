@@ -10,6 +10,7 @@ import com.avinashdavid.readitforreddit.MiscUtils.Constants
 import com.avinashdavid.readitforreddit.NetworkUtils.NetworkSingleton
 import com.avinashdavid.readitforreddit.NetworkUtils.UriGenerator
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.orm.SugarRecord
 import org.json.JSONObject
 import timber.log.Timber
@@ -31,26 +32,32 @@ class GetUserSubmittedService: IntentService("GetUserSubmittedService") {
     override fun onHandleIntent(intent: Intent?) {
         mUserId = intent!!.getStringExtra(EXTRA_SERVICE_USER_ID)
 
+        val submissions = mutableListOf<UserHistoryListing>()
+
         val request = JsonObjectRequest(Request.Method.GET,
                 UriGenerator.getUriUserSubmitted(mUserId),
                 null, Response.Listener<JSONObject> { response ->
             val children = response!!.getJSONObject("data")!!.getJSONArray("children")!!
-            val gson: Gson = Gson()
+            val gson = Gson()
             SugarRecord.deleteAll(UserHistoryListing::class.java)
             for (i in 0 until children.length()) {
                 val data = children.getJSONObject(i).getJSONObject("data")
-                val id = data.getString("id")
+                val postId = data.getString("id")
                 data.remove("id")
                 val dataString = data.toString()
                 var userHistoryListing: UserHistoryListing
                 try {
                     userHistoryListing = gson.fromJson(dataString, UserHistoryListing::class.java)
-                    userHistoryListing.postId = id
-                    userHistoryListing.save()
+                    userHistoryListing.postId = postId
+                    submissions.add(userHistoryListing)
+//                    userHistoryListing.save()
                 } catch (e : NumberFormatException) {
 
                 }
             }
+
+            UserThingsSingleton.changeSubmitted(submissions)
+
             val broadcast = Intent()
             broadcast.action = Constants.BROADCAST_USER_SUBMITTED_LOADED
             this.sendBroadcast(broadcast)},

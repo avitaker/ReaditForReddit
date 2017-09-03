@@ -36,6 +36,8 @@ class GetUserCommentsService : IntentService("GetUserCommentsService") {
 
         val context : Context = this.applicationContext;
 
+        val comments = mutableListOf<UserHistoryComment>()
+
         val request = JsonObjectRequest(Request.Method.GET,
                 UriGenerator.getUriUserComments(mUserId).toString(),
                 null, Response.Listener<JSONObject> { response ->
@@ -49,11 +51,14 @@ class GetUserCommentsService : IntentService("GetUserCommentsService") {
                 var userHistoryComment: UserHistoryComment
                 try {
                     userHistoryComment = gson.fromJson(dataString, UserHistoryComment::class.java)
-                    userHistoryComment.save()
+                    comments.add(userHistoryComment)
+//                    userHistoryComment.save()
                 } catch (e : NumberFormatException) {
 
                 }
             }
+            UserThingsSingleton.changeComments(comments)
+
             val broadcast = Intent()
             broadcast.action = Constants.BROADCAST_USER_COMMENTS_LOADED
             this.sendBroadcast(broadcast)},

@@ -10,6 +10,7 @@ import com.avinashdavid.readitforreddit.MiscUtils.Constants
 import com.avinashdavid.readitforreddit.NetworkUtils.NetworkSingleton
 import com.avinashdavid.readitforreddit.NetworkUtils.UriGenerator
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.orm.SugarRecord
 import org.json.JSONObject
 import timber.log.Timber
@@ -41,7 +42,8 @@ class GetUserOverviewService : IntentService("GetUserOverviewService") {
                 UriGenerator.getUriUserOverview(mUserId).toString(),
                 null, Response.Listener<JSONObject> { response ->
             val children = response!!.getJSONObject("data")!!.getJSONArray("children")!!
-            val gson: Gson = Gson()
+
+            val gson = Gson()
             SugarRecord.deleteAll(UserHistoryComment::class.java)
             SugarRecord.deleteAll(UserHistoryListing::class.java)
 
@@ -67,7 +69,6 @@ class GetUserOverviewService : IntentService("GetUserOverviewService") {
                     try {
                         val userHistoryListing = gson.fromJson(dataString, UserHistoryListing::class.java)
                         userHistoryListing.postId = possibleId
-                        userHistoryListing.save()
                         things.add(userHistoryListing)
                     } catch (e: NumberFormatException) {
 

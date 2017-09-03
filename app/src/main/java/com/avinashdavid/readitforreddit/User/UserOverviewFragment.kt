@@ -30,7 +30,11 @@ private const val KEY_LOADED = "KEY_LOADED"
 private const val KEY_FIRST_CHILD = "KEY_SCROLL_POSITION"
 private const val KEY_OFFSET = "KEY_OFFSET"
 
-class UserOverviewFragment : Fragment() {
+class UserOverviewFragment : Fragment(), ScrollListener {
+    override fun onReachedLast() {
+
+    }
+
     companion object {
         const val TYPE_OVERVIEW = 0
         const val TYPE_COMMENTS = 1
@@ -225,23 +229,21 @@ class UserOverviewFragment : Fragment() {
 
     fun displayOverview(){
         val list = UserThingsSingleton.listOfThings
-        userHistoryAdapter = UserHistoryAdapter(activity, list)
+        userHistoryAdapter = UserHistoryAdapter(activity, list, this)
         rvUserOverview!!.adapter = userHistoryAdapter
     }
 
     fun displayComments() {
-        val comments = SugarRecord.listAll(UserHistoryComment::class.java)
         val aComments = mutableListOf<SugarRecord>()
-        aComments.addAll(comments)
-        userHistoryAdapter = UserHistoryAdapter(activity, aComments)
+        aComments.addAll(UserThingsSingleton.listOfComments)
+        userHistoryAdapter = UserHistoryAdapter(activity, aComments, this)
         rvUserOverview!!.adapter = userHistoryAdapter
     }
 
     fun displaySubmitted() {
-        val submissions = SugarRecord.listAll(UserHistoryListing::class.java)
         val aSubmissions = mutableListOf<SugarRecord>()
-        aSubmissions.addAll(submissions)
-        userHistoryAdapter = UserHistoryAdapter(activity, aSubmissions)
+        aSubmissions.addAll(UserThingsSingleton.listOfSubmitted)
+        userHistoryAdapter = UserHistoryAdapter(activity, aSubmissions, this)
         rvUserOverview!!.adapter = userHistoryAdapter
     }
 }

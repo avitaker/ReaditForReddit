@@ -1,6 +1,7 @@
 package com.avinashdavid.readitforreddit.User
 
 import android.content.Context
+import android.support.v4.app.Fragment
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.avinashdavid.readitforreddit.CommentsActivity
 import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils
+import com.avinashdavid.readitforreddit.MiscUtils.ScrollListener
 import com.avinashdavid.readitforreddit.R
 import com.avinashdavid.readitforreddit.UI.RedditPostRecyclerAdapter
 import com.orm.SugarRecord
@@ -16,7 +18,7 @@ import java.util.*
 /**
  * Created by avinashdavid on 9/1/17.
  */
-class UserHistoryAdapter(context: Context, things: MutableList<SugarRecord>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class UserHistoryAdapter(context: Context, things: MutableList<SugarRecord>, fragment: Fragment): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         const val VIEW_TYPE_COMMENT = 0
         const val VIEW_TYPE_LISTING = 1
@@ -24,6 +26,7 @@ class UserHistoryAdapter(context: Context, things: MutableList<SugarRecord>): Re
 
     var listOfThings = things
     val parentContext = context
+    var scrollListener = fragment as ScrollListener
 
     override fun getItemViewType(position: Int): Int {
         val thing = listOfThings[position]
@@ -61,6 +64,13 @@ class UserHistoryAdapter(context: Context, things: MutableList<SugarRecord>): Re
         }
         else if (holder is RedditPostRecyclerAdapter.ListingHolder) {
             holder.bindUserHistoryListing(listOfThings[position] as UserHistoryListing, false)
+        }
+    }
+
+    override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder?) {
+        super.onViewAttachedToWindow(holder)
+        if (holder!!.adapterPosition == listOfThings.size - 1) {
+            scrollListener.onReachedLast()
         }
     }
 
