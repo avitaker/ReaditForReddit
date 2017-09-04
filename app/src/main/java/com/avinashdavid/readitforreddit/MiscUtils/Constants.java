@@ -26,12 +26,15 @@ public class Constants {
     public static final String BROADCAST_MORE_COMMENTS_ERROR = "com.avinashdavid.readitforreddit.BROADCAST_ERROR_MORE_COMMENTS";
 
     public static final String BROADCAST_USER_COMMENTS_LOADED = "com.avinashdavid.readitforreddit.BROADCAST_USERCOMMENTS";
+    public static final String BROADCAST_USER_COMMENTS_MORE_LOADED = "com.avinashdavid.readitforreddit.BROADCAST_USERCOMMENTS_MORE";
     public static final String BROADCAST_USER_COMMENTS_ERROR = "com.avinashdavid.readitforreddit.BROADCAST_USERCOMMENTS_ERROR";
 
     public static final String BROADCAST_USER_OVERVIEW_LOADED = "com.avinashdavid.readitforreddit.BROADCAST_USEROVERVIEW";
+    public static final String BROADCAST_USER_OVERVIEW_MORE_LOADED = "com.avinashdavid.readitforreddit.BROADCAST_USEROVERVIEW_MORE";
     public static final String BROADCAST_USER_OVERVIEW_ERROR = "com.avinashdavid.readitforreddit.BROADCAST_USEROVERVIEW_ERROR";
 
     public static final String BROADCAST_USER_SUBMITTED_LOADED = "com.avinashdavid.readitforreddit.BROADCAST_USERSUBMITTED";
+    public static final String BROADCAST_USER_SUBMITTED_MORE_LOADED = "com.avinashdavid.readitforreddit.BROADCAST_USERSUBMITTED_MORE";
     public static final String BROADCAST_USER_SUBMITTED_ERROR = "com.avinashdavid.readitforreddit.BROADCAST_USERSUBMITTED_ERROR";
 
     public static final String BROADCAST_USER_ABOUT_LOADED = "com.avinashdavid.readitforreddit.BROADCAST_USER_ABOUT_LOADED";

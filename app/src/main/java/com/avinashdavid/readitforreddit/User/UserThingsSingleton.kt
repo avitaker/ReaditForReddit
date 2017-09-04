@@ -9,6 +9,10 @@ object UserThingsSingleton{
     var listOfThings: MutableList<SugarRecord> = mutableListOf()
     var listOfSubmitted: MutableList<UserHistoryListing> = mutableListOf()
     var listOfComments: MutableList<UserHistoryComment> = mutableListOf()
+    var lastThingFullName = ""
+    var lastCommentFullName = ""
+    var lastSubmittedFullName = ""
+    var lastUser = ""
 
     fun changeThings(list: MutableList<SugarRecord>) {
         listOfThings = list

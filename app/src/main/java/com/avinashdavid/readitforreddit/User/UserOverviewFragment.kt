@@ -32,7 +32,17 @@ private const val KEY_OFFSET = "KEY_OFFSET"
 
 class UserOverviewFragment : Fragment(), ScrollListener {
     override fun onReachedLast() {
-
+        when (fragmentType) {
+            TYPE_OVERVIEW -> {
+                loadOverview(userId!!, true)
+            }
+            TYPE_COMMENTS -> {
+                loadComments(userId!!, true)
+            }
+            TYPE_SUBMITTED -> {
+                loadSubmitted(userId!!, true)
+            }
+        }
     }
 
     companion object {
@@ -152,79 +162,107 @@ class UserOverviewFragment : Fragment(), ScrollListener {
     fun setupBroadastReceiver() {
         mBroadcastReceiver = object: BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                if (!thingsLoaded) {
-                    thingsLoaded = true
-                    val action:String = intent!!.action
-                    when (action) {
-                        Constants.BROADCAST_USER_COMMENTS_LOADED -> {
+                val action:String = intent!!.action
+                when (action) {
+                    Constants.BROADCAST_USER_COMMENTS_LOADED -> {
 //                        userHistoryComments = SugarRecord.listAll(UserHistoryComment::class.java)
 //                        if (userCommentAdapter == null) userCommentAdapter = UserCommentAdapter(activity, userHistoryComments)
 //                        else userCommentAdapter!!.userHistoryComments = userHistoryComments
 //                        rvUserOverview!!.adapter = userCommentAdapter
-                            displayComments()
-                        }
-                        Constants.BROADCAST_USER_COMMENTS_ERROR -> {
-                            val errorSnack: Snackbar = PreferenceUtils.getThemedSnackbar(activity, R.id.activity_user_history, "Error loading user comments", Snackbar.LENGTH_INDEFINITE);
-                            errorSnack.setAction("Refresh", object: View.OnClickListener {
-                                override fun onClick(v: View?) {
-                                    loadComments(userId!!)
-                                }
-                            })
-                            errorSnack.show()
-                        }
-                        Constants.BROADCAST_USER_OVERVIEW_LOADED -> {
-                            displayOverview()
-                        }
-                        Constants.BROADCAST_USER_OVERVIEW_ERROR -> {
-                            val errorSnack: Snackbar = PreferenceUtils.getThemedSnackbar(activity, R.id.activity_user_history, "Error loading user history", Snackbar.LENGTH_INDEFINITE);
-                            errorSnack.setAction("Refresh", object: View.OnClickListener {
-                                override fun onClick(v: View?) {
-                                    loadComments(userId!!)
-                                }
-                            })
-                            errorSnack.show()
-                        }
-                        Constants.BROADCAST_USER_SUBMITTED_LOADED -> {
-                            displaySubmitted()
-                        }
-                        Constants.BROADCAST_USER_SUBMITTED_ERROR -> {
-                            val errorSnack: Snackbar = PreferenceUtils.getThemedSnackbar(activity, R.id.activity_user_history, "Error loading user submissions", Snackbar.LENGTH_INDEFINITE);
-                            errorSnack.setAction("Refresh", object: View.OnClickListener {
-                                override fun onClick(v: View?) {
-                                    loadSubmitted(userId!!)
-                                }
-                            })
-                            errorSnack.show()
-                        }
+                        displayComments()
+                    }
+                    Constants.BROADCAST_USER_COMMENTS_ERROR -> {
+                        val errorSnack: Snackbar = PreferenceUtils.getThemedSnackbar(activity, R.id.activity_user_history, "Error loading user comments", Snackbar.LENGTH_INDEFINITE);
+                        errorSnack.setAction("Refresh", object: View.OnClickListener {
+                            override fun onClick(v: View?) {
+                                loadComments(userId!!)
+                            }
+                        })
+                        errorSnack.show()
+                    }
+                    Constants.BROADCAST_USER_OVERVIEW_LOADED -> {
+                        displayOverview()
+                    }
+                    Constants.BROADCAST_USER_OVERVIEW_ERROR -> {
+                        val errorSnack: Snackbar = PreferenceUtils.getThemedSnackbar(activity, R.id.activity_user_history, "Error loading user history", Snackbar.LENGTH_INDEFINITE);
+                        errorSnack.setAction("Refresh", object: View.OnClickListener {
+                            override fun onClick(v: View?) {
+                                loadComments(userId!!)
+                            }
+                        })
+                        errorSnack.show()
+                    }
+                    Constants.BROADCAST_USER_SUBMITTED_LOADED -> {
+                        displaySubmitted()
+                    }
+                    Constants.BROADCAST_USER_SUBMITTED_ERROR -> {
+                        val errorSnack: Snackbar = PreferenceUtils.getThemedSnackbar(activity, R.id.activity_user_history, "Error loading user submissions", Snackbar.LENGTH_INDEFINITE);
+                        errorSnack.setAction("Refresh", object: View.OnClickListener {
+                            override fun onClick(v: View?) {
+                                loadSubmitted(userId!!)
+                            }
+                        })
+                        errorSnack.show()
+                    }
+                    Constants.BROADCAST_USER_OVERVIEW_MORE_LOADED -> {
+//                        val oldSize = userHistoryAdapter!!.itemCount
+//                        val newSize = UserThingsSingleton.listOfThings.size
+//                        userHistoryAdapter!!.listOfThings.addAll(UserThingsSingleton.listOfThings.subList(oldSize-1, newSize - 1))
+//                        userHistoryAdapter!!.notifyItemRangeInserted(oldSize - 1, newSize)
+                        userHistoryAdapter!!.listOfThings = UserThingsSingleton.listOfThings
+                        userHistoryAdapter!!.notifyDataSetChanged()
+                    }
+                    Constants.BROADCAST_USER_COMMENTS_MORE_LOADED -> {
+//                        val oldSize = userHistoryAdapter!!.itemCount
+//                        val newSize = UserThingsSingleton.listOfComments.size
+//                        userHistoryAdapter!!.listOfThings.addAll(UserThingsSingleton.listOfComments.subList(oldSize-1, newSize - 1))
+//                        userHistoryAdapter!!.notifyItemRangeInserted(oldSize - 1, newSize)
+                        val aComments = mutableListOf<SugarRecord>()
+                        aComments.addAll(UserThingsSingleton.listOfComments)
+                        userHistoryAdapter!!.listOfThings = aComments
+                        userHistoryAdapter!!.notifyDataSetChanged()
+                    }
+                    Constants.BROADCAST_USER_SUBMITTED_MORE_LOADED -> {
+//                        val oldSize = userHistoryAdapter!!.itemCount
+//                        val newSize = UserThingsSingleton.listOfSubmitted.size
+//                        userHistoryAdapter!!.listOfThings.addAll(UserThingsSingleton.listOfSubmitted.subList(oldSize-1, newSize - 1))
+//                        userHistoryAdapter!!.notifyItemRangeInserted(oldSize - 1, newSize)
+                        val aSubmissions = mutableListOf<SugarRecord>()
+                        aSubmissions.addAll(UserThingsSingleton.listOfSubmitted)
+                        userHistoryAdapter!!.listOfThings = aSubmissions
+                        userHistoryAdapter!!.notifyDataSetChanged()
                     }
                 }
             }
         }
     }
 
-    fun loadComments(userId: String) {
+    fun loadComments(userId: String, more: Boolean = false) {
         val actions = listOf(Constants.BROADCAST_USER_COMMENTS_LOADED,
+                Constants.BROADCAST_USER_COMMENTS_MORE_LOADED,
                 Constants.BROADCAST_USER_COMMENTS_ERROR)
-        if (mIntentFilter.countActions() < 2) mIntentFilter.addActions(actions)
+        if (mIntentFilter.countActions() < 3) mIntentFilter.addActions(actions)
         activity.registerReceiver(mBroadcastReceiver!!, mIntentFilter)
-        GetUserCommentsService.loadUserComments(activity, userId)
+        GetUserCommentsService.loadUserComments(activity, userId, more)
     }
 
-    fun loadOverview(userId: String) {
+    fun loadOverview(userId: String, more: Boolean = false) {
         val actions = listOf(Constants.BROADCAST_USER_OVERVIEW_LOADED,
+                Constants.BROADCAST_USER_OVERVIEW_MORE_LOADED,
                 Constants.BROADCAST_USER_OVERVIEW_ERROR)
-        if (mIntentFilter.countActions() < 2) mIntentFilter.addActions(actions)
+        if (mIntentFilter.countActions() < 3) mIntentFilter.addActions(actions)
         activity.registerReceiver(mBroadcastReceiver!!, mIntentFilter)
-        GetUserOverviewService.loadUserOverview(activity, userId)
+        GetUserOverviewService.loadUserOverview(activity, userId, more)
     }
 
-    fun loadSubmitted(userId: String) {
+    fun loadSubmitted(userId: String, more: Boolean = false) {
         val actions = listOf(
                 Constants.BROADCAST_USER_SUBMITTED_LOADED,
+                Constants.BROADCAST_USER_SUBMITTED_MORE_LOADED,
                 Constants.BROADCAST_USER_SUBMITTED_ERROR)
-        if (mIntentFilter.countActions() < 2) mIntentFilter.addActions(actions)
+        if (mIntentFilter.countActions() < 3) mIntentFilter.addActions(actions)
         activity.registerReceiver(mBroadcastReceiver!!, mIntentFilter)
-        GetUserSubmittedService.loadUserSubmitted(activity, userId)
+        GetUserSubmittedService.loadUserSubmitted(activity, userId, more)
     }
 
     fun displayOverview(){

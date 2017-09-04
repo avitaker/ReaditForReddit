@@ -10,7 +10,6 @@ import com.avinashdavid.readitforreddit.MiscUtils.Constants
 import com.avinashdavid.readitforreddit.NetworkUtils.NetworkSingleton
 import com.avinashdavid.readitforreddit.NetworkUtils.UriGenerator
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.orm.SugarRecord
 import org.json.JSONObject
 import timber.log.Timber
@@ -23,74 +22,89 @@ class GetUserOverviewService : IntentService("GetUserOverviewService") {
     companion object {
         fun loadUserOverview(context: Context, userId: String, loadMore: Boolean = false) {
             val intent = Intent(context, GetUserOverviewService::class.java)
-            intent.putExtra(EXTRA_SERVICE_USER_ID, userId)
+            intent.putExtra(EXTRA_SERVICE_USER_NAME, userId)
             intent.putExtra(EXTRA_USER_OVERVIEW_MORE, loadMore)
             context.startService(intent)
         }
     }
 
-    private var mUserId = ""
+    private var mUserName = ""
     private var mLoadMore = false
 
     override fun onHandleIntent(intent: Intent?) {
-        mUserId = intent!!.getStringExtra(EXTRA_SERVICE_USER_ID)
+        mUserName = intent!!.getStringExtra(EXTRA_SERVICE_USER_NAME)
         mLoadMore = intent.getBooleanExtra(EXTRA_USER_OVERVIEW_MORE, false)
 
-        val context : Context = this.applicationContext;
+        val context : Context = this.applicationContext
 
-        val request = JsonObjectRequest(Request.Method.GET,
-                UriGenerator.getUriUserOverview(mUserId).toString(),
-                null, Response.Listener<JSONObject> { response ->
-            val children = response!!.getJSONObject("data")!!.getJSONArray("children")!!
+        if (mLoadMore && mUserName == UserThingsSingleton.lastUser && UserThingsSingleton.lastThingFullName == "null") {
+            return
+        } else {
+            if (mUserName != UserThingsSingleton.lastUser){
+                UserThingsSingleton.lastUser = mUserName
+                UserThingsSingleton.lastCommentFullName = ""
+                UserThingsSingleton.lastSubmittedFullName = ""
+                UserThingsSingleton.lastThingFullName = ""
+            }
+            val url = UriGenerator.getUriUserOverview(mUserName, mLoadMore)
 
-            val gson = Gson()
-            SugarRecord.deleteAll(UserHistoryComment::class.java)
-            SugarRecord.deleteAll(UserHistoryListing::class.java)
+            val request = JsonObjectRequest(Request.Method.GET,
+                    url,
+                    null, Response.Listener<JSONObject> { response ->
+                val parentData = response!!.getJSONObject("data")
+                val children = parentData!!.getJSONArray("children")!!
+                val fullNameAfter = parentData.getString("after")
 
-            val things = mutableListOf<SugarRecord>()
+                val gson = Gson()
 
-            for (i in 0 until children.length()) {
-                val obj = children.getJSONObject(i)
-                val kind = obj.getString("kind")
-                val data = obj.getJSONObject("data")
-                val possibleId = data.getString("id")
-                data.remove("id")
-                val dataString = data.toString()
-                if (kind.equals("t1")) {
-                    var userHistoryComment: UserHistoryComment
-                    try {
-                        userHistoryComment = gson.fromJson(dataString, UserHistoryComment::class.java)
-                        userHistoryComment.save()
-                        things.add(userHistoryComment)
-                    } catch (e : NumberFormatException) {
+                val things = mutableListOf<SugarRecord>()
 
-                    }
-                } else if (kind.equals("t3")){
-                    try {
-                        val userHistoryListing = gson.fromJson(dataString, UserHistoryListing::class.java)
-                        userHistoryListing.postId = possibleId
-                        things.add(userHistoryListing)
-                    } catch (e: NumberFormatException) {
+                for (i in 0 until children.length()) {
+                    val obj = children.getJSONObject(i)
+                    val kind = obj.getString("kind")
+                    val data = obj.getJSONObject("data")
+                    val thingId = data.getString("id")
+                    data.remove("id")
+                    val dataString = data.toString()
+                    if (kind.equals("t1")) {
+                        var userHistoryComment: UserHistoryComment
+                        try {
+                            userHistoryComment = gson.fromJson(dataString, UserHistoryComment::class.java)
+                            userHistoryComment.commentId = thingId
+                            things.add(userHistoryComment)
+                        } catch (e : NumberFormatException) {
 
+                        }
+                    } else if (kind.equals("t3")){
+                        try {
+                            val userHistoryListing = gson.fromJson(dataString, UserHistoryListing::class.java)
+                            userHistoryListing.postId = thingId
+                            things.add(userHistoryListing)
+                        } catch (e: NumberFormatException) {
+
+                        }
                     }
                 }
-            }
 
-            if (mLoadMore) UserThingsSingleton.addToThings(things)
-            else UserThingsSingleton.changeThings(things)
+                UserThingsSingleton.lastThingFullName = fullNameAfter
 
-            val broadcast = Intent()
-            broadcast.action = Constants.BROADCAST_USER_OVERVIEW_LOADED
-            this.sendBroadcast(broadcast)},
-                Response.ErrorListener { error ->
-                    Timber.e(error, UriGenerator.getUriUserOverview(mUserId).toString())
-                    val message = error.message
-                    val errorIntent = Intent()
-                    errorIntent.action = Constants.BROADCAST_USER_OVERVIEW_ERROR
-                    errorIntent.putExtra(Constants.KEY_NETWORK_REQUEST_ERROR, message)
-                    this.sendBroadcast(errorIntent)
-                })
+                if (mLoadMore) UserThingsSingleton.addToThings(things)
+                else UserThingsSingleton.changeThings(things)
 
-        NetworkSingleton.getInstance(applicationContext).addToRequestQueue(request)
+                val broadcast = Intent()
+                if (mLoadMore) broadcast.action = Constants.BROADCAST_USER_OVERVIEW_MORE_LOADED
+                else broadcast.action = Constants.BROADCAST_USER_OVERVIEW_LOADED
+                this.sendBroadcast(broadcast)},
+                    Response.ErrorListener { error ->
+                        Timber.e(error, UriGenerator.getUriUserOverview(mUserName).toString())
+                        val message = error.message
+                        val errorIntent = Intent()
+                        errorIntent.action = Constants.BROADCAST_USER_OVERVIEW_ERROR
+                        errorIntent.putExtra(Constants.KEY_NETWORK_REQUEST_ERROR, message)
+                        this.sendBroadcast(errorIntent)
+                    })
+
+            NetworkSingleton.getInstance(applicationContext).addToRequestQueue(request)
+        }
     }
 }

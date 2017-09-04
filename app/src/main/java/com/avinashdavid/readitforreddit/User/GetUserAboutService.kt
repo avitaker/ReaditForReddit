@@ -22,7 +22,7 @@ class GetUserAboutService : IntentService("GetUserAboutService") {
     companion object {
         fun loadUserAbout(context: Context, userId: String) {
             val intent = Intent(context, GetUserAboutService::class.java)
-            intent.putExtra(EXTRA_SERVICE_USER_ID, userId)
+            intent.putExtra(EXTRA_SERVICE_USER_NAME, userId)
             context.startService(intent)
         }
     }
@@ -30,7 +30,7 @@ class GetUserAboutService : IntentService("GetUserAboutService") {
     private var mUserId = ""
 
     override fun onHandleIntent(intent: Intent?) {
-        mUserId = intent!!.getStringExtra(EXTRA_SERVICE_USER_ID)
+        mUserId = intent!!.getStringExtra(EXTRA_SERVICE_USER_NAME)
 
         val context : Context = this.applicationContext
 

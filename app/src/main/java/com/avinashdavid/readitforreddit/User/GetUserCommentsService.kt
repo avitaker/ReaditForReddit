@@ -17,60 +17,83 @@ import timber.log.Timber
 /**
  * Created by avinashdavid on 8/21/17.
  */
-const val EXTRA_SERVICE_USER_ID = "mUserId"
+const val EXTRA_SERVICE_USER_NAME = "mUserId"
 
 class GetUserCommentsService : IntentService("GetUserCommentsService") {
     companion object {
 
-        fun loadUserComments(context: Context, userId: String) {
+        fun loadUserComments(context: Context, userId: String, loadMore: Boolean = false) {
             val intent = Intent(context, GetUserCommentsService::class.java)
-            intent.putExtra(EXTRA_SERVICE_USER_ID, userId)
+            intent.putExtra(EXTRA_SERVICE_USER_NAME, userId)
+            intent.putExtra(EXTRA_USER_OVERVIEW_MORE, loadMore)
             context.startService(intent)
         }
     }
 
-    private var mUserId = ""
+    private var mUserName = ""
+    private var mLoadMore = false
 
     override fun onHandleIntent(intent: Intent?) {
-        mUserId = intent!!.getStringExtra(EXTRA_SERVICE_USER_ID)
+        mUserName = intent!!.getStringExtra(EXTRA_SERVICE_USER_NAME)
+        mLoadMore = intent.getBooleanExtra(EXTRA_USER_OVERVIEW_MORE, false)
 
         val context : Context = this.applicationContext;
 
-        val comments = mutableListOf<UserHistoryComment>()
-
-        val request = JsonObjectRequest(Request.Method.GET,
-                UriGenerator.getUriUserComments(mUserId).toString(),
-                null, Response.Listener<JSONObject> { response ->
-            val children = response!!.getJSONObject("data")!!.getJSONArray("children")!!
-            val gson: Gson = Gson()
-            SugarRecord.deleteAll(UserHistoryComment::class.java)
-            for (i in 0 until children.length()) {
-                val data = children.getJSONObject(i).getJSONObject("data")
-                data.remove("id")
-                val dataString = data.toString()
-                var userHistoryComment: UserHistoryComment
-                try {
-                    userHistoryComment = gson.fromJson(dataString, UserHistoryComment::class.java)
-                    comments.add(userHistoryComment)
-//                    userHistoryComment.save()
-                } catch (e : NumberFormatException) {
-
-                }
+        if (mLoadMore && mUserName == UserThingsSingleton.lastUser && UserThingsSingleton.lastCommentFullName == "null") {
+            return
+        } else {
+            if (mUserName != UserThingsSingleton.lastUser){
+                UserThingsSingleton.lastUser = mUserName
+                UserThingsSingleton.lastCommentFullName = ""
+                UserThingsSingleton.lastSubmittedFullName = ""
+                UserThingsSingleton.lastThingFullName = ""
             }
-            UserThingsSingleton.changeComments(comments)
 
-            val broadcast = Intent()
-            broadcast.action = Constants.BROADCAST_USER_COMMENTS_LOADED
-            this.sendBroadcast(broadcast)},
-                Response.ErrorListener { error ->
-                    Timber.e(error, UriGenerator.getUriUserComments(mUserId).toString())
-                    val message = error.message
-                    val errorIntent = Intent()
-                    errorIntent.action = Constants.BROADCAST_USER_COMMENTS_ERROR
-                    errorIntent.putExtra(Constants.KEY_NETWORK_REQUEST_ERROR, message)
-                    this.sendBroadcast(errorIntent)
-                })
+            val comments = mutableListOf<UserHistoryComment>()
 
-        NetworkSingleton.getInstance(applicationContext).addToRequestQueue(request)
+            val request = JsonObjectRequest(Request.Method.GET,
+                    UriGenerator.getUriUserComments(mUserName, mLoadMore),
+                    null, Response.Listener<JSONObject> { response ->
+                val parentData = response!!.getJSONObject("data")
+                val children = parentData!!.getJSONArray("children")!!
+                val fullNameAfter = parentData.getString("after")
+                val gson: Gson = Gson()
+                SugarRecord.deleteAll(UserHistoryComment::class.java)
+                for (i in 0 until children.length()) {
+                    val data = children.getJSONObject(i).getJSONObject("data")
+                    val commentId = data.getString("id")
+                    data.remove("id")
+                    val dataString = data.toString()
+                    var userHistoryComment: UserHistoryComment
+                    try {
+                        userHistoryComment = gson.fromJson(dataString, UserHistoryComment::class.java)
+                        userHistoryComment.commentId = commentId
+                        comments.add(userHistoryComment)
+//                    userHistoryComment.save()
+                    } catch (e : NumberFormatException) {
+
+                    }
+                }
+
+                UserThingsSingleton.lastCommentFullName = fullNameAfter
+
+                if (mLoadMore) UserThingsSingleton.addToComments(comments)
+                else UserThingsSingleton.changeComments(comments)
+
+                val broadcast = Intent()
+                if (mLoadMore) broadcast.action = Constants.BROADCAST_USER_COMMENTS_MORE_LOADED
+                else broadcast.action = Constants.BROADCAST_USER_COMMENTS_LOADED
+                this.sendBroadcast(broadcast)},
+                    Response.ErrorListener { error ->
+                        Timber.e(error, UriGenerator.getUriUserComments(mUserName).toString())
+                        val message = error.message
+                        val errorIntent = Intent()
+                        errorIntent.action = Constants.BROADCAST_USER_COMMENTS_ERROR
+                        errorIntent.putExtra(Constants.KEY_NETWORK_REQUEST_ERROR, message)
+                        this.sendBroadcast(errorIntent)
+                    })
+
+            NetworkSingleton.getInstance(applicationContext).addToRequestQueue(request)
+        }
     }
 }

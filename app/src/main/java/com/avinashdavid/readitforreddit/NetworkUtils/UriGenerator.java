@@ -4,6 +4,8 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.avinashdavid.readitforreddit.User.UserThingsSingleton;
+
 /**
  * Created by avinashdavid on 3/6/17.
  * This class generates all the HTTP urls that are called in the app
@@ -21,6 +23,7 @@ public class UriGenerator {
     private static final String subredditMarkerString = "r";
     private static final String KEY_SUBREDDITS = "subreddits";
     private static final String KEY_COMMENT_DEPTH = "depth";
+    private static  final String KEY_COUNT = "count";
 
     private static final String KEY_RESTRICT_SR = "restrict_sr";
 
@@ -223,24 +226,57 @@ public class UriGenerator {
     public static String getUriUserComments(@NonNull String userId) {
         Uri.Builder builder = baseListingUri.buildUpon();
         builder.appendPath(PATH_SEGMENT_USER).appendPath(userId).appendPath(PATH_SEGMENT_COMMENTS);
+        builder.appendQueryParameter(KEY_LIMIT, "20");
         return builder.build().toString() + ".json";
+    }
+
+    public static String getUriUserComments(@NonNull String userId, boolean loadMore) {
+        Uri.Builder builder = baseListingUri.buildUpon();
+        builder.appendPath(PATH_SEGMENT_USER).appendPath(userId).appendPath(PATH_SEGMENT_COMMENTS);
+        builder.appendQueryParameter(KEY_LIMIT, "20");
+        if (loadMore) builder.appendQueryParameter(KEY_AFTER, UserThingsSingleton.INSTANCE.getLastCommentFullName());
+        String toReturn = builder.build().toString();
+        return toReturn;
     }
 
     public static String getUriUserOverview(@NonNull String userId) {
         Uri.Builder builder = baseListingUri.buildUpon();
         builder.appendPath(PATH_SEGMENT_USER).appendPath(userId).appendPath(PATH_SEGMENT_OVERVIEW);
-        return builder.build().toString() + ".json";
+        builder.appendQueryParameter(KEY_LIMIT, "20");
+        return builder.build().toString();
+    }
+
+    public static String getUriUserOverview(@NonNull String userId, boolean loadMore) {
+        Uri.Builder builder = baseListingUri.buildUpon();
+        builder.appendPath(PATH_SEGMENT_USER).appendPath(userId).appendPath(PATH_SEGMENT_OVERVIEW);
+        builder.appendQueryParameter(KEY_LIMIT, "20");
+        if (loadMore) {
+            String after = UserThingsSingleton.INSTANCE.getLastThingFullName();
+            builder.appendQueryParameter(KEY_AFTER, after);
+        }
+        String toReturn = builder.build().toString();
+        return toReturn;
     }
 
     public static String getUriUserSubmitted(@NonNull String userId){
         Uri.Builder builder = baseListingUri.buildUpon();
         builder.appendPath(PATH_SEGMENT_USER).appendPath(userId).appendPath(PATH_SEGMENT_SUBMITTED);
-        return builder.build().toString() + ".json";
+        builder.appendQueryParameter(KEY_LIMIT, "20");
+        return builder.build().toString();
+    }
+
+    public static String getUriUserSubmitted(@NonNull String userId, boolean loadMore) {
+        Uri.Builder builder = baseListingUri.buildUpon();
+        builder.appendPath(PATH_SEGMENT_USER).appendPath(userId).appendPath(PATH_SEGMENT_SUBMITTED);
+        builder.appendQueryParameter(KEY_LIMIT, "20");
+        if (loadMore) builder.appendQueryParameter(KEY_AFTER, UserThingsSingleton.INSTANCE.getLastSubmittedFullName());
+        String toReturn = builder.build().toString();
+        return toReturn;
     }
 
     public static String GetUriUserAbout(@NonNull String userId) {
         Uri.Builder builder = baseListingUri.buildUpon();
         builder.appendPath(PATH_SEGMENT_USER).appendPath(userId).appendPath(PATH_SEGMENT_ABOUT);
-        return builder.build().toString() + ".json";
+        return builder.build().toString();
     }
 }

@@ -25,8 +25,8 @@ class UserHistoryAdapter(context: Context, things: MutableList<SugarRecord>, fra
     }
 
     var listOfThings = things
-    val parentContext = context
-    var scrollListener = fragment as ScrollListener
+    val mContext = context
+    var mScrollListener = fragment as ScrollListener
 
     override fun getItemViewType(position: Int): Int {
         val thing = listOfThings[position]
@@ -43,15 +43,15 @@ class UserHistoryAdapter(context: Context, things: MutableList<SugarRecord>, fra
         var view: View? = null
         when (viewType) {
             VIEW_TYPE_COMMENT -> {
-                view = LayoutInflater.from(parentContext).inflate(R.layout.item_user_comment, parent, false)
+                view = LayoutInflater.from(mContext).inflate(R.layout.item_user_comment, parent, false)
                 return CommentViewholder(view)
             }
             VIEW_TYPE_LISTING -> {
-                view = LayoutInflater.from(parentContext).inflate(R.layout.item_listing, parent, false)
+                view = LayoutInflater.from(mContext).inflate(R.layout.item_listing, parent, false)
                 return RedditPostRecyclerAdapter.ListingHolder(view, false)
             }
             else -> {
-                view = LayoutInflater.from(parentContext).inflate(R.layout.item_user_comment, parent, false)
+                view = LayoutInflater.from(mContext).inflate(R.layout.item_user_comment, parent, false)
                 return CommentViewholder(view)
             }
         }
@@ -70,7 +70,7 @@ class UserHistoryAdapter(context: Context, things: MutableList<SugarRecord>, fra
     override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder?) {
         super.onViewAttachedToWindow(holder)
         if (holder!!.adapterPosition == listOfThings.size - 1) {
-            scrollListener.onReachedLast()
+            mScrollListener.onReachedLast()
         }
     }
 

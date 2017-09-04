@@ -18,6 +18,7 @@ class UserHistoryComment() : SugarRecord() {
     var link_id: String = ""
     var over_18: Boolean = false
     var num_comments: Int = 0
+    @Transient var commentId = ""
 
     constructor(bodyHtml : String, score: Int, timestamp: Long, linkId:String, linkTitle : String, linkUrl:String, linkAuthor:String, linkSubredditName:String, linkNumComments:Int, linkNSFW : Boolean) : this() {
         this.bodyHtml = bodyHtml
