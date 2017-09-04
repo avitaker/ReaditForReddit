@@ -29,6 +29,7 @@ class UserHistoryActivity : AppCompatActivity() {
             val intent: Intent = Intent(context, UserHistoryActivity::class.java)
             intent.putExtra(EXTRA_USER_ID, userName)
             context.startActivity(intent)
+            (context as AppCompatActivity).overridePendingTransition(R.anim.enter_right, R.anim.slide_to_left)
         }
     }
 
@@ -67,6 +68,9 @@ class UserHistoryActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setHomeButtonEnabled(true)
 
+        val listOfIds = listOf(R.id.main_appbar, R.id.collapsing_toolbar, R.id.my_toolbar)
+        PreferenceUtils.changeToolbarColor(this, listOfIds)
+
         if (intent.getStringExtra(EXTRA_USER_ID)!=null) mUserId = intent.getStringExtra(EXTRA_USER_ID)
         if (savedInstanceState != null) mUserId = savedInstanceState.getString(EXTRA_USER_ID)
 
@@ -93,11 +97,9 @@ class UserHistoryActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
-            R.id.home -> {
-                finish()
-                return true
-            }
+
         }
+        finish()
         return super.onOptionsItemSelected(item)
     }
 

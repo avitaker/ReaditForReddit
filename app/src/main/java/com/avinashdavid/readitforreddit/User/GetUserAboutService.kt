@@ -35,7 +35,7 @@ class GetUserAboutService : IntentService("GetUserAboutService") {
         val context : Context = this.applicationContext
 
         val request = JsonObjectRequest(Request.Method.GET,
-                UriGenerator.GetUriUserAbout(mUserId).toString(),
+                UriGenerator.getUriUserAbout(mUserId).toString(),
                 null, Response.Listener<JSONObject> { response ->
             val data = response!!.getJSONObject("data")!!
             data.remove("id")
@@ -51,7 +51,7 @@ class GetUserAboutService : IntentService("GetUserAboutService") {
             broadcast.action = Constants.BROADCAST_USER_ABOUT_LOADED
             this.sendBroadcast(broadcast)},
                 Response.ErrorListener { error ->
-                    Timber.e(error, UriGenerator.GetUriUserAbout(mUserId).toString())
+                    Timber.e(error, UriGenerator.getUriUserAbout(mUserId).toString())
                     Timber.e(error)
                     val message = error.message
                     val errorIntent = Intent()

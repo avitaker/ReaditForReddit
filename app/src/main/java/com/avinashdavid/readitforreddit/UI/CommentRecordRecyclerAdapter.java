@@ -49,6 +49,7 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
     //    private Cursor mCommentRecords;
     private RedditListing mRedditListing;
     private Activity mCommentsActivity;
+    private boolean mIsCommentThread;
     private LayoutInflater mLayoutInflater;
     private int lastPosition = -1;
 
@@ -65,10 +66,11 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
     private static final int VIEW_TYPE_DEPTH_9 = 10;
     private static final int VIEW_TYPE_DEPTH_10 = 11;
     private static final int VIEW_TYPE_AUTHOR = 47;
+    private static final int VIEW_TYPE_VIEW_FULL_COMMENTS = 12;
     private BroadcastReceiver mMoreReceiver;
     private IntentFilter mIntentFilter;
 
-    public CommentRecordRecyclerAdapter(@NonNull Context context, List<CommentRecord> commentRecords, RedditListing redditListing){
+    public CommentRecordRecyclerAdapter(@NonNull Context context, List<CommentRecord> commentRecords, RedditListing redditListing, boolean isCommentThread){
         try {
             this.mCommentsActivity = (CommentsActivity) context;
         } catch (ClassCastException e){
@@ -77,6 +79,7 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
         this.mLayoutInflater = LayoutInflater.from(mCommentsActivity);
         this.mCommentRecords = commentRecords;
         this.mRedditListing = redditListing;
+        mIsCommentThread = isCommentThread;
         this.mMoreReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -179,6 +182,9 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
             case -VIEW_TYPE_DEPTH_10:
                 id = R.layout.item_comment_10;
                 break;
+            case VIEW_TYPE_VIEW_FULL_COMMENTS:
+                id = R.layout.item_view_full_comments;
+                break;
             default:
                 id = R.layout.item_comment;
                 break;
@@ -188,6 +194,8 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
             return new RedditPostRecyclerAdapter.ListingHolder(view, true);
         } else if (viewType < 0) {
             return new MoreHolder(view);
+        } else if (viewType == VIEW_TYPE_VIEW_FULL_COMMENTS) {
+            return new FullThreadHolder(view);
         } else {
             return new CommentsHolder(view);
         }
@@ -195,6 +203,10 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (getItemViewType(position) == VIEW_TYPE_VIEW_FULL_COMMENTS) {
+            ((FullThreadHolder)holder).bindHolder(mRedditListing.mPostId);
+            return;
+        }
         CommentRecord commentObject;
         if (MainActivity.usingTabletLayout){
             if (getItemViewType(position)==0){
@@ -223,7 +235,8 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
     @Override
     public int getItemCount() {
         if (!MainActivity.usingTabletLayout) {
-            return mCommentRecords == null ? 0 : mCommentRecords.size();
+            if (!mIsCommentThread) return mCommentRecords == null ? 0 : mCommentRecords.size();
+            else return mCommentRecords == null? 1 : mCommentRecords.size() + 1;
         } else {
             return mCommentRecords == null ? 1 : mCommentRecords.size()+1;
         }
@@ -239,6 +252,9 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
     public int getItemViewType(int position) {
         CommentRecord commentRecord;
         if (!MainActivity.usingTabletLayout) {
+            if (mIsCommentThread && position == getItemCount() - 1) {
+                return VIEW_TYPE_VIEW_FULL_COMMENTS;
+            }
             if (position<mCommentRecords.size()) {
                 commentRecord = mCommentRecords.get(position);
             } else {
@@ -330,6 +346,24 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
         }
     }
 
+    static class FullThreadHolder extends RecyclerView.ViewHolder {
+        private Context mContext;
+
+        public FullThreadHolder(View itemView) {
+            super(itemView);
+            mContext = itemView.getContext();
+        }
+
+        public void bindHolder(final String postId) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CommentsActivity.startCommentActivity(mContext, postId);
+                    ((AppCompatActivity)mContext).finish();
+                }
+            });
+        }
+    }
 
     static class CommentsHolder extends RecyclerView.ViewHolder{
         TextView author;
@@ -412,15 +446,6 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
                     UserHistoryActivity.Companion.startUserHistoryActivity(mContext, commentRecord.author);
                 }
             });
-
-//            containerView.setOnLongClickListener(new View.OnLongClickListener() {
-//
-//                @Override
-//                public boolean onLongClick(View v) {
-//                    UserHistoryActivity.Companion.startUserHistoryActivity(mContext, commentRecord.author);
-//                    return true;
-//                }
-//            });
         }
 
 

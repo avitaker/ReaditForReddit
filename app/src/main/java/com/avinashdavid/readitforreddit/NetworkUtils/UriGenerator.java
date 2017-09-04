@@ -25,6 +25,9 @@ public class UriGenerator {
     private static final String KEY_COMMENT_DEPTH = "depth";
     private static  final String KEY_COUNT = "count";
 
+    private static final String QUERY_PARAM_COMMENT = "comment";
+    private static final String QUERY_PARAM_CONTEXT = "context";
+
     private static final String KEY_RESTRICT_SR = "restrict_sr";
 
     private static final int DEFAULT_COMMENT_DEPTH = 10;
@@ -274,9 +277,19 @@ public class UriGenerator {
         return toReturn;
     }
 
-    public static String GetUriUserAbout(@NonNull String userId) {
+    public static String getUriUserAbout(@NonNull String userId) {
         Uri.Builder builder = baseListingUri.buildUpon();
         builder.appendPath(PATH_SEGMENT_USER).appendPath(userId).appendPath(PATH_SEGMENT_ABOUT);
         return builder.build().toString();
+    }
+
+    public static Uri getUriCommentThread(@NonNull String postId, @NonNull String commentId, int numberOfParents) {
+        Uri.Builder builder = baseListingUri.buildUpon();
+        builder.appendPath(PATH_SEGMENT_COMMENTS).appendPath(postId);
+        builder.appendQueryParameter("comment", commentId);
+        if (numberOfParents > 0 && numberOfParents <= 8){
+            builder.appendQueryParameter("context", Integer.toString(numberOfParents));
+        }
+        return builder.build();
     }
 }

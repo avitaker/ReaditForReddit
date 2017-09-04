@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.android.volley.Request;
@@ -63,6 +64,24 @@ public class GetCommentsService extends IntentService {
     public static final String EXTRA_URL = "extraUrlParcelableComments";
     public static final String EXTRA_SORT = "extraSort";
 
+    public static void loadCommentsForArticle(Context context, @Nullable String subreddit, String articleId, @Nullable String sort){
+        Intent intent = new Intent(context, GetCommentsService.class);
+        Uri url = UriGenerator.getUriCommentsForArticle(subreddit, articleId, sort);
+        intent.putExtra(GetCommentsService.EXTRA_URL, url);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        String key = context.getString(R.string.pref_last_post);
+        sp.edit().putString(key, articleId).apply();
+        context.startService(intent);
+    }
+
+    public static void loadCommentsInThread(Context context, @NonNull String postId, @NonNull String commentId, int numberOfParents) {
+        Intent intent = new Intent(context, GetCommentsService.class);
+        Uri url = UriGenerator.getUriCommentThread(postId, commentId, numberOfParents);
+        intent.putExtra(GetCommentsService.EXTRA_URL, url);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        sp.edit().putString(context.getString(R.string.pref_last_comment_thread), commentId).apply();
+        context.startService(intent);
+    }
 
     public GetCommentsService() {
         super(GetCommentsService.class.getSimpleName());
@@ -72,8 +91,6 @@ public class GetCommentsService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         mUrl = intent.getParcelableExtra(EXTRA_URL);
         mSort = intent.getStringExtra(EXTRA_SORT);
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String key = getString(R.string.pref_last_post);
 
         if (null == mSort){
             mSort = getResources().getStringArray(R.array.sort_listing_options)[0];
@@ -132,16 +149,6 @@ public class GetCommentsService extends IntentService {
                 });
 
         NetworkSingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonArrayRequest);
-    }
-
-    public static void loadCommentsForArticle(Context context, @Nullable String subreddit, String articleId, @Nullable String sort){
-        Intent intent = new Intent(context, GetCommentsService.class);
-        Uri url = UriGenerator.getUriCommentsForArticle(subreddit, articleId, sort);
-        intent.putExtra(GetCommentsService.EXTRA_URL, url);
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-        String key = context.getString(R.string.pref_last_post);
-        sp.edit().putString(key, articleId).apply();
-        context.startService(intent);
     }
 
     public static void makeCommentObjectsFromJsonObjects(Context context, ArrayList<JSONObject> jsonObjects, String linkId){

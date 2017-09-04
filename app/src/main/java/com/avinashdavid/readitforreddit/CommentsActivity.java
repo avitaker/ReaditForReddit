@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -45,7 +44,6 @@ import com.avinashdavid.readitforreddit.UI.CommentRecordRecyclerAdapter;
 import com.avinashdavid.readitforreddit.UI.FragmentViewImage;
 import com.avinashdavid.readitforreddit.UI.GetCommentsAsyncTask;
 import com.bumptech.glide.Glide;
-import com.orm.SugarRecord;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,12 +72,12 @@ public class CommentsActivity extends AppCompatActivity
 
     public static final String EXTRA_URL = "extraUrl";
     public static final String EXTRA_POST_ID = "extraPostId";
+    public static final String EXTRA_COMMENT_ID = "EXTRA_COMMENT_ID";
+    public static final String EXTRA_NUMBER_OF_PARENTS = "EXTRA_NUMBER_OF_PARENTS";
 
     private static final String KEY_SORT = "keySort";
     String mSortString;
 
-    private static final String KEY_LAYOUTMANAGER_STATE = "comLayManState";
-    private Parcelable mLayoutState;
 
     public static final String TAG_COMMENTS_FRAGMENT = "tagCommFrag";
 
@@ -106,6 +104,8 @@ public class CommentsActivity extends AppCompatActivity
     String lastPostId;
 
     private String mPostId;
+    private String mCommentId;
+    private int mNumberOfParents;
 
     TextView voteCount_textview;
     TextView author_textview;
@@ -135,6 +135,15 @@ public class CommentsActivity extends AppCompatActivity
     public static void startCommentActivity(Context c, String postId) {
         Intent intent = new Intent(c, CommentsActivity.class);
         intent.putExtra(CommentsActivity.EXTRA_POST_ID, postId);
+        c.startActivity(intent);
+        ((AppCompatActivity)c).overridePendingTransition(R.anim.enter_right, R.anim.slide_to_left);
+    }
+
+    public static void startCommentActivityForThread(Context c, String postId, String commentId, int numberOfParents) {
+        Intent intent = new Intent(c, CommentsActivity.class);
+        intent.putExtra(CommentsActivity.EXTRA_POST_ID, postId);
+        intent.putExtra(CommentsActivity.EXTRA_COMMENT_ID, commentId);
+        intent.putExtra(CommentsActivity.EXTRA_NUMBER_OF_PARENTS, numberOfParents);
         c.startActivity(intent);
         ((AppCompatActivity)c).overridePendingTransition(R.anim.enter_right, R.anim.slide_to_left);
     }
@@ -172,10 +181,18 @@ public class CommentsActivity extends AppCompatActivity
             finish();
         } else if (mIntent.getStringExtra(EXTRA_POST_ID) != null) {
             mPostId = mIntent.getStringExtra(EXTRA_POST_ID);
+            if (mIntent.getStringExtra(EXTRA_COMMENT_ID) != null) {
+                mCommentId = mIntent.getStringExtra(EXTRA_COMMENT_ID);
+                mNumberOfParents = mIntent.getIntExtra(EXTRA_NUMBER_OF_PARENTS, -1);
+            }
         }
 
         if (savedInstanceState!=null && savedInstanceState.getString(EXTRA_POST_ID)!= null){
             mPostId = savedInstanceState.getString(EXTRA_POST_ID);
+            if (savedInstanceState.getString(EXTRA_COMMENT_ID) != null) {
+                mCommentId = savedInstanceState.getString(EXTRA_COMMENT_ID);
+                mNumberOfParents = savedInstanceState.getInt(EXTRA_NUMBER_OF_PARENTS, -1);
+            }
         }
 
         mToolbar = (Toolbar)findViewById(R.id.my_toolbar);
@@ -257,13 +274,22 @@ public class CommentsActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         lastPostId = sp.getString(getString(R.string.pref_last_post), null);
-        if (!mPostId.equals(lastPostId)) {
+        String lastCommentThreadId = sp.getString(getString(R.string.pref_last_comment_thread), null);
+        if (!mPostId.equals(lastPostId) && mCommentId == null) {
             CommentRecord.deleteAll(CommentRecord.class);
             SharedPreferences.Editor editor = sp.edit();
             editor.putInt(Constants.KEY_COMMENTS_FIRST_CHILD, 0);
             editor.putInt(Constants.KEY_COMMENTS_OFFSET, 0);
             editor.apply();
             GetCommentsService.loadCommentsForArticle(CommentsActivity.this, null, mPostId, mSortString);
+        } else if (mCommentId != null) {
+            if (lastCommentThreadId != null) {
+                if (lastCommentThreadId.equals(mCommentId)) {
+                    //RESTORE STATE
+                } else {
+                    GetCommentsService.loadCommentsInThread(this, mPostId, mCommentId, mNumberOfParents);
+                }
+            } else GetCommentsService.loadCommentsInThread(this, mPostId, mCommentId, mNumberOfParents);
         } else {
             initUi();
             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -378,12 +404,10 @@ public class CommentsActivity extends AppCompatActivity
         mCommentRecords = CommentRecord.listAll(CommentRecord.class);
         mItemCount = mCommentRecords.size();
 
-        mCommentsRecyclerViewAdapter = new CommentRecordRecyclerAdapter(this, mCommentRecords, mListing);
+        mCommentsRecyclerViewAdapter = new CommentRecordRecyclerAdapter(this, mCommentRecords, mListing, false);
         mCommentsRecyclerViewAdapter.setHasStableIds(true);
 
         mCommentsRecyclerview.setAdapter(mCommentsRecyclerViewAdapter);
-
-        mLinearLayoutManager.onRestoreInstanceState(mLayoutState);
     }
 
 
@@ -412,6 +436,8 @@ public class CommentsActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
 //        outState.putParcelable(EXTRA_URL, mUrl);
         outState.putString(EXTRA_POST_ID, mPostId);
+        outState.putString(EXTRA_COMMENT_ID, mCommentId);
+        outState.putInt(EXTRA_NUMBER_OF_PARENTS, mNumberOfParents);
 //        outState.putParcelable(KEY_LAYOUTMANAGER_STATE, mListingsLinearLayoutManager.onSaveInstanceState());
     }
 
@@ -597,7 +623,7 @@ public class CommentsActivity extends AppCompatActivity
             mCommentRecords = CommentRecord.listAll(CommentRecord.class);
             mItemCount = mCommentRecords.size();
 
-            mCommentsRecyclerViewAdapter = new CommentRecordRecyclerAdapter(CommentsActivity.this, mCommentRecords, mListing);
+            mCommentsRecyclerViewAdapter = new CommentRecordRecyclerAdapter(CommentsActivity.this, mCommentRecords, mListing, mCommentId!=null);
             mCommentsRecyclerViewAdapter.setHasStableIds(true);
 
             findViewById(R.id.loadingPanel).setVisibility(View.GONE);
@@ -618,8 +644,6 @@ public class CommentsActivity extends AppCompatActivity
                     mCommentsRecyclerview.scrollBy(0, -mOffset);
                 }
             });
-
-            mLinearLayoutManager.onRestoreInstanceState(mLayoutState);
         }
     }
 

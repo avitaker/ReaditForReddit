@@ -90,7 +90,7 @@ class UserHistoryAdapter(context: Context, things: MutableList<SugarRecord>, fra
             tvCommentBody.text = GeneralUtils.returnFormattedStringFromHtml(comment.bodyHtml)
             itemView.setOnClickListener (object : View.OnClickListener{
                 override fun onClick(v: View?) {
-                    CommentsActivity.startCommentActivity(mContext, comment.link_id);
+                    CommentsActivity.startCommentActivityForThread(mContext, comment.link_id, comment.commentId, 1)
                 }
             })
         }

@@ -125,6 +125,7 @@
     <string name="pref_theme">theme_setting</string>
     <string name="pref_boolean_use_tablet_layout">tablet_boolean</string>
     <string name="pref_last_post">lastPost</string>
+    <string name="pref_last_comment_thread">lastCommentThread</string>
     <string name="pref_last_valid_nav_item">lastValidNav</string>
 
     <string name="error_while_loading_posts">An error occurred while loading posts</string>
@@ -163,6 +164,9 @@
 
     <string name="fontName_cmu_serif">Computer Modern (Serif)</string>
     <string name="font_cmu_serif">fonts/cmu_conc.ttf</string>
+
+    <!--Comment thread -->
+    <string name="view_full_comment_thread">View full comment thread</string>
 
     <!--Quit Dialog-->
     <string name="quit_dialog_title">Quit</string>

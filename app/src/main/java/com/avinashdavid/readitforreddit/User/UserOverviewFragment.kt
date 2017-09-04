@@ -230,7 +230,6 @@ class UserOverviewFragment : Fragment(), ScrollListener {
                         val aSubmissions = mutableListOf<SugarRecord>()
                         aSubmissions.addAll(UserThingsSingleton.listOfSubmitted)
                         userHistoryAdapter!!.listOfThings = aSubmissions
-                        userHistoryAdapter!!.notifyDataSetChanged()
                     }
                 }
             }

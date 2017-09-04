@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +21,7 @@ import android.view.WindowManager;
 import com.avinashdavid.readitforreddit.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by avinashdavid on 3/10/17.
@@ -103,6 +105,16 @@ public class PreferenceUtils {
             view.setBackgroundColor(ContextCompat.getColor(activity, R.color.solarized_bg));
         }
         return snackbar;
+    }
+
+    public static void changeToolbarColor(AppCompatActivity activity, @NonNull List<Integer> ids) {
+        ArrayList<View> views = new ArrayList<>();
+        for (int i=0; i<ids.size(); i++) {
+            if (activity.findViewById(ids.get(i)) != null) {
+                views.add(activity.findViewById(ids.get(i)));
+            }
+        }
+        changeToolbarColor(activity, views);
     }
 
     public static void changeToolbarColor(AppCompatActivity activity, @Nullable ArrayList<View> otherViews){

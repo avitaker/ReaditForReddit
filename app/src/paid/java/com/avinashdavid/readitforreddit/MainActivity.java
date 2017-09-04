@@ -1077,7 +1077,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mCommentRecords = CommentRecord.listAll(CommentRecord.class);
 
             mCommentsRedditListing = RedditListing.find(RedditListing.class, "m_post_id = ?", mPostId).get(0);
-            mCommentRecordRecyclerAdapter = new CommentRecordRecyclerAdapter(MainActivity.this, mCommentRecords, mCommentsRedditListing);
+            mCommentRecordRecyclerAdapter = new CommentRecordRecyclerAdapter(MainActivity.this, mCommentRecords, mCommentsRedditListing,false);
             mCommentRecordRecyclerAdapter.setHasStableIds(true);
 
             mCommentsRecyclerview.setAdapter(mCommentRecordRecyclerAdapter);
