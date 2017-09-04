@@ -347,7 +347,6 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
         public CommentsHolder(View itemView) {
             super(itemView);
-            containerView = itemView;
             author = (TextView)itemView.findViewById(R.id.author);
             score = (TextView)itemView.findViewById(R.id.score);
             time_elapsed = (TextView)itemView.findViewById(R.id.time_elapsed);
@@ -407,14 +406,21 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
                 }
             }
 
-            containerView.setOnLongClickListener(new View.OnLongClickListener() {
-
+            author.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onLongClick(View v) {
+                public void onClick(View v) {
                     UserHistoryActivity.Companion.startUserHistoryActivity(mContext, commentRecord.author);
-                    return true;
                 }
             });
+
+//            containerView.setOnLongClickListener(new View.OnLongClickListener() {
+//
+//                @Override
+//                public boolean onLongClick(View v) {
+//                    UserHistoryActivity.Companion.startUserHistoryActivity(mContext, commentRecord.author);
+//                    return true;
+//                }
+//            });
         }
 
 

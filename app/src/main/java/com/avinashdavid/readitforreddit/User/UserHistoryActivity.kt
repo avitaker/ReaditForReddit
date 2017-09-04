@@ -7,6 +7,7 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.view.MenuItem
 import android.view.View
 import com.avinashdavid.readitforreddit.MiscUtils.Constants
 import com.avinashdavid.readitforreddit.MiscUtils.GeneralUtils
@@ -61,7 +62,8 @@ class UserHistoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         PreferenceUtils.onActivityCreateSetTheme(this)
         setContentView(R.layout.activity_user_history)
-        setSupportActionBar(this.my_toolbar)
+        setSupportActionBar(my_toolbar)
+        my_toolbar.title = "Profile"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setHomeButtonEnabled(true)
 
@@ -87,6 +89,16 @@ class UserHistoryActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         outState!!.putString(EXTRA_USER_ID, mUserId)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item!!.itemId) {
+            R.id.home -> {
+                finish()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     fun setUpFragments(userId: String):Unit {

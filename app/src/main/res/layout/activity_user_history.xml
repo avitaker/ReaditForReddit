@@ -29,15 +29,16 @@
                 android:background="?attr/colorPrimary"
                 android:navigationIcon="?attr/menu_icon"
                 app:popupTheme="?attr/toolbar_popup_theme"
-                app:layout_collapseMode="pin">
+                app:layout_collapseMode="pin"
+                android:fitsSystemWindows="true">
 
-                <!--<TextView-->
-                    <!--android:layout_width="match_pareznt"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--tools:text="avitaker"-->
-                    <!--style="@style/Base.TextAppearance.Widget.AppCompat.Toolbar.Title"-->
-                    <!--android:gravity="bottom"-->
-                    <!--android:layout_marginBottom="@dimen/activity_horizontal_margin"/>-->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Profile"
+                    style="@style/Base.TextAppearance.Widget.AppCompat.Toolbar.Title"
+                    android:gravity="bottom"
+                    android:layout_marginBottom="@dimen/activity_horizontal_margin"/>
 
             </android.support.v7.widget.Toolbar>
 
