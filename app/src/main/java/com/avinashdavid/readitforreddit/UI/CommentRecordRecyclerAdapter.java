@@ -117,7 +117,7 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
                 id = R.layout.post_details;
                 break;
             case VIEW_TYPE_DEPTH_0:
-                id = R.layout.item_comment;
+                id = R.layout.item_comment_0;
                 break;
             case VIEW_TYPE_DEPTH_1:
                 id = R.layout.item_comment_1;
@@ -150,7 +150,7 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
                 id = R.layout.item_comment_10;
                 break;
             case -VIEW_TYPE_DEPTH_0:
-                id = R.layout.item_comment;
+                id = R.layout.item_comment_0;
                 break;
             case -VIEW_TYPE_DEPTH_1:
                 id = R.layout.item_comment_1;

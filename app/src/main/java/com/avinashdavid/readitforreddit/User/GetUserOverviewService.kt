@@ -88,12 +88,16 @@ class GetUserOverviewService : IntentService("GetUserOverviewService") {
 
                 UserThingsSingleton.lastThingFullName = fullNameAfter
 
-                if (mLoadMore) UserThingsSingleton.addToThings(things)
-                else UserThingsSingleton.changeThings(things)
-
                 val broadcast = Intent()
-                if (mLoadMore) broadcast.action = Constants.BROADCAST_USER_OVERVIEW_MORE_LOADED
-                else broadcast.action = Constants.BROADCAST_USER_OVERVIEW_LOADED
+                if (mLoadMore) {
+                    UserThingsSingleton.addToThings(things)
+                    broadcast.action = Constants.BROADCAST_USER_OVERVIEW_MORE_LOADED
+                }
+                else {
+                    UserThingsSingleton.changeThings(things)
+                    broadcast.action = Constants.BROADCAST_USER_OVERVIEW_LOADED
+                }
+
                 this.sendBroadcast(broadcast)},
                     Response.ErrorListener { error ->
                         Timber.e(error, UriGenerator.getUriUserOverview(mUserName).toString())

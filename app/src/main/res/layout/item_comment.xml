@@ -3,6 +3,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rlComment"
                 android:padding="@dimen/padding_comment_item"
     android:background="?attr/more_background">
 
@@ -72,10 +73,4 @@
         <!--android:paddingRight="@dimen/padding_comment_item"-->
         <!--android:paddingLeft="@dimen/padding_comment_item"-->
         <!--android:paddingBottom="@dimen/padding_comment_item"/>-->
-
-    <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="1dp"-->
-        <!--android:background="@android:color/darker_gray"-->
-        <!--android:layout_alignParentBottom="true"/>-->
 </RelativeLayout>
