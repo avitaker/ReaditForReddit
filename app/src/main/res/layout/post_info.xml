@@ -40,6 +40,8 @@
                 android:layout_height="match_parent"
                 android:id="@+id/author_textview"
                 style="@style/BoldCaptionsAccent"
+                android:paddingLeft="@dimen/padding_listing_captions"
+                android:paddingStart="@dimen/padding_listing_captions"
                 android:gravity="bottom"/>
 
                 <TextView
@@ -54,6 +56,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/subreddit_textview"
                 style="@style/BoldCaptionsAccent"
+                android:paddingLeft="@dimen/padding_listing_captions"
+                android:paddingStart="@dimen/padding_listing_captions"
                 android:gravity="bottom"/>
         </com.google.android.flexbox.FlexboxLayout>
 

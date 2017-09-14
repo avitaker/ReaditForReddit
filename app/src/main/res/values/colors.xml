@@ -89,6 +89,7 @@
     <!--Dark theme 1-->
     <color name="wine">#500805</color>
     <color name="dark">#1E0000</color>
+    <color name="grey_700">#616161</color>
     <color name="grey_800">#424242</color>
     <color name="grey_300">#E0E0E0</color>
     <color name="currant">#8c0004</color>

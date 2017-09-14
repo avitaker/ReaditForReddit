@@ -41,6 +41,7 @@
         <item name="more_background">@android:color/background_dark</item>
         <item name="more_close">@drawable/ic_close_white_24dp</item>
         <item name="refresh_icon">@drawable/ic_refresh_white_24dp</item>
+        <item name="add_icon">@drawable/ic_add_white_24dp</item>
     </style>
 
     <style name="AppTheme.Light" parent="AppTheme">
@@ -111,7 +112,8 @@
         <item name="colorPrimaryDark">@color/dark</item>
         <item name="colorAccent">@color/tan</item>
         <item name="android:colorBackground">@color/grey_800</item>
-        <item name="more_background">@color/grey_800</item>
+        <item name="more_background">@android:color/black</item>
+        <item name="add_icon">@drawable/ic_add_white_24dp</item>
         <!--<item name="android:textColorPrimaryInverse">@android:color/background_dark</item>-->
         <!--<item name="android:textColor">@color/milk</item>-->
     </style>
@@ -125,6 +127,7 @@
     </style>
 
     <style name="PostTitle" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">15sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -133,10 +136,13 @@
     </style>
 
     <style name="CommentText" parent="TextAppearance.AppCompat">
+        <item name="android:paddingBottom">5dp</item>
         <!--<item name="android:textColor">@android:color/background_dark</item>-->
     </style>
 
     <style name="VoteCount" parent="TextAppearance.AppCompat.SearchResult.Subtitle">
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingStart">0dp</item>
         <item name="android:paddingRight">@dimen/padding_listing_captions</item>
     </style>
 
@@ -148,28 +154,31 @@
     </style>
 
     <style name="BoldCaptions" parent="TextAppearance.AppCompat.Caption">
-        <item name="android:padding">2dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingLeft">@dimen/padding_listing_captions</item>
         <item name="android:paddingRight">@dimen/padding_listing_captions</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="BoldCaptionsAccent" parent="BoldCaptions">
+        <item name="android:paddingLeft">0dp</item>
         <item name="android:textColor">?attr/colorAccent</item>
     </style>
 
     <style name="NormalWeightColorAccent" parent="BoldCaptions">
+        <item name="android:paddingTop">5dp</item>
         <item name="android:textColor">?attr/post_accent_color</item>
     </style>
 
     <style name="LittleCaptions" parent="TextAppearance.AppCompat.Caption">
-        <item name="android:paddingTop">2dp</item>
-        <item name="android:paddingBottom">2dp</item>
+        <item name="android:paddingTop">5dp</item>
         <item name="android:paddingRight">@dimen/padding_listing_captions</item>
     </style>
 
     <style name="LittleCaptions.Comment" parent="LittleCaptions">
+        <item name="android:paddingTop">1dp</item>
+        <item name="android:paddingBottom">4dp</item>
         <item name="android:textSize">11sp</item>
-        <item name="android:gravity">bottom</item>
         <item name="android:paddingLeft">2dp</item>
     </style>
 

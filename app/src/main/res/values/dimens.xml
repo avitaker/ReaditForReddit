@@ -11,8 +11,8 @@
     <!--Listing margins and padding-->
     <dimen name="margin_listing">6dp</dimen>
     <dimen name="margin_listing_bottom">-4dp</dimen>
-    <dimen name="padding_listing_cardview">8dp</dimen>
-    <dimen name="padding_listing_captions">4dp</dimen>
+    <dimen name="padding_listing_cardview">12dp</dimen>
+    <dimen name="padding_listing_captions">3dp</dimen>
 
     <!--comments page-->
     <dimen name="post_appbar_height">300dp</dimen>
