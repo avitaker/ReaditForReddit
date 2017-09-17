@@ -10,6 +10,7 @@
         <item name="menu_icon">@drawable/ic_menu_white_24dp</item>
         <item name="appbar_theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="add_icon">@drawable/ic_add_white_24dp</item>
+        <item name="android:textColor">@android:color/black</item>
 
         <item name="android:colorBackground">@color/grey_300</item>
 
@@ -42,6 +43,7 @@
         <item name="more_close">@drawable/ic_close_white_24dp</item>
         <item name="refresh_icon">@drawable/ic_refresh_white_24dp</item>
         <item name="add_icon">@drawable/ic_add_white_24dp</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="AppTheme.Light" parent="AppTheme">
