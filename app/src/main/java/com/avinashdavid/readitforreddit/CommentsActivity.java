@@ -208,6 +208,7 @@ public class CommentsActivity extends AppCompatActivity
         viewsToChange.add(findViewById(R.id.main_appbar));
         viewsToChange.add(findViewById(R.id.collapsing_toolbar));
         viewsToChange.add(findViewById(R.id.post_info_toolbar));
+        viewsToChange.add(findViewById(R.id.my_toolbar));
         PreferenceUtils.changeToolbarColor(this, viewsToChange);
 
         fab = (FloatingActionButton)findViewById(R.id.comments_fab);

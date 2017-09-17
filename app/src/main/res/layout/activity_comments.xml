@@ -24,7 +24,6 @@
 
 
             <LinearLayout
-                android:background="?attr/colorPrimary"
                 android:id="@+id/post_info_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -184,7 +183,6 @@
                 android:id="@+id/my_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
                 android:navigationIcon="?attr/menu_icon"
                 app:popupTheme="?attr/toolbar_popup_theme"
                 app:layout_collapseMode="pin"

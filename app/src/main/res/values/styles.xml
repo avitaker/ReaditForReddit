@@ -189,6 +189,7 @@
 
     <style name="ThemePostInfo">
         <item name="android:textColor">?attr/post_text_color</item>
+        <item name="android:textColorLink">?attr/post_text_color</item>
     </style>
 
     <style name="WidgetToolbar">

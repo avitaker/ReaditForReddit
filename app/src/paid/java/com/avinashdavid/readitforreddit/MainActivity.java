@@ -236,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ArrayList<View> viewsToChange = new ArrayList<>();
         viewsToChange.add(findViewById(R.id.main_appbar));
         viewsToChange.add(findViewById(R.id.collapsing_toolbar));
+        viewsToChange.add(findViewById(R.id.my_toolbar));
         viewsToChange.add(mNavigationView.getHeaderView(0).findViewById(R.id.navdrawer_header));
         viewsToChange.add(sidebarDrawer);
 
