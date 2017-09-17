@@ -20,7 +20,7 @@
             android:fitsSystemWindows="true"
             app:expandedTitleMarginEnd="@dimen/collapsingtoolbar_marginend"
             app:expandedTitleMarginStart="@dimen/collapsingtoolbar_marginstart"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|enterAlways">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/my_toolbar"
@@ -84,7 +84,8 @@
             android:layout_width="match_parent"
             android:layout_height="0px"
             android:layout_weight="1"
-            android:background="@android:color/white" />
+            android:background="@android:color/white"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <!--<FrameLayout-->
             <!--android:id="@+id/flContainer"-->
