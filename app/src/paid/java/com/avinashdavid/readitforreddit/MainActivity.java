@@ -55,6 +55,9 @@ import com.avinashdavid.readitforreddit.UI.GoToDialogFragment;
 import com.avinashdavid.readitforreddit.UI.QuitDialog;
 import com.avinashdavid.readitforreddit.UI.RedditPostRecyclerAdapter;
 import com.avinashdavid.readitforreddit.UI.SearchDialogFragment;
+import com.avinashdavid.readitforreddit.User.GetLoggedInUserAbout;
+import com.avinashdavid.readitforreddit.User.LoggedInUser;
+import com.avinashdavid.readitforreddit.User.UserHistoryActivity;
 import com.orm.SugarRecord;
 
 import java.util.ArrayList;
@@ -158,6 +161,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     BroadcastReceiver mSubredditInfoReceiver;
     IntentFilter mSubredditInfoIntentFilter;
+
+    BroadcastReceiver mLoggedInUserReceiver;
+    IntentFilter mLoggedInUserIntentFilter;
 
     int selectedSortID = R.id.sort_hot;
 
@@ -333,6 +339,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         };
         mSubredditInfoIntentFilter = new IntentFilter();
 
+        mLoggedInUserReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+
+                if (action.equals(Constants.BROADCAST_GET_LOGGEDIN_USER_SUCCESS)){
+                    LoggedInUser loggedInUser = LoggedInUser.Companion.getCurrentLoggedInUser();
+                    try {
+                        ((TextView)findViewById(R.id.tvUserHandle_Drawer)).setText(loggedInUser.getUsername());
+                        findViewById(R.id.tvDefaultDrawerHeader).setVisibility(View.GONE);
+                        findViewById(R.id.llDrawerUserInformation).setVisibility(View.VISIBLE);
+                        mNavigationView.getMenu().removeItem(R.id.itLogin);
+                    } catch (NullPointerException e) {
+                        findViewById(R.id.tvDefaultDrawerHeader).setVisibility(View.VISIBLE);
+                        findViewById(R.id.llDrawerUserInformation).setVisibility(View.GONE);
+                        mNavigationView.getMenu().removeItem(R.id.itProfile);
+                        mNavigationView.getMenu().removeItem(R.id.itLogOut);
+                    }
+                } else if (action.equals(Constants.BROADCAST_GET_LOGGEDIN_USER_ERROR)){
+                    findViewById(R.id.tvDefaultDrawerHeader).setVisibility(View.VISIBLE);
+                    findViewById(R.id.llDrawerUserInformation).setVisibility(View.GONE);
+                    mNavigationView.getMenu().removeItem(R.id.itProfile);
+                    mNavigationView.getMenu().removeItem(R.id.itLogOut);
+//                    sidebarText.setText(getString(R.string.error_loading_sidebar));
+                }
+            }
+        };
+        mLoggedInUserIntentFilter = new IntentFilter(Constants.BROADCAST_GET_LOGGEDIN_USER_SUCCESS);
+        mLoggedInUserIntentFilter.addAction(Constants.BROADCAST_GET_LOGGEDIN_USER_ERROR);
+
         if (usingTabletLayout){
             mCommentsRecyclerview = (RecyclerView)findViewById(R.id.comment_recyclerview);
             mCommentsLinearLayoutManager = new LinearLayoutManager(this);
@@ -394,6 +430,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onResume() {
         super.onResume();
         startAllReceivers();
+        GetLoggedInUserAbout.Companion.loadLoggedInUserInformation(this);
 //        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
     }
 
@@ -830,6 +867,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (itemId == R.id.itLogin) {
             Intent intent = new Intent(this, GetAuthActivity.class);
             startActivityForResult(intent, CODE_LOGIN_USER);
+        } else if (itemId == R.id.itProfile) {
+            UserHistoryActivity.Companion.startUserHistoryActivity(this);
+        } else if (itemId == R.id.itLogOut) {
+            Toast.makeText(this, "IMPLEMENT ME", Toast.LENGTH_LONG).show();
+            //TODO: LOGOUT
+//            UserHistoryActivity.Companion.startUserHistoryActivity(this);
         }
         else {
             saveCheckedItem(itemId);
@@ -1024,10 +1067,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mSubredditInfoIntentFilter.addAction(Constants.BROADCAST_SIDEBAR_ERROR);
         registerReceiver(mSubredditInfoReceiver, mSubredditInfoIntentFilter);
 
+        registerReceiver(mLoggedInUserReceiver, mLoggedInUserIntentFilter);
+
         if (usingTabletLayout){
             mCommentsIntentFilter.addAction(Constants.BROADCAST_COMMENTS_LOADED);
             registerReceiver(mCommentsLoadedBroadcastReceiver, mCommentsIntentFilter);
         }
+
+
     }
 
     void stopAllReceivers(){
@@ -1035,6 +1082,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             unregisterReceiver(mPostsBroadcastReceiver);
             unregisterReceiver(mAddSubBroadcastReceiver);
             unregisterReceiver(mSubredditInfoReceiver);
+            unregisterReceiver(mLoggedInUserReceiver);
             if (usingTabletLayout){
                 unregisterReceiver(mCommentsLoadedBroadcastReceiver);
             }

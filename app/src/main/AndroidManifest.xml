@@ -73,6 +73,7 @@
         <service android:name=".OAuth.GetUserAuthService"/>
         <service android:name=".OAuth.RevokeAccessTokenService"/>
         <service android:name=".OAuth.GetRefreshedAuthTokenService"/>
+        <service android:name=".User.GetLoggedInUserAbout"/>
 
         <activity
             android:name=".ManageSubredditsActivity"

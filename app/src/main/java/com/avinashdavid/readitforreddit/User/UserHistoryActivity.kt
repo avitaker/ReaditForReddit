@@ -31,6 +31,13 @@ class UserHistoryActivity : AppCompatActivity() {
             context.startActivity(intent)
             (context as AppCompatActivity).overridePendingTransition(R.anim.enter_right, R.anim.slide_to_left)
         }
+
+        fun startUserHistoryActivity(context: Context) {
+            val intent: Intent = Intent(context, UserHistoryActivity::class.java)
+            if (LoggedInUser.Companion.currentLoggedInUser!=null) intent.putExtra(EXTRA_USER_ID, LoggedInUser.Companion.currentLoggedInUser!!.username)
+            context.startActivity(intent)
+            (context as AppCompatActivity).overridePendingTransition(R.anim.enter_right, R.anim.slide_to_left)
+        }
     }
 
     var mUserId = ""
@@ -82,6 +89,7 @@ class UserHistoryActivity : AppCompatActivity() {
         mIntentFilter.addAction(Constants.BROADCAST_USER_ABOUT_LOADED)
         mIntentFilter.addAction(Constants.BROADCAST_USER_ABOUT_ERROR)
         registerReceiver(mBroadcastReceiver, mIntentFilter)
+
         loadUserAbout(mUserId)
     }
 

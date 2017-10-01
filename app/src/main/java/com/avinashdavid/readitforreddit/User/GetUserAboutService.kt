@@ -3,6 +3,7 @@ package com.avinashdavid.readitforreddit.User
 import android.app.IntentService
 import android.content.Context
 import android.content.Intent
+import android.preference.PreferenceManager
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
@@ -20,9 +21,16 @@ import timber.log.Timber
 
 class GetUserAboutService : IntentService("GetUserAboutService") {
     companion object {
+        private const val loggedInUser = "loggedInUser"
         fun loadUserAbout(context: Context, userId: String) {
             val intent = Intent(context, GetUserAboutService::class.java)
             intent.putExtra(EXTRA_SERVICE_USER_NAME, userId)
+            context.startService(intent)
+        }
+
+        fun loadUserAbout(context: Context) {
+            val intent = Intent(context, GetUserAboutService::class.java)
+            intent.putExtra(EXTRA_SERVICE_USER_NAME, loggedInUser)
             context.startService(intent)
         }
     }
@@ -31,6 +39,13 @@ class GetUserAboutService : IntentService("GetUserAboutService") {
 
     override fun onHandleIntent(intent: Intent?) {
         mUserId = intent!!.getStringExtra(EXTRA_SERVICE_USER_NAME)
+
+        if (mUserId == loggedInUser) {
+            if (LoggedInUser.currentLoggedInUser != null) {
+                mUserId = LoggedInUser.currentLoggedInUser!!.username
+            }
+        }
+
 
         val context : Context = this.applicationContext
 

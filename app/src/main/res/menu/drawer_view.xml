@@ -32,6 +32,16 @@
             android:id="@+id/itLogin"
             android:title="@string/title_login"/>
 
+        <item
+            android:orderInCategory="0"
+            android:id="@+id/itProfile"
+            android:title="@string/profile"/>
+
+        <item
+            android:orderInCategory="0"
+            android:id="@+id/itLogOut"
+            android:title="@string/log_out"/>
+
     </group>
 
     <group

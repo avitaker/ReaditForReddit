@@ -46,6 +46,10 @@ public class Constants {
     public static final String BROADCAST_USER_ABOUT_LOADED = "com.avinashdavid.readitforreddit.BROADCAST_USER_ABOUT_LOADED";
     public static final String BROADCAST_USER_ABOUT_ERROR = "com.avinashdavid.readitforreddit.BROADCAST_USER_ABOUT_ERROR";
 
+    public static final String BROADCAST_GET_LOGGEDIN_USER_SUCCESS = "com.avinashdavid.readitforreddit.BROADCAST_GET_LOGGEDIN_USER_SUCCESS";
+    public static final String BROADCAST_GET_LOGGEDIN_USER_ERROR = "com.avinashdavid.readitforreddit.BROADCAST_GET_LOGGEDIN_USER_ERROR";
+
+
     public static final String KEY_COMMENTS_FIRST_CHILD = "commentsScrollPos";
     public static final String KEY_COMMENTS_OFFSET = "commentsOffset";
     public static final String KEY_POSTS_SCROLL_POSITION = "postsScrollPos";

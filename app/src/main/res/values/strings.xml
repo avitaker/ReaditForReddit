@@ -181,6 +181,8 @@
     <!--SETTINGS FRAGMENT-->
     <string name="title_app_settings">Settings</string>
     <string name="title_login">Log In</string>
+    <string name="profile">Profile</string>
+    <string name="log_out">Log Out</string>
 
     <string name="title_theme_settings">Theme</string>
 
