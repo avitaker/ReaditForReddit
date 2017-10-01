@@ -18,6 +18,9 @@ import android.view.View;
 
 import com.avinashdavid.readitforreddit.R;
 
+import java.util.Calendar;
+import java.util.TimeZone;
+
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
@@ -86,7 +89,7 @@ public class GeneralUtils {
         if (text.length()<=0){
             return text;
         }
-        while (text.charAt(text.length() - 1) == '\n') {
+        while (text.length() > 1 && text.charAt(text.length() - 1) == '\n') {
             text = text.subSequence(0, text.length() - 1);
         }
 
@@ -140,5 +143,10 @@ public class GeneralUtils {
         android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
         ft.replace(containerId, fragment, tag);
         ft.commit();
+    }
+
+    public static long getGMTTimeInMillis() {
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        return calendar.getTimeInMillis();
     }
 }

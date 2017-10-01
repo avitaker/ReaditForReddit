@@ -187,6 +187,7 @@
                 android:navigationIcon="?attr/menu_icon"
                 app:popupTheme="?attr/toolbar_popup_theme"
                 app:layout_collapseMode="pin"
+                app:layout_scrollFlags="scroll|enterAlways"
                 android:onClick="commentScrollToTop">
 
                 <TextView
@@ -216,7 +217,7 @@
             android:indeterminate="true" />
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <com.avinashdavid.readitforreddit.MiscUtils.FlingAdjustedRecyclerView
         android:id="@+id/comment_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

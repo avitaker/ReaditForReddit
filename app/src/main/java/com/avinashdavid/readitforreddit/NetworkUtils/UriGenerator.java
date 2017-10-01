@@ -19,9 +19,11 @@ public class UriGenerator {
     private static final String PATH_SEGMENT_ABOUT = "about";
     private static final String PATH_SEGMENT_OVERVIEW = "overview";
     private static final String PATH_SEGMENT_SUBMITTED = "submitted";
+    private static final String PATH_SUBREDDITS = "subreddits";
+    private static final String PATH_USERS = "users";
     private static final String KEY_SORT = "sort";
     private static final String subredditMarkerString = "r";
-    private static final String KEY_SUBREDDITS = "subreddits";
+    private static final String KEY_SHOW = "show";
     private static final String KEY_COMMENT_DEPTH = "depth";
     private static  final String KEY_COUNT = "count";
 
@@ -33,14 +35,15 @@ public class UriGenerator {
     private static final int DEFAULT_COMMENT_DEPTH = 10;
     public static final int DEFAULT_COMMENTS_LIMIT = 150;
 
-    private static final Uri baseListingUri = Uri.parse("https://api.reddit.com/");
+    private static final Uri baseUnauthUrl = Uri.parse("https://api.reddit.com/");
+    private static final Uri baseAuthUrl = Uri.parse("https://oauth.reddit.com");
 
-    public static Uri getBaseListingUri() {
-        return baseListingUri.buildUpon().appendQueryParameter(KEY_LIMIT, Integer.toString(20)).build();
+    public static Uri getBaseUnauthUrl() {
+        return baseUnauthUrl.buildUpon().appendQueryParameter(KEY_LIMIT, Integer.toString(20)).build();
     }
 
     public static Uri getUriPosts(@Nullable String subreddit, @Nullable String sorting, int limit, @Nullable String after){
-        Uri.Builder builder = baseListingUri.buildUpon();
+        Uri.Builder builder = baseUnauthUrl.buildUpon();
         if (subreddit!=null) {
             builder.appendPath(subredditMarkerString).appendPath(subreddit);
         }
@@ -90,7 +93,7 @@ public class UriGenerator {
     }
 
     public static Uri getUriSearch(@Nullable String subreddit, @Nullable String query, @Nullable String after, @Nullable String sorting, boolean restrictSr){
-        Uri.Builder builder = baseListingUri.buildUpon();
+        Uri.Builder builder = baseUnauthUrl.buildUpon();
         if (null!=subreddit){
             builder.appendPath(subredditMarkerString).appendPath(subreddit);
         }
@@ -179,13 +182,13 @@ public class UriGenerator {
         return builder.build();
     }
 
-    public static Uri getUriSubredditList(@Nullable String where, @Nullable String mineWhere){
-        Uri.Builder builder = baseListingUri.buildUpon().appendPath(KEY_SUBREDDITS);
-        if (null != where){
+    public static Uri getUriSubredditList(@Nullable String where, boolean ofLoggedInUser){
+        Uri.Builder builder = baseUnauthUrl.buildUpon().appendPath(PATH_SUBREDDITS);
+        if (ofLoggedInUser){
+            builder = baseAuthUrl.buildUpon().appendPath(PATH_SUBREDDITS);
+            builder.appendPath("mine").appendPath("subscriber").appendQueryParameter(KEY_LIMIT, Integer.toString(Integer.MAX_VALUE)).appendQueryParameter(KEY_SHOW, "all");
+        } else if (where != null) {
             builder.appendPath(where);
-            if (null!=mineWhere){
-                builder.appendPath(mineWhere);
-            }
         } else {
             builder.appendPath("default");
         }
@@ -193,7 +196,7 @@ public class UriGenerator {
     }
 
     public static Uri getUriCommentsForArticle(@Nullable String subreddit, String articleId, @Nullable String sortOrder){
-        Uri.Builder builder = baseListingUri.buildUpon();
+        Uri.Builder builder = baseUnauthUrl.buildUpon();
         if (articleId.contains("t3_")) articleId = articleId.substring(3);
         if (null!=subreddit){
             builder.appendPath(subredditMarkerString).appendPath(subreddit);
@@ -209,13 +212,13 @@ public class UriGenerator {
     }
 
     public static Uri getUriSubredditAbout(String subreddit){
-        Uri.Builder builder = baseListingUri.buildUpon();
+        Uri.Builder builder = baseUnauthUrl.buildUpon();
         builder.appendPath(subredditMarkerString).appendPath(subreddit).appendPath("about");
         return builder.build();
     }
 
     public static Uri getUriMoreComments(String articleId, String children){
-        Uri.Builder builder = baseListingUri.buildUpon();
+        Uri.Builder builder = baseUnauthUrl.buildUpon();
         builder.appendPath("api").appendPath("morechildren").appendQueryParameter("api_type", "json").appendQueryParameter("link_id", "t3_"+articleId);
         StringBuilder soFar = new StringBuilder(builder.build().toString());
         soFar.append("&children=" + children);
@@ -227,14 +230,14 @@ public class UriGenerator {
     }
 
     public static String getUriUserComments(@NonNull String userId) {
-        Uri.Builder builder = baseListingUri.buildUpon();
+        Uri.Builder builder = baseUnauthUrl.buildUpon();
         builder.appendPath(PATH_SEGMENT_USER).appendPath(userId).appendPath(PATH_SEGMENT_COMMENTS);
         builder.appendQueryParameter(KEY_LIMIT, "20");
         return builder.build().toString() + ".json";
     }
 
     public static String getUriUserComments(@NonNull String userId, boolean loadMore) {
-        Uri.Builder builder = baseListingUri.buildUpon();
+        Uri.Builder builder = baseUnauthUrl.buildUpon();
         builder.appendPath(PATH_SEGMENT_USER).appendPath(userId).appendPath(PATH_SEGMENT_COMMENTS);
         builder.appendQueryParameter(KEY_LIMIT, "20");
         if (loadMore) builder.appendQueryParameter(KEY_AFTER, UserThingsSingleton.INSTANCE.getLastCommentFullName());
@@ -243,14 +246,14 @@ public class UriGenerator {
     }
 
     public static String getUriUserOverview(@NonNull String userId) {
-        Uri.Builder builder = baseListingUri.buildUpon();
+        Uri.Builder builder = baseUnauthUrl.buildUpon();
         builder.appendPath(PATH_SEGMENT_USER).appendPath(userId).appendPath(PATH_SEGMENT_OVERVIEW);
         builder.appendQueryParameter(KEY_LIMIT, "20");
         return builder.build().toString();
     }
 
     public static String getUriUserOverview(@NonNull String userId, boolean loadMore) {
-        Uri.Builder builder = baseListingUri.buildUpon();
+        Uri.Builder builder = baseUnauthUrl.buildUpon();
         builder.appendPath(PATH_SEGMENT_USER).appendPath(userId).appendPath(PATH_SEGMENT_OVERVIEW);
         builder.appendQueryParameter(KEY_LIMIT, "20");
         if (loadMore) {
@@ -262,14 +265,14 @@ public class UriGenerator {
     }
 
     public static String getUriUserSubmitted(@NonNull String userId){
-        Uri.Builder builder = baseListingUri.buildUpon();
+        Uri.Builder builder = baseUnauthUrl.buildUpon();
         builder.appendPath(PATH_SEGMENT_USER).appendPath(userId).appendPath(PATH_SEGMENT_SUBMITTED);
         builder.appendQueryParameter(KEY_LIMIT, "20");
         return builder.build().toString();
     }
 
     public static String getUriUserSubmitted(@NonNull String userId, boolean loadMore) {
-        Uri.Builder builder = baseListingUri.buildUpon();
+        Uri.Builder builder = baseUnauthUrl.buildUpon();
         builder.appendPath(PATH_SEGMENT_USER).appendPath(userId).appendPath(PATH_SEGMENT_SUBMITTED);
         builder.appendQueryParameter(KEY_LIMIT, "20");
         if (loadMore) builder.appendQueryParameter(KEY_AFTER, UserThingsSingleton.INSTANCE.getLastSubmittedFullName());
@@ -278,13 +281,13 @@ public class UriGenerator {
     }
 
     public static String getUriUserAbout(@NonNull String userId) {
-        Uri.Builder builder = baseListingUri.buildUpon();
+        Uri.Builder builder = baseUnauthUrl.buildUpon();
         builder.appendPath(PATH_SEGMENT_USER).appendPath(userId).appendPath(PATH_SEGMENT_ABOUT);
         return builder.build().toString();
     }
 
     public static Uri getUriCommentThread(@NonNull String postId, @NonNull String commentId, int numberOfParents) {
-        Uri.Builder builder = baseListingUri.buildUpon();
+        Uri.Builder builder = baseUnauthUrl.buildUpon();
         builder.appendPath(PATH_SEGMENT_COMMENTS).appendPath(postId);
         builder.appendQueryParameter("comment", commentId);
         if (numberOfParents > 0 && numberOfParents <= 8){

@@ -1,15 +1,12 @@
 package com.avinashdavid.readitforreddit;
 
 import android.app.Activity;
-import android.app.SharedElementCallback;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
@@ -19,7 +16,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -33,7 +29,6 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +43,7 @@ import com.avinashdavid.readitforreddit.NetworkUtils.GetListingsService;
 import com.avinashdavid.readitforreddit.NetworkUtils.GetSubredditInfoService;
 import com.avinashdavid.readitforreddit.NetworkUtils.GetSubredditsService;
 import com.avinashdavid.readitforreddit.NetworkUtils.UriGenerator;
+import com.avinashdavid.readitforreddit.OAuth.GetAuthActivity;
 import com.avinashdavid.readitforreddit.PostUtils.CommentRecord;
 import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 import com.avinashdavid.readitforreddit.SubredditUtils.SubredditObject;
@@ -63,7 +59,6 @@ import com.orm.SugarRecord;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -88,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     int itemCount=20;
 
+    private String mAccessToken = null;
+
     public static final String EXTRA_SUBREDDIT_NAME = "extraSubName";
 
     private static final String KEY_SUBREDDIT_NAME = "sr_name_SI";
@@ -108,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final int CODE_MANAGE_SUBREDDITS = 7;
 
     private static final int CODE_APP_SETTINGS = 8;
+
+    private static final int CODE_LOGIN_USER = 9;
 
     public static int CLICKED_ITEM_POSITION = -1;
 
@@ -194,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         usingTabletLayout = (findViewById(R.id.comment_recyclerview)!=null);
         mApplicationSharedPreferences.edit().putBoolean(getString(R.string.pref_boolean_use_tablet_layout), usingTabletLayout).apply();
 
+        mAccessToken = mApplicationSharedPreferences.getString(GetAuthActivity.KEY_ACCESS_TOKEN, null);
 
         if (savedInstanceState!=null) {
             mSubredditString = savedInstanceState.getString(KEY_SUBREDDIT_NAME);
@@ -247,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 //        mSubredditObjectRealmResults = mRealm.where(SubredditObject.class).findAll().sort("subredditName");
         String rawString = mApplicationSharedPreferences.getString(getString(R.string.pref_subreddit_list), "");
-        setSubredditsInNavigationView(rawString);
+        setSubredditsInNavigationView(rawString, mAccessToken);
         setSidebarText((TextView)findViewById(R.id.sidebar_text));
 
         mNavigationView.setNavigationItemSelectedListener(this);
@@ -285,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     mySnackbar.setAction(R.string.retry, new MyRefreshListener());
                     mySnackbar.show();
                 } else if (Constants.BROADCAST_SUBREDDITS_LOADED.equals(action)){
-                    setSubredditsInNavigationView("");
+                    setSubredditsInNavigationView("", mAccessToken);
                 } else if (Constants.BROADCAST_RANDOM_SUBREDDIT_POSTS_LOADED.equals(action)){
                     refreshUI(true);
                 }
@@ -300,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Activity activity = MainActivity.this;
                 if (action.equals(Constants.BROADCAST_SUBREDDIT_ADDED)) {
                     mApplicationSharedPreferences.edit().putBoolean(getString(R.string.pref_reload_subreddits), true).commit();
-                    setSubredditsInNavigationView("");
+                    setSubredditsInNavigationView("", mAccessToken);
                     stopAllReceivers();
                     activity.finish();
                     Intent intent1 = new Intent(activity, activity.getClass());
@@ -570,7 +570,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode==CODE_MANAGE_SUBREDDITS){
             if (resultCode == Activity.RESULT_OK){
-                setSubredditsInNavigationView("");
+                setSubredditsInNavigationView("", mAccessToken);
             }
         } else if (requestCode == CODE_APP_SETTINGS){
 //            Toast.makeText(MainActivity.this, getString(R.string.message_restart_to_see_changes), Toast.LENGTH_LONG).show();
@@ -582,6 +582,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent intent1 = new Intent(activity, activity.getClass());
                 intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 activity.startActivity(intent1);
+            }
+        } else if (requestCode == CODE_LOGIN_USER) {
+            if (resultCode == Activity.RESULT_OK) {
+                Toast.makeText(this, "Getting subreddits", Toast.LENGTH_LONG).show();
+                mAccessToken = mApplicationSharedPreferences.getString(GetAuthActivity.KEY_ACCESS_TOKEN, null);
+                haveToReloadSubreddits = true;
+                GetSubredditsService.loadSubreddits(this, null, true, mAccessToken);
             }
         }
         else {
@@ -724,7 +731,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    public void setSubredditsInNavigationView(String rawString){
+    public void setSubredditsInNavigationView(String rawString, @Nullable String authToken){
         final Menu menu = mNavigationView.getMenu();
         String subTitle;
         if (rawString.length()==0 || haveToReloadSubreddits){
@@ -735,7 +742,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (mSubredditObjectRealmResults.size()<=0) {
                 mListingRecyclerview.setVisibility(View.GONE);
                 findViewById(R.id.firstTimeLayout).setVisibility(View.VISIBLE);
-                getSubredditsForNavigationMenu(null, null);
+                getSubredditsForNavigationMenu(null, authToken != null, authToken);
                 Timber.e("no subreddits in realm");
             } else {
                 StringBuilder sb = new StringBuilder();
@@ -768,11 +775,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    void getSubredditsForNavigationMenu(@Nullable String where, @Nullable String mineWhere){
+    void getSubredditsForNavigationMenu(@Nullable String where, boolean mineWhere, @Nullable String authToken){
         if (mRealm==null){
             startRealm();
         }
-        GetSubredditsService.loadSubreddits(this, where, mineWhere);
+        GetSubredditsService.loadSubreddits(this, where, mineWhere, authToken);
     }
 
     public List<RedditListing> getPosts(@Nullable String subredditString, @Nullable String searchQuery, @Nullable String after, @Nullable String sort, boolean restrictSr, boolean forceRefresh){
@@ -820,6 +827,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (itemId == R.id.app_settings){
             Intent intent = new Intent(this, AppSettingsActivity.class);
             startActivityForResult(intent, CODE_APP_SETTINGS);
+        } else if (itemId == R.id.itLogin) {
+            Intent intent = new Intent(this, GetAuthActivity.class);
+            startActivityForResult(intent, CODE_LOGIN_USER);
         }
         else {
             saveCheckedItem(itemId);

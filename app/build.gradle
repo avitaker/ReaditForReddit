@@ -87,7 +87,6 @@ dependencies {
     compile 'com.android.support:percent:25.1.0'
     compile 'uk.co.chrisjenx:calligraphy:2.3.0'
     compile 'com.google.code.gson:gson:2.8.1'
-    compile 'com.wu-man:android-oauth-client:0.4.5'
     testCompile 'junit:junit:4.12'
 }
 

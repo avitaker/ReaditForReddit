@@ -37,7 +37,7 @@ class GetUserCommentsService : IntentService("GetUserCommentsService") {
         mUserName = intent!!.getStringExtra(EXTRA_SERVICE_USER_NAME)
         mLoadMore = intent.getBooleanExtra(EXTRA_USER_OVERVIEW_MORE, false)
 
-        val context : Context = this.applicationContext;
+        val context : Context = this.applicationContext
 
         if (mLoadMore && mUserName == UserThingsSingleton.lastUser && UserThingsSingleton.lastCommentFullName == "null") {
             return

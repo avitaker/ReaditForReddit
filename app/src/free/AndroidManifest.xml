@@ -16,6 +16,7 @@
             android:name="com.avinashdavid.readitforreddit.MainActivity"
             >
         </activity>
+        <activity android:name="com.avinashdavid.readitforreddit.OAuth.GetAuthActivity"/>
         <!--Include the AdActivity configChanges and theme. -->
         <activity
             android:name="com.google.android.gms.ads.AdActivity"

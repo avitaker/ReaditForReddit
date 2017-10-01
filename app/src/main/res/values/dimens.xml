@@ -3,6 +3,12 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="padding_tiny">2dp</dimen>
+    <dimen name="padding_minor">4dp</dimen>
+    <dimen name="padding_medium">8dp</dimen>
+    <dimen name="padding_medium_large">12dp</dimen>
+    <dimen name="padding_large">16dp</dimen>
+
     <!--Appbar and collapsing toolbar-->
     <dimen name="listings_appbar_height">100dp</dimen>
     <dimen name="collapsingtoolbar_marginstart">48dp</dimen>

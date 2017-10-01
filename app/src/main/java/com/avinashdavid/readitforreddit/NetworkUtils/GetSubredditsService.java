@@ -4,17 +4,26 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.util.Base64;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
+import com.avinashdavid.readitforreddit.OAuth.GetUserAuthService;
 import com.avinashdavid.readitforreddit.SubredditUtils.SubredditObject;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -32,11 +41,13 @@ public class GetSubredditsService extends IntentService {
     private Realm mRealm;
 
     private Uri mUrl;
+    private String mAuthToken;
 
     private String mWhere;
     private String mMineWhere;
 
     public static final String EXTRA_URL = "extraUrlParcelable";
+    public static final String EXTRA_AUTH_TOKEN = "EXTRA_AUTH_TOKEN";
 
     private static final String KIND_KEY = "kind";
     private static final String LISTING_KIND = "Listing";
@@ -76,6 +87,10 @@ public class GetSubredditsService extends IntentService {
             //TODO handle empty intent
             return;
         }
+        mAuthToken = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).getString(GetUserAuthService.PREF_NAME_ACCESS_TOKEN, null);
+        Timber.d(mAuthToken);
+        final String requestBody = "grant_type=client_credentials";
+
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, mUrl.toString(), null, new Response.Listener<JSONObject>() {
 
@@ -134,7 +149,32 @@ public class GetSubredditsService extends IntentService {
                         // TODO Auto-generated method stub
                         Timber.e(error, "error while retreiving listings data");
                     }
-                });
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("grant_type", "client_credentials");
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+
+                if (mAuthToken != null) {
+                    headers.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+                    headers.put("Authorization", "bearer " + mAuthToken);
+                }
+                return headers;
+            }
+        };
+
+
+        try {
+            jsObjRequest.getHeaders();
+        } catch (Exception e) {
+            Timber.e(e);
+        }
 
         NetworkSingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
     }
@@ -147,10 +187,11 @@ public class GetSubredditsService extends IntentService {
         super.onDestroy();
     }
 
-    public static void loadSubreddits(Context context, @Nullable String where, @Nullable String mineWhere){
+    public static void loadSubreddits(Context context, @Nullable String where, boolean mineWhere, @Nullable String authToken){
         Intent intent = new Intent(context, GetSubredditsService.class);
         Uri url = UriGenerator.getUriSubredditList(where, mineWhere);
         intent.putExtra(GetSubredditsService.EXTRA_URL, url);
+        intent.putExtra(GetSubredditsService.EXTRA_AUTH_TOKEN, authToken);
         context.startService(intent);
     }
 }

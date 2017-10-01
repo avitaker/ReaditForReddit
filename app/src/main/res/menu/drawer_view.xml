@@ -22,10 +22,15 @@
             android:id="@+id/add.subscription"
             android:title="@string/title_activity_manage_subreddits"/>
 
-        <item
+        <itemm
             android:orderInCategory="0"
             android:id="@+id/app.settings"
             android:title="@string/title_app_settings"/>
+
+        <item
+            android:orderInCategory="0"
+            android:id="@+id/itLogin"
+            android:title="@string/title_login"/>
 
     </group>
 

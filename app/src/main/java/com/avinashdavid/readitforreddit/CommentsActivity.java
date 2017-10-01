@@ -445,7 +445,7 @@ public class CommentsActivity extends AppCompatActivity
     public void addMoreItems(){
 //        mAfter = mCommentsRecyclerViewAdapter.getData().get(mCommentsRecyclerViewAdapter.getItemCount() - 1).getAfter();
         Intent intent = new Intent(CommentsActivity.this, GetListingsService.class);
-        intent.putExtra(GetListingsService.EXTRA_URL, UriGenerator.getBaseListingUri());
+        intent.putExtra(GetListingsService.EXTRA_URL, UriGenerator.getBaseUnauthUrl());
         intent.putExtra(GetListingsService.EXTRA_LOAD_AFTER, mAfter);
         startService(intent);
     }
