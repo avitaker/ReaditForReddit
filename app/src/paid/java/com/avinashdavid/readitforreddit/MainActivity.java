@@ -882,7 +882,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             LoggedInUser.Companion.setCurrentLoggedInUser(null);
             finish();
             startActivity(new Intent(this, MainActivity.class));
-            //TODO: LOGOUT
 //            UserHistoryActivity.Companion.startUserHistoryActivity(this);
         }
         else {

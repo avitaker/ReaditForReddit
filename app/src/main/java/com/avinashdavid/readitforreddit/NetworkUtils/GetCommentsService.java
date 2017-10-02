@@ -187,6 +187,7 @@ public class GetCommentsService extends IntentService {
             JSONObject currentJsonObj = jsonObjects.get(i);
             CommentRecord commentObject = getChildrenCommentObjectsFromJsonDataObject(currentJsonObj, linkId);
             if (commentObject == null) break;
+
             if (commentObject.depth!=DEPTH_MORE) {
                 commentObject.save();
             }
@@ -249,8 +250,8 @@ public class GetCommentsService extends IntentService {
                 String body = bodyRaw.substring(0, bodyRaw.length()-1).replace("\"","");
                 long timecreated = replyData.getInt(DEPTH_KEY);
                 String parent = replyData.getString(PARENT_KEY);
-                Object isLikedValue = replyData.get("likes");
-                boolean isLiked = isLikedValue != null;
+                String isLikedValue = replyData.getString("likes");
+                boolean isLiked = !isLikedValue.equals("null");
                 boolean hasReplies = false;
                 String authorflair = "";
 
@@ -270,8 +271,8 @@ public class GetCommentsService extends IntentService {
                 boolean isGilded = replyData.getInt(GILDED) > 0;
                 boolean isEdited = !replyData.getString(EDITED).equals("false");
 
-                Object isLikedValue = replyData.get("likes");
-                boolean isLiked = isLikedValue != null;
+                String isLikedValue = replyData.getString("likes");
+                boolean isLiked = !isLikedValue.equals("null");
 
                 commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, scoreHidden, score, author, body, parent, timecreated, depth, hasReplies, authorflair, isGilded, isEdited, isLiked);
                 return commentObject;
