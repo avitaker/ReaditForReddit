@@ -12,6 +12,7 @@ import com.avinashdavid.readitforreddit.MiscUtils.Constants
 import com.avinashdavid.readitforreddit.NetworkUtils.NetworkSingleton
 import com.avinashdavid.readitforreddit.OAuth.GetUserAuthService.Companion.PREF_NAME_ACCESS_TOKEN
 import com.avinashdavid.readitforreddit.OAuth.GetUserAuthService.Companion.PREF_NAME_REFRESH_TOKEN
+import com.avinashdavid.readitforreddit.User.LoggedInUser
 import org.json.JSONObject
 import timber.log.Timber
 import java.util.HashMap
@@ -21,12 +22,17 @@ import java.util.HashMap
  */
 class RevokeAccessTokenService : IntentService("RevokeAccessTokenService") {
     val revokeUrlString = "https://www.reddit.com/api/v1/revoke_token"
-    val currentToken = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString(PREF_NAME_ACCESS_TOKEN, null)
-    val currentRefreshToken = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString(PREF_NAME_REFRESH_TOKEN, null)
+    var currentToken = ""
+    var currentRefreshToken = ""
 
     override fun onHandleIntent(intent: Intent?) {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        if (currentToken == null) return;
+
+        currentToken = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString(PREF_NAME_ACCESS_TOKEN, "")
+        currentRefreshToken = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString(PREF_NAME_REFRESH_TOKEN, "")
+
+        if (currentToken == "") return
+
 
         val request = object: StringRequest(Request.Method.POST, revokeUrlString, Response.Listener<String> { response ->
             Timber.d("TOKEN REVOKED")
@@ -34,6 +40,8 @@ class RevokeAccessTokenService : IntentService("RevokeAccessTokenService") {
             spe.putString(PREF_NAME_ACCESS_TOKEN, null)
                     .putString(PREF_NAME_REFRESH_TOKEN, null)
                     .apply()
+
+            LoggedInUser.currentLoggedInUser = null
 
             val successIntent = Intent()
             successIntent.action = Constants.BROADCAST_REVOKE_TOKEN_SUCCEEDED

@@ -10,11 +10,13 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
+import com.avinashdavid.readitforreddit.OAuth.GetUserAuthService;
 import com.avinashdavid.readitforreddit.PostUtils.CommentRecord;
 import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 import com.avinashdavid.readitforreddit.R;
@@ -23,6 +25,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import timber.log.Timber;
 
@@ -91,6 +95,15 @@ public class GetCommentsService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         mUrl = intent.getParcelableExtra(EXTRA_URL);
         mSort = intent.getStringExtra(EXTRA_SORT);
+        final String mAuthToken = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).getString(GetUserAuthService.PREF_NAME_ACCESS_TOKEN, null);
+        Timber.d("AUTHORITY: " + mUrl.getAuthority());
+
+        if (mAuthToken!=null && !mAuthToken.equals("")) {
+            mUrl = mUrl.buildUpon().authority("oauth.reddit.com").build();
+            Timber.d(mUrl.toString());
+        }
+
+        Timber.d("COMMENTS LINK:  " + mUrl.toString());
 
         if (null == mSort){
             mSort = getResources().getStringArray(R.array.sort_listing_options)[0];
@@ -146,7 +159,25 @@ public class GetCommentsService extends IntentService {
                     }
 
                     
-                });
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("grant_type", "client_credentials");
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+
+                if (mAuthToken != null) {
+                    headers.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+                    headers.put("Authorization", "bearer " + mAuthToken);
+                }
+                return headers;
+            }
+        };
 
         NetworkSingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonArrayRequest);
     }
@@ -218,10 +249,12 @@ public class GetCommentsService extends IntentService {
                 String body = bodyRaw.substring(0, bodyRaw.length()-1).replace("\"","");
                 long timecreated = replyData.getInt(DEPTH_KEY);
                 String parent = replyData.getString(PARENT_KEY);
+                Object isLikedValue = replyData.get("likes");
+                boolean isLiked = isLikedValue != null;
                 boolean hasReplies = false;
                 String authorflair = "";
 
-                commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, false, moreCount, author, body, parent, timecreated, DEPTH_MORE, false, authorflair, false, false);
+                commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, false, moreCount, author, body, parent, timecreated, DEPTH_MORE, false, authorflair, false, false, isLiked);
                 return commentObject;
             } catch (Exception e){
                 String id = replyData.getString(ID_KEY);
@@ -237,7 +270,10 @@ public class GetCommentsService extends IntentService {
                 boolean isGilded = replyData.getInt(GILDED) > 0;
                 boolean isEdited = !replyData.getString(EDITED).equals("false");
 
-                commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, scoreHidden, score, author, body, parent, timecreated, depth, hasReplies, authorflair, isGilded, isEdited);
+                Object isLikedValue = replyData.get("likes");
+                boolean isLiked = isLikedValue != null;
+
+                commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, scoreHidden, score, author, body, parent, timecreated, depth, hasReplies, authorflair, isGilded, isEdited, isLiked);
                 return commentObject;
             }
 //            String id = replyData.getString(ID_KEY);

@@ -44,6 +44,8 @@ import com.avinashdavid.readitforreddit.NetworkUtils.GetSubredditInfoService;
 import com.avinashdavid.readitforreddit.NetworkUtils.GetSubredditsService;
 import com.avinashdavid.readitforreddit.NetworkUtils.UriGenerator;
 import com.avinashdavid.readitforreddit.OAuth.GetAuthActivity;
+import com.avinashdavid.readitforreddit.OAuth.GetUserAuthService;
+import com.avinashdavid.readitforreddit.OAuth.RevokeAccessTokenService;
 import com.avinashdavid.readitforreddit.PostUtils.CommentRecord;
 import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 import com.avinashdavid.readitforreddit.SubredditUtils.SubredditObject;
@@ -363,11 +365,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     mNavigationView.getMenu().removeItem(R.id.itProfile);
                     mNavigationView.getMenu().removeItem(R.id.itLogOut);
 //                    sidebarText.setText(getString(R.string.error_loading_sidebar));
+                } else if (action.equals(Constants.BROADCAST_REVOKE_TOKEN_SUCCEEDED)) {
+                    finish();
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 }
             }
         };
         mLoggedInUserIntentFilter = new IntentFilter(Constants.BROADCAST_GET_LOGGEDIN_USER_SUCCESS);
         mLoggedInUserIntentFilter.addAction(Constants.BROADCAST_GET_LOGGEDIN_USER_ERROR);
+        mLoggedInUserIntentFilter.addAction(Constants.BROADCAST_REVOKE_TOKEN_SUCCEEDED);
 
         if (usingTabletLayout){
             mCommentsRecyclerview = (RecyclerView)findViewById(R.id.comment_recyclerview);
@@ -870,7 +876,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (itemId == R.id.itProfile) {
             UserHistoryActivity.Companion.startUserHistoryActivity(this);
         } else if (itemId == R.id.itLogOut) {
-            Toast.makeText(this, "IMPLEMENT ME", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, RevokeAccessTokenService.class);
+            startService(intent);
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putString(GetUserAuthService.PREF_NAME_ACCESS_TOKEN, null).putString(GetUserAuthService.PREF_NAME_REFRESH_TOKEN, null).apply();
+            LoggedInUser.Companion.setCurrentLoggedInUser(null);
+            finish();
+            startActivity(new Intent(this, MainActivity.class));
             //TODO: LOGOUT
 //            UserHistoryActivity.Companion.startUserHistoryActivity(this);
         }
