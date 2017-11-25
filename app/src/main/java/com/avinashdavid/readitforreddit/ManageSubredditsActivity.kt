@@ -40,7 +40,7 @@ class ManageSubredditsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         PreferenceUtils.onActivityCreateSetTheme(this)
         setContentView(R.layout.activity_manage_subreddits)
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
 //        mRecyclerView = findViewById(R.id.manage_subreddits_recyclerview) as RecyclerView

@@ -85,7 +85,7 @@ class UserOverviewFragment : Fragment(), ScrollListener {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         fragmentView = inflater?.inflate(R.layout.fragment_user_overview, container, false)
 
-        rvUserOverview = fragmentView!!.findViewById(R.id.rvUserOverview) as RecyclerView
+        rvUserOverview = fragmentView!!.findViewById<RecyclerView>(R.id.rvUserOverview)
 
         rvUserOverview!!.prepareLinear(activity, true)
 
@@ -153,7 +153,6 @@ class UserOverviewFragment : Fragment(), ScrollListener {
         val firstChild = rvUserOverview!!.getChildAt(0)
         if (firstChild != null) {
             val firstVilibleChildPosition = rvUserOverview!!.getChildAdapterPosition(firstChild)
-            val offset = firstChild.top
 
             outState.putInt(KEY_FIRST_CHILD, firstVilibleChildPosition)
         }

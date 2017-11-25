@@ -76,11 +76,11 @@ class UserHistoryAdapter(context: Context, things: MutableList<SugarRecord>, fra
 
     class CommentViewholder(var view: View): RecyclerView.ViewHolder(view){
         val mContext = view.context
-        public val tvLinkTitle = view.findViewById(R.id.tvLinkTitle) as TextView
-        public val tvCommentScore = view.findViewById(R.id.tvCommentScore) as TextView
-        public val tvCommentAge = view.findViewById(R.id.tvCommentAge) as TextView
-        public val tvLinkSubreddit = view.findViewById(R.id.tvLinkSubreddit) as TextView
-        public val tvCommentBody = view.findViewById(R.id.tvCommentBody) as TextView
+        public val tvLinkTitle = view.findViewById<TextView>(R.id.tvLinkTitle)
+        public val tvCommentScore = view.findViewById<TextView>(R.id.tvCommentScore)
+        public val tvCommentAge = view.findViewById<TextView>(R.id.tvCommentAge)
+        public val tvLinkSubreddit = view.findViewById<TextView>(R.id.tvLinkSubreddit)
+        public val tvCommentBody = view.findViewById<TextView>(R.id.tvCommentBody)
 
         fun bindHolder(comment: UserHistoryComment) {
             tvLinkTitle.text = comment.link_title

@@ -32,7 +32,7 @@ class GetUserSubmittedService: IntentService("GetUserSubmittedService") {
 
     override fun onHandleIntent(intent: Intent?) {
         mUserName = intent!!.getStringExtra(EXTRA_SERVICE_USER_NAME)
-        mLoadMore = intent!!.getBooleanExtra(EXTRA_USER_OVERVIEW_MORE, false)
+        mLoadMore = intent.getBooleanExtra(EXTRA_USER_OVERVIEW_MORE, false)
 
         if (mLoadMore && mUserName == UserThingsSingleton.lastUser && UserThingsSingleton.lastSubmittedFullName == "null") {
             return

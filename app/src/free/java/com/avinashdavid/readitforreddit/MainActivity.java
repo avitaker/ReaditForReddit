@@ -51,8 +51,6 @@ import com.avinashdavid.readitforreddit.UI.GetCommentsAsyncTask;
 import com.avinashdavid.readitforreddit.UI.GoToDialogFragment;
 import com.avinashdavid.readitforreddit.UI.RedditPostRecyclerAdapter;
 import com.avinashdavid.readitforreddit.UI.SearchDialogFragment;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 
 import java.util.List;
 
