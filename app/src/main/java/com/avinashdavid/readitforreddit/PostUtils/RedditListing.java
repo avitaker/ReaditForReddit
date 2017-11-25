@@ -56,10 +56,13 @@ public class RedditListing extends SugarRecord {
     @SerializedName("over_18")
     public boolean isNSFW;
 
+    @SerializedName("likes")
+    public String likes;
+
     public RedditListing() {
     }
 
-    public RedditListing(String postId, long timestamp, String title, int voteCount, int commentsCount, String author, String subreddit, long timeCreated, String selftext_html, String domain, String after, String url, String thumbnailUrl, boolean isGilded, boolean isNSFW) {
+    public RedditListing(String postId, long timestamp, String title, int voteCount, int commentsCount, String author, String subreddit, long timeCreated, String selftext_html, String domain, String after, String url, String thumbnailUrl, boolean isGilded, boolean isNSFW, String likes) {
         this.mPostId = postId;
         this.timestamp = timestamp;
         this.mTitle = title;
@@ -75,6 +78,7 @@ public class RedditListing extends SugarRecord {
         this.thumbnailUrl = thumbnailUrl;
         this.isGilded = isGilded;
         this.isNSFW = isNSFW;
+        this.likes = likes;
     }
 
     public RedditListing(JSONObject linkObject){
@@ -92,6 +96,7 @@ public class RedditListing extends SugarRecord {
             this.selftext_html = linkObject.getString("selftext_html");
             this.thumbnailUrl = linkObject.getString("thumbnail");
             this.isGilded = linkObject.getInt("gilded")>0;
+            this.likes = linkObject.getString("likes");
         } catch (Exception e) {
             Timber.e(e);
         }

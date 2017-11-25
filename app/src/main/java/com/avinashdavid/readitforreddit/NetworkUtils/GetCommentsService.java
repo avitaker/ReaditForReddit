@@ -250,12 +250,13 @@ public class GetCommentsService extends IntentService {
                 String body = bodyRaw.substring(0, bodyRaw.length()-1).replace("\"","");
                 long timecreated = replyData.getInt(DEPTH_KEY);
                 String parent = replyData.getString(PARENT_KEY);
-                String isLikedValue = replyData.getString("likes");
-                boolean isLiked = !isLikedValue.equals("null");
+                String isLikedValue = replyData.getString("isLiked");
+                boolean isLiked = isLikedValue.equals("true");
+                boolean isDisliked = isLikedValue.equals("false");
                 boolean hasReplies = false;
                 String authorflair = "";
 
-                commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, false, moreCount, author, body, parent, timecreated, DEPTH_MORE, false, authorflair, false, false, isLiked);
+                commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, false, moreCount, author, body, parent, timecreated, DEPTH_MORE, false, authorflair, false, false, isLiked, isDisliked);
                 return commentObject;
             } catch (Exception e){
                 String id = replyData.getString(ID_KEY);
@@ -272,9 +273,14 @@ public class GetCommentsService extends IntentService {
                 boolean isEdited = !replyData.getString(EDITED).equals("false");
 
                 String isLikedValue = replyData.getString("likes");
-                boolean isLiked = !isLikedValue.equals("null");
+                boolean isLiked = false;
+                boolean isDisliked = false;
+                if (isLikedValue!=null) {
+                    isLiked = isLikedValue.equals("true");
+                    isDisliked = isLikedValue.equals("false");
+                }
 
-                commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, scoreHidden, score, author, body, parent, timecreated, depth, hasReplies, authorflair, isGilded, isEdited, isLiked);
+                commentObject = new CommentRecord(System.currentTimeMillis(), id, linkId, scoreHidden, score, author, body, parent, timecreated, depth, hasReplies, authorflair, isGilded, isEdited, isLiked, isDisliked);
                 return commentObject;
             }
 //            String id = replyData.getString(ID_KEY);

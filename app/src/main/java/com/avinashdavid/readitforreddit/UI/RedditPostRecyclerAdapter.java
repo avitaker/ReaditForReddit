@@ -275,6 +275,14 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
                 }
                 Glide.with(mContext).load(listing.getThumbnail()).into(thumbnail_imageview);
             }
+            if (listing.getLikes()!=null) {
+                if (listing.getLikes()) {
+                    voteCount_textview.setTextColor(mContext.getResources().getColor(R.color.orange_300));
+                }
+                else {
+                    voteCount_textview.setTextColor(mContext.getResources().getColor(R.color.purple_300));
+                }
+            }
 
 //            if (listing.isGilded){
 //                author_textview.setTextColor(goldColor);
@@ -314,6 +322,14 @@ public class RedditPostRecyclerAdapter extends RecyclerView.Adapter<RedditPostRe
             commentCount_textview.setText(mContext.getString(R.string.format_numberofcomments, listing.commentsCount));
             domain_textview.setText(listing.domain);
             timecreated_textview.setText(GeneralUtils.returnFormattedTime(mContext, System.currentTimeMillis(), listing.timeCreated));
+            if (listing.likes!=null) {
+                if (listing.likes.equals("true")) {
+                    voteCount_textview.setTextColor(mContext.getResources().getColor(R.color.orange_300));
+                }
+                else if (listing.likes.equals("false")) {
+                    voteCount_textview.setTextColor(mContext.getResources().getColor(R.color.purple_300));
+                }
+            }
             if (thumbnail_imageview!=null) {
 //                Picasso picasso = Picasso.with(mContext);
                 if (imageLink){

@@ -5,19 +5,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.avinashdavid.readitforreddit.MiscUtils.Constants;
+import com.avinashdavid.readitforreddit.OAuth.GetUserAuthService;
 import com.avinashdavid.readitforreddit.PostUtils.RedditListing;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import timber.log.Timber;
 
@@ -89,6 +94,13 @@ public class GetListingsService extends IntentService {
         final Context context = GetListingsService.this.getApplicationContext();
         final ArrayList<RedditListing> redditListings = new ArrayList<>();
 
+        final String mAuthToken = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).getString(GetUserAuthService.PREF_NAME_ACCESS_TOKEN, null);
+
+        if (mAuthToken!=null && !mAuthToken.equals("")) {
+            mUrl = mUrl.buildUpon().authority("oauth.reddit.com").build();
+            Timber.d(mUrl.toString());
+        }
+
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, mUrl.toString(), null, new Response.Listener<JSONObject>() {
 
@@ -122,8 +134,9 @@ public class GetListingsService extends IntentService {
                                         String thumbnailUrl = linkObject.getString(THUMBNAIL_URL);
                                         boolean isGilded = linkObject.getInt(GILDED)>0;
                                         boolean isNSFW = Boolean.valueOf(linkObject.getString("over_18"));
+                                        String likes = linkObject.getString("likes");
 
-                                        RedditListing redditListing = new RedditListing(postId, System.currentTimeMillis(), title, voteCount, commentCount, author, subreddit, timeCreated, selftext, domain, afterResponse, url, thumbnailUrl, isGilded, isNSFW);
+                                        RedditListing redditListing = new RedditListing(postId, System.currentTimeMillis(), title, voteCount, commentCount, author, subreddit, timeCreated, selftext, domain, afterResponse, url, thumbnailUrl, isGilded, isNSFW, likes);
                                         redditListings.add(redditListing);
                                     }
                                 }
@@ -166,8 +179,27 @@ public class GetListingsService extends IntentService {
                         Timber.e(error, "error while retreiving listings data");
                         Intent errorIntent = new Intent(Constants.BROADCAST_ERROR_WHILE_RETREIVING_POSTS);
                         context.sendBroadcast(errorIntent);
+                        PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext()).edit().putString(GetUserAuthService.PREF_NAME_ACCESS_TOKEN, "").commit();
                     }
-                });
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("grant_type", "client_credentials");
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+
+                if (mAuthToken != null) {
+                    headers.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+                    headers.put("Authorization", "bearer " + mAuthToken);
+                }
+                return headers;
+            }
+        };
         NetworkSingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
     }
 

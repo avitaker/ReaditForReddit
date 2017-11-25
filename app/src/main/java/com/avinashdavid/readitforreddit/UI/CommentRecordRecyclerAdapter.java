@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -400,8 +399,11 @@ public class CommentRecordRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
         void bindComment(final CommentRecord commentRecord, String postAuthor){
             mCommentObject = commentRecord;
             author.setText(commentRecord.author);
-            if (commentRecord.likes) {
+            if (commentRecord.isLiked) {
                 score.setTextColor(mContext.getResources().getColor(R.color.orange_300));
+            }
+            if (commentRecord.isDisliked) {
+                score.setTextColor(mContext.getResources().getColor(R.color.purple_300));
             }
             if (commentRecord.author.equals(postAuthor)) {
                 GeneralUtils.setSDKSensitiveBackground(author, authorBackground);

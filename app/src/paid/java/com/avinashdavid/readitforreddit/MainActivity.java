@@ -346,6 +346,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
 
+                if (action == null) return;
+
                 if (action.equals(Constants.BROADCAST_GET_LOGGEDIN_USER_SUCCESS)){
                     LoggedInUser loggedInUser = LoggedInUser.Companion.getCurrentLoggedInUser();
                     try {

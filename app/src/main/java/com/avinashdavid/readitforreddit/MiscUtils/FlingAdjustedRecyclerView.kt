@@ -9,7 +9,7 @@ import android.view.View
  * Created by avinashdavid on 9/24/17.a
  */
 class FlingAdjustedRecyclerView : RecyclerView{
-    private val flingFactor = 0.5
+    private val flingFactor = 0.8
 
     override fun fling(velocityX: Int, velocityY: Int): Boolean {
         val newVelocityY = (flingFactor * velocityY).toInt()

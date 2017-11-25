@@ -22,7 +22,7 @@
             android:id="@+id/add.subscription"
             android:title="@string/title_activity_manage_subreddits"/>
 
-        <itemm
+        <item
             android:orderInCategory="0"
             android:id="@+id/app.settings"
             android:title="@string/title_app_settings"/>

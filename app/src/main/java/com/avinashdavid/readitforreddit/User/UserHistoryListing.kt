@@ -19,5 +19,6 @@ class UserHistoryListing() : SugarRecord() {
     var url = ""
     var thumbnail = ""
     var over_18 = false
+    var likes : Boolean? = null
     @Transient var postId = ""
 }
